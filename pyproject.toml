@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "velo3"
+version = "0.1.0"
+description = "Logbooks for bicycles"
+authors = ["velo3_creator"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "3.2.20"
+djangorestframework = "^3.14.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

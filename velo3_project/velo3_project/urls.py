@@ -19,18 +19,15 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-# router = SimpleRouter(r'testprof', )
+from src.profiles.views import VeloUserViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('src.bicycles.urls')),
-    # path('', include('src.logbooks.urls')),
-    # path('', include('src.profiles.urls')),
+    # path('api/bicycles/', include('src.bicycles.urls')),
+    # path('api/logbooks/', include('src.logbooks.urls')),
+    path('api/profiles/', include('src.profiles.urls')),
 
 ]
-
-# urlpatterns += router.urls
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

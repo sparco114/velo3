@@ -1,16 +1,16 @@
-import datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
+# TODO: вынести функции _directory_path из всех приложений в одно место, чтоб не было повторения кода
 def user_avatar_directory_path(instance, filename):
-    current_datetime = str(datetime.datetime.now().replace(microsecond=0))
+    current_datetime = str(timezone.now().replace(microsecond=0))
     file_format = filename.split('.')[-1]
     full_filename = f'{current_datetime}.{file_format}'
-    return f'avatar/id_{instance.id}_{instance.username}/{full_filename}'
+    return f'avatars/id_{instance.id}/{full_filename}'
 
 
 class VeloUser(AbstractUser):

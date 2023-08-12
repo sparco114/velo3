@@ -1,3 +1,4 @@
 from django.contrib import admin
+from src.bicycles.models import Bicycle
 
-# Register your models here.
+admin.site.register(Bicycle)

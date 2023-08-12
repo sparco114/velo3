@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
 from src.profiles.models import VeloUser, VeloUserProfile
 

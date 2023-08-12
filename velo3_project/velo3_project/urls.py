@@ -23,7 +23,7 @@ from src.profiles.views import VeloUserViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/bicycles/', include('src.bicycles.urls')),
+    path('api/bicycles/', include('src.bicycles.urls')),
     # path('api/logbooks/', include('src.logbooks.urls')),
     path('api/profiles/', include('src.profiles.urls')),
 

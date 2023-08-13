@@ -17,16 +17,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import SimpleRouter
 
-from src.profiles.views import VeloUserViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/bicycles/', include('src.bicycles.urls')),
-    # path('api/logbooks/', include('src.logbooks.urls')),
-    path('api/profiles/', include('src.profiles.urls')),
-
+    path('api/v1/', include('src.routers')),
 ]
 
 if settings.DEBUG:

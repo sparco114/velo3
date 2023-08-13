@@ -147,3 +147,9 @@ MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = 'profiles.VeloUser'
+
+
+# DEFAULT_CHARSET = 'utf-8'
+# REST_FRAMEWORK = {
+#     'DEFAULT_CHARSET': 'utf-8',
+# }

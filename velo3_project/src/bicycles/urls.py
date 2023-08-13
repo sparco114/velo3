@@ -1,9 +1,9 @@
-from rest_framework.routers import SimpleRouter, DefaultRouter
-from src.bicycles.models import Bicycle
+from rest_framework.routers import SimpleRouter
+from src.bicycles.views import BicycleViewSet
 
 router = SimpleRouter()
 
-router.register(r'', Bicycle)
+router.register(r'', BicycleViewSet)
 
 urlpatterns = router.urls
 

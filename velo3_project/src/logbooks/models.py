@@ -39,3 +39,6 @@ class LogBookRecord(models.Model):
     is_published = models.BooleanField(default=True)
     category = models.CharField(max_length=20, choices=CATEGORIES, default='другое')
     pictures = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
+
+    def __str__(self):
+        return f'id {self.pk}: {self.header}'

@@ -35,6 +35,9 @@ class VeloUserProfile(models.Model):
     phone = models.CharField(max_length=14, blank=True, null=True)
     about = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return f'id {self.pk}: {self.velouser}'
+
 
 @receiver(post_save, sender=VeloUser)
 def create_or_update_user_profile(instance, created, **kwargs):

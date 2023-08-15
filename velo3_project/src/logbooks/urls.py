@@ -1,10 +1,16 @@
+from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from src.logbooks.views import LogBookRecordViewSet
 
-router = SimpleRouter()
+logbook_records_router = SimpleRouter()
 
-# TODO: откорректировать адреса во всех моделях, чтоб были по типу .../пользователь/велосипед/запись
-router.register('', LogBookRecordViewSet)
+logbook_records_router.register('add', LogBookRecordViewSet)
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    path('bicycles/<int:bicycle_pk>/', include(logbook_records_router.urls)),
+    path('logbook_records_list/', LogBookRecordViewSet.as_view({'get': 'list'})),
+]
+
+

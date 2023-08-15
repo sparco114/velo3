@@ -53,3 +53,6 @@ class Bicycle(models.Model):
     is_active = models.BooleanField(default=True)
     about = models.TextField(blank=True, null=True)
     pictures = models.ImageField(blank=True, null=True, upload_to=bicycle_pictures_directory_path)
+
+    def __str__(self):
+        return f'id {self.pk}: {self.bicycle_name}'

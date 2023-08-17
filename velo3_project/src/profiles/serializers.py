@@ -28,7 +28,7 @@ class VeloUserSerializer(ModelSerializer):
                   )
 
     def update(self, instance, validated_data):
-        velouserprofile_data = validated_data.pop('velouserprofile', {})
+        velouserprofile_data = validated_data.pop('velouserprofile', {}) # внутри сериализатора используется название поля по умолчанию, и а мое название velouser_profile будет использовано только как "алиас" для доступа к связанной модели
         for attr, value in velouserprofile_data.items():
             setattr(instance.velouserprofile, attr, value)
         instance.velouserprofile.full_clean() # проверка на соответствие choice на уровне модели

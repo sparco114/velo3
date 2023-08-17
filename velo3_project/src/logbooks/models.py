@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 from src.bicycles.models import Bicycle
+from src.profiles.models import VeloUser
+
 
 # TODO: откорректировать пути сохранения во всех моделях, чтоб было по типу media/пользователь/вело/запись
 def logbook_record_pictures_directory_path(instance, filename):
@@ -39,6 +41,7 @@ class LogBookRecord(models.Model):
     is_published = models.BooleanField(default=True)
     category = models.CharField(max_length=20, choices=CATEGORIES, default='другое')
     pictures = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
+    creator = models.ForeignKey(VeloUser, on_delete=models.CASCADE, related_name='created_logbook_records')
 
     def __str__(self):
         return f'id {self.pk}: {self.header}'

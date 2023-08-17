@@ -29,7 +29,7 @@ class Bicycle(models.Model):
     )
 
     owner = models.ForeignKey(VeloUser, on_delete=models.CASCADE, related_name='bicycles')
-    bicycle_name = models.CharField(max_length=30, blank=True, null=True)
+    bicycle_name = models.CharField(max_length=30)
     brand = models.CharField(max_length=30, blank=True, null=True)
     model = models.CharField(max_length=35, blank=True, null=True)
     release_year = models.IntegerField(blank=True, null=True,
@@ -50,7 +50,7 @@ class Bicycle(models.Model):
                                                               message='Первый велосипед изобретен в 1817 году.')
                                         ])
     price = models.PositiveIntegerField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_former = models.BooleanField(default=False)
     about = models.TextField(blank=True, null=True)
     pictures = models.ImageField(blank=True, null=True, upload_to=bicycle_pictures_directory_path)
 

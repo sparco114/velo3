@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'debug_toolbar',
 
     'src.bicycles',
     'src.logbooks',
@@ -51,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'velo3_project.urls'
@@ -140,16 +145,30 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'profiles.VeloUser'
 
+# django-debug-toolbar
+INTERNAL_IPS = ["127.0.0.1", ]
 
 # Default JSON format
-# REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
-#     ),
-#     'DEFAULT_PARSER_CLASSES': (
-#         'rest_framework.parsers.JSONParser',
-#     )
-# }
+REST_FRAMEWORK = {
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'rest_framework.parsers.JSONParser',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+DJOSER = {
+    'USER_CREATE_PASSWORD_RETYPE': True,  # Включает подтверждение пароля при регистрации
+    'SET_PASSWORD_RETYPE': True,  # Включает подтверждение при изменении пароля
+
+}
 
 
 # DEFAULT_CHARSET = 'utf-8'

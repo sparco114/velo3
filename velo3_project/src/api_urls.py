@@ -15,7 +15,7 @@ urlpatterns = [
     path('djoser_auth/', include('djoser.urls')),  # регистрация djoser
     path('djoser_token/', include('djoser.urls.authtoken')),  # вход djoser (по токену)
 
-    # TODO: либо распределить эти пути по файлам urls.py в каждом приложении, либо удалить эти файлы, если они не будут использованы
+    # TODO: Проверить возможность переписать это на роутеры
     path('profiles/', VeloUserViewSet.as_view({'get': 'list'})),  # просмотр
     path('profiles/<int:pk>/', VeloUserViewSet.as_view({'get': 'retrieve'})),  # просмотр
     path('my/profile/', MyVeloUserView.as_view(), name='my-profile'),  # (редактирование, удаление)

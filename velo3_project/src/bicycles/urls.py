@@ -1,9 +1,16 @@
-from rest_framework.routers import SimpleRouter
-from src.bicycles.views import BicycleViewSet
+# from rest_framework.routers import SimpleRouter
+# from src.bicycles.views import BicycleViewSet
+#
+# router = SimpleRouter()
+#
+# router.register(r'', BicycleViewSet)
+#
+# urlpatterns = router.urls
+#
+from django.urls import path
 
-router = SimpleRouter()
+from src.bicycles.views import bicycles_list
 
-router.register(r'', BicycleViewSet)
-
-urlpatterns = router.urls
-
+urlpatterns = [
+    path('bicycles/', bicycles_list),
+]

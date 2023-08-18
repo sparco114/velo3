@@ -1,3 +1,5 @@
+
+from django.shortcuts import render
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 
@@ -51,3 +53,7 @@ class MyBicycleUpdateViewSet(generics.RetrieveUpdateDestroyAPIView):
 #         logs = LogBookRecord.objects.filter(bicycle=pk)
 #         ser = LogBookRecordSerializer(logs, many=True)
 #         return Response({'logs': ser.data})
+
+
+def bicycles_list(request):
+    return render(request, 'bicycles.html')

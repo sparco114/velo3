@@ -9,7 +9,7 @@ const bicycles_app = createApp({
     };
   },
   mounted() {
-      axios.get('http://127.0.0.1:8000/api/v1/bicycles/')
+      axios.get('http://127.0.0.1:8000/api/v1/bicycles/?random=3')
         .then(response => {
             this.bicycles = response.data;
       })
@@ -42,8 +42,20 @@ const logbook_records_app = createApp({
       logbook_records: []
     };
   },
+  methods: {
+        truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...';
+            }
+            return text;
+        },
+        showFullText(record) {
+            // TODO: реализовать навигацию на страницу с полным текстом, используя например Vue Router или другой метод навигации
+            console.log('Перейти к полному тексту записи:', record.text);
+        }
+  },
   mounted() {
-      axios.get('http://127.0.0.1:8000/api/v1/logbooks/')
+      axios.get('http://127.0.0.1:8000/api/v1/logbooks/?random=7')
         .then(response => {
             this.logbook_records = response.data;
       })

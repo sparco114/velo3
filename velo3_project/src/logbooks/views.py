@@ -8,8 +8,23 @@ from src.logbooks.serializers import LogBookRecordSerializer
 
 
 class LogBookRecordViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = LogBookRecord.objects.all()
     serializer_class = LogBookRecordSerializer
+
+    def get_queryset(self):
+        amount_first = self.request.query_params.get('first')
+        amount_last = self.request.query_params.get('last')
+        amount_random = self.request.query_params.get('random')
+
+        if amount_first:
+            queryset = LogBookRecord.objects.order_by('id')[:int(amount_first)]
+        elif amount_last:
+            queryset = LogBookRecord.objects.order_by('-id')[:int(amount_last)]
+        elif amount_random:
+            queryset = LogBookRecord.objects.order_by('?')[:int(amount_random)]
+        else:
+            queryset = LogBookRecord.objects.all()
+        # TODO: добавить условие, чтобы возвращались только активные (не бывшие) велосипеды
+        return queryset
 
 
 class BicycleLogBookViewSet(viewsets.ReadOnlyModelViewSet):

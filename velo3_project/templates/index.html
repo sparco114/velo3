@@ -28,113 +28,126 @@
         .small-date {
         font-size: 0.7em;
         }
+        .px-custom-feed {
+        width: 50rem;
+        }
+
+
+
     </style>
 </head>
 
 <body>
 {% verbatim %}
 
-<nav class="navbar" style="background-color: #198754;">
+<nav class="navbar fixed-top" style="background-color: #198754;">
     <div class="container-fluid">
-        <strong><a class="navbar-brand" style="color: #fff;" href="/">VELO3.RU</a></strong>
-        <div>
-            <a href="#" class="btn btn-success">Регистрация</a>
-            <a href="#" class="btn btn-success">Вход</a>
+        <strong><a class="navbar-brand fs-4 me-5" style="color: #fff;" href="/">VELO3.RU</a></strong>
+        <div class="me-3">
+            <a href="bicycles" class="nav-link fs-5 text-white">Велосипеды</a>
+        </div>
+        <div class="me-auto">
+            <a href="logbooks" class="nav-link fs-5 text-white">Бортжурналы</a>
+        </div>
+
+        <div class="">
+            <a href="#" class="btn btn-success border me-2">Регистрация</a>
+            <a href="#" class="btn btn-success border">Вход</a>
         </div>
     </div>
 </nav>
 
 
+<div class="container mt-5 px-custom-feed">
 
 
-
-
-
-<div class="container text-center">
-    <div class="row justify-content-center ">
-        <img src="https://webstockreview.net/images/bicycle-clipart-vector-4.png" alt="Ваше изображение" class="img-fluid" style="max-width: 30%;">
-    </div>
-    <div class="row">
-        <h1 class="mb-5"><b>Бортовой журнал твоего велосипеда</b></h1>
-    </div>
-    <div class="row">
-        <div class="col align-self-center">
-            <a href="#" class="btn btn-success rounded-pill btn-lg">Войти</a>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col align-self-center">
-            <a href="#" class="btn btn-success rounded-pill btn-lg btn-small-font">Завести бортжурнал</a>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-<div class="container mt-5">
-    <a class="nav-link" href="bicycles"><h3>Велосипеды</h3></a>
-
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="bicycles_list_app">
-
-        <div class="col" v-for="bike in bicycles">
-            <div class="card h-100 shadow-sm">
-                <a href="#№" class="stretched-link"></a>
-                <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg" class="card-img-top" alt="...">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ bike.bicycle_name }}</h5>
-                    <p class="card-text small mt-auto">{{ bike.owner }}</p>
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <img src="https://webstockreview.net/images/bicycle-clipart-vector-4.png" alt="Ваше изображение"
+                     class="img-fluid" style="max-width: 30%;">
+            </div>
+            <div class="row">
+                <h1 class="mb-5"><b>Бортовой журнал вашего велосипеда</b></h1>
+            </div>
+            <div class="row">
+                <div class="col align-self-center">
+                    <a href="#" class="btn rounded-4 btn-lg border">Войти</a>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col align-self-center">
+                    <a href="#" class="btn rounded-4 btn-lg border shadow">Завести бортжурнал</a>
                 </div>
             </div>
         </div>
 
-    </div>
-</div>
 
 
 
-<!--<div class="container" id="bicycles_list_app">-->
-<!--    <ul>-->
-<!--        <li v-for="bike in bicycles">-->
-<!--            <b>Название велосипеда: {{ bike.bicycle_name }}</b>-->
-<!--            <br>-->
-<!--            <i>Владелец: {{ bike.owner }}</i>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
 
-
-<div class="container mt-5">
-    <a class="nav-link" href="bicycles"><h3>Бортжурналы</h3></a>
-
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="logbook_records_list_app">
-
-        <div class="col mb-5" v-for="record in logbook_records">
-            <div class="card h-100 shadow-sm">
-                <a href="#№" class="stretched-link"></a>
-                <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                     class="card-img-top" alt="...">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ record.header }}</h5>
-                    <div class="row justify-content-between">
-                        <div class="col card-text small mt-auto text-secondary text-start">
-                            {{ record.category }} {{ record.creation_date }}
-                        </div>
-                        <div class="col small-date text-secondary text-end">
-                            21.08.2023
-                        </div>
-
-                        <!--                    TODO: добавить в модель LogBookRecord дату создания записи - creation_date-->
+    <div class="container mt-5">
+        <a class="nav-link" href="bicycles"><h3>Велосипеды</h3></a>
+        <div class="row row-cols-1 row-cols-md-3 g-3 mt-2" id="bicycles_list_app">
+            <div class="col" v-for="bike in bicycles">
+                <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a v-bind:href="'/bicycles/' + bike.id" class="stretched-link"></a>
+                    <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                         class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ bike.bicycle_name }}</h5>
+                        <p class="card-text small mt-auto">{{ bike.owner }}</p>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
 
+
+
+
+
+    <div class="container mt-5">
+        <a class="nav-link" href="#"><h3>Бортжурналы</h3></a>
+        <div id="logbook_records_list_app">
+            <div class="card mt-4 rounded-4" v-for="record in logbook_records">
+                <div class="row g-0">
+                    <div class="col-2">
+
+
+                        <div class="card-body">
+                            <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                                 class="card-img" alt="...">
+                            <div class="card-body">
+                                <p class="">{{ record.bicycle.bicycle_name }}</p>
+                                <small class="text-muted">{{ record.bicycle.owner }}</small>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                            <div class="">
+                                <img src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
+                                     class="card-img">
+                            </div>
+                            <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
+                            <p class="card-text"><small class="text-muted">{{ record.category }}</small></p>
+                            <div class="card-text">{{ truncateText(record.text, 225) }}
+                                <span v-if="record.text.length > 225">
+                                <a class="text-nowrap" href="#" @click.prevent="showFullText(record)">Читать далее</a>
+                            </span>
+                            </div>
+                            <p class="card-text text-end"><small class="text-muted">21.08.2023</small></p>
+                            <!--TODO: добавить в модель LogBookRecord дату создания записи - creation_date-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endverbatim %}
 
 <script src="/static/app.js"></script>

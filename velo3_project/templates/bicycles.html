@@ -16,14 +16,31 @@
 
 <body>
 {% verbatim %}
+
+<nav class="navbar" style="background-color: #198754;">
+    <div class="container-fluid">
+        <strong><a class="navbar-brand" style="color: #fff;" href="/">VELO3</a></strong>
+        <div class="btn-group">
+            <form action="#">
+                <button class="btn btn-success">Регистрация</button>
+            </form>
+            <form action="#">
+                <button type="button" class="btn btn-success">Вход</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+
 <div class="container" id="bicycles_list_app">
-    <ul>
-        <li v-for="bike in bicycles">
-            <b>Название велосипеда: {{ bike.bicycle_name }}</b>
-            <br>
-            <i>Владелец: {{ bike.owner }}</i>
-        </li>
-    </ul>
+<!--    <ul>-->
+<!--        <li v-for="bike in bicycles">-->
+<!--            <b>Название велосипеда: {{ bike.bicycle_name }}</b>-->
+<!--            <br>-->
+<!--            <i>Владелец: {{ bike.owner }}</i>-->
+<!--        </li>-->
+<!--    </ul>-->
 </div>
 
 

@@ -8,44 +8,104 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
           crossorigin="anonymous">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.js"></script>-->
     <!--    TODO: попробовать будет ли работать с min версиями -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a87540a;
+            margin: 0;
+            min-height: 100%;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .small-date {
+            font-size: 0.7em;
+        }
+        .px-custom-feed {
+            width: 50rem;
+        }
+    </style>
 </head>
+
 
 <body>
 {% verbatim %}
 
-<nav class="navbar" style="background-color: #198754;">
+
+<nav class="navbar fixed-top" style="background-color: #198754;">
     <div class="container-fluid">
-        <strong><a class="navbar-brand" style="color: #fff;" href="/">VELO3</a></strong>
-        <div class="btn-group">
-            <form action="#">
-                <button class="btn btn-success">Регистрация</button>
-            </form>
-            <form action="#">
-                <button type="button" class="btn btn-success">Вход</button>
-            </form>
+        <strong><a class="navbar-brand fs-4 me-5" style="color: #fff;" href="/">VELO3.RU</a></strong>
+        <div class="me-3">
+            <a href="/bicycles" class="nav-link fs-5 text-white">Велосипеды</a>
+        </div>
+        <div class="me-auto">
+            <a href="/logbooks" class="nav-link fs-5 text-white">Бортжурналы</a>
+        </div>
+        <div>
+            <a href="#" class="btn btn-success border me-2">Регистрация</a>
+            <a href="#" class="btn btn-success border">Вход</a>
         </div>
     </div>
 </nav>
 
 
+<div class="container mt-5 px-custom-feed">
 
-<div class="container" id="bicycles_list_app">
-<!--    <ul>-->
-<!--        <li v-for="bike in bicycles">-->
-<!--            <b>Название велосипеда: {{ bike.bicycle_name }}</b>-->
-<!--            <br>-->
-<!--            <i>Владелец: {{ bike.owner }}</i>-->
-<!--        </li>-->
-<!--    </ul>-->
+    <div class="container mt-5">
+        <a class="nav-link" href="/bicycles"><h3>Велосипеды</h3></a>
+        <div class="row row-cols-1 row-cols-md-3 g-3 mt-2" id="bicycles_list_app">
+            <div class="col" v-for="bike in bicycles">
+                <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a v-bind:href="'/bicycles/' + bike.id" class="stretched-link"></a>
+                    <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                         class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ bike.bicycle_name }}</h5>
+                        <p class="card-text small mt-auto">{{ bike.owner }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
+<footer class=" footer text-center mt-5" style="background-color: #1a87541b;">
+    <div class="container p-2 px-5 d-flex justify-content-center">
+        <a class="nav-link me-3" href="#">О проекте</a>
+        <a class="nav-link me-3" href="#">Связь с автором</a>
+        <a class="nav-link me-3" href="#">Политика конфиденциальности</a>
+        <a class="nav-link me-3" href="#">Условия использования</a>
+    </div>
+</footer>
 
 
 {% endverbatim %}
 
-<script src="/static/app.js"></script>
+<script type="module">
+import { bicyclesListApp } from '../static/app.js'
+bicyclesListApp.mount('#bicycles_list_app')
+</script>
+
 </body>
 </html>
+
+
+
+
+
+

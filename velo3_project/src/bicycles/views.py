@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import filters
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,12 +10,10 @@ from src.bicycles.serializers import BicycleSerializer
 
 
 class BicycleViewSet(viewsets.ReadOnlyModelViewSet):
-    # queryset = Bicycle.objects.all()
     serializer_class = BicycleSerializer
-
     # http_method_names = ['get']
-    # filter_backends = [filters.OrderingFilter]
-    # ordering_fields = ['id']
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['id']
 
     def get_queryset(self):
         amount_first = self.request.query_params.get('first')

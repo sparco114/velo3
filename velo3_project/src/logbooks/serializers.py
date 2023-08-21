@@ -8,6 +8,7 @@ class LogBookRecordSerializer(serializers.ModelSerializer):
     # bicycle = serializers.CharField(read_only=True)
     bicycle = BicycleSerializer()
     creator = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(format="%d.%m.%Y")
     # creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:

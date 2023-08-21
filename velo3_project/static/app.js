@@ -1,21 +1,30 @@
 //TODO: если будет много компонентов, можно разледить их по файлам, как указано в разделе Splitting Up the Modules документации  https://vuejs.org/guide/quick-start.html#creating-a-vue-application
 
-const { createApp } = Vue
+//TODO: на проде надо использовать версию вью https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js
+import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 
-const bicycles_app = createApp({
+export const bicyclesListApp = createApp({
   data() {
     return {
       bicycles: []
     };
   },
   mounted() {
-      axios.get('http://127.0.0.1:8000/api/v1/bicycles/?random=3')
-        .then(response => {
-            this.bicycles = response.data;
-      })
-        .catch(error => {
-            console.error('Ошибка при выполнении запроса:', error);
-      });
+    let apiUrl = 'http://127.0.0.1:8000/api/v1/bicycles/';
+    if (window.location.pathname === '/bicycles/') {
+      apiUrl += '?ordering=-id';
+//      TODO: добавить пагинацию для страницы /bicycles/
+    } else {
+      apiUrl += '?random=3';
+    }
+  axios.get(apiUrl)
+    .then(response => {
+        this.bicycles = response.data.results;
+        console.log(response.data)
+    })
+    .catch(error => {
+        console.error('Ошибка при выполнении запроса:', error);
+    });
   },
 //  template: `
 //    <div>
@@ -30,13 +39,12 @@ const bicycles_app = createApp({
 //  `,
 });
 
-bicycles_app.mount('#bicycles_list_app');
 
 
 
 
 
-const logbook_records_app = createApp({
+export const logbookRecordsListApp = createApp({
   data() {
     return {
       logbook_records: []
@@ -57,7 +65,9 @@ const logbook_records_app = createApp({
   mounted() {
       axios.get('http://127.0.0.1:8000/api/v1/logbooks/?random=7')
         .then(response => {
-            this.logbook_records = response.data;
+            this.logbook_records = response.data.results;
+            console.log(response.data)
+
       })
         .catch(error => {
             console.error('Ошибка при выполнении запроса:', error);
@@ -65,4 +75,3 @@ const logbook_records_app = createApp({
   },
 });
 
-logbook_records_app.mount('#logbook_records_list_app');

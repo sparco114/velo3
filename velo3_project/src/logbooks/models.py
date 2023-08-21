@@ -42,6 +42,8 @@ class LogBookRecord(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORIES, default='другое')
     pictures = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
     creator = models.ForeignKey(VeloUser, on_delete=models.CASCADE, related_name='created_logbook_records')
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return f'id {self.pk}: {self.header}'

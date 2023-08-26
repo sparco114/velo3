@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from rest_framework import viewsets, generics
+from rest_framework import filters
 
 from src.bicycles.models import Bicycle
 from src.logbooks.models import LogBookRecord
@@ -9,6 +10,8 @@ from src.logbooks.serializers import LogBookRecordSerializer
 
 class LogBookRecordViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = LogBookRecordSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['id']
 
     def get_queryset(self):
         amount_first = self.request.query_params.get('first')

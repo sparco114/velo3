@@ -71,11 +71,3 @@ class MyBicycleUpdateViewSet(generics.RetrieveUpdateDestroyAPIView):
 #         logs = LogBookRecord.objects.filter(bicycle=pk)
 #         ser = LogBookRecordSerializer(logs, many=True)
 #         return Response({'logs': ser.data})
-
-
-def main_page(request):
-    return render(request, 'index.html')
-
-
-def bicycles_list(request):
-    return render(request, 'bicycles.html')

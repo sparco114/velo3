@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'djoser',
     # 'debug_toolbar',
     'django_filters',
+    'corsheaders',
 
     'src.bicycles',
     'src.logbooks',
@@ -57,6 +58,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'velo3_project.urls'
@@ -179,6 +183,12 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': True,  # Включает подтверждение при изменении пароля
 
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 
 # DEFAULT_CHARSET = 'utf-8'
 # REST_FRAMEWORK = {

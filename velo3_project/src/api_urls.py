@@ -1,7 +1,8 @@
 from django.urls import include, path, re_path
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
-from src.bicycles.views import BicycleViewSet, MyBicycleListViewSet, MyBicycleCreateViewSet, MyBicycleUpdateViewSet
+from src.bicycles.views import BicycleListViewSet, MyBicycleListViewSet, MyBicycleCreateViewSet, MyBicycleUpdateViewSet, \
+    BicycleDetailViewSet
 from src.logbooks.views import LogBookRecordViewSet, BicycleLogBookViewSet, BicycleLogBookRecordCreateView, \
     LogBookRecordUpdateView
 from src.profiles.views import MyVeloUserView, VeloUserViewSet
@@ -21,8 +22,8 @@ urlpatterns = [
     path('my/profile/', MyVeloUserView.as_view(), name='my-profile'),  # (редактирование, удаление)
 
 
-    path('bicycles/', BicycleViewSet.as_view({'get': 'list'})),  # просмотр
-    path('bicycles/<int:pk>/', BicycleViewSet.as_view({'get': 'retrieve'})),  # просмотр
+    path('bicycles/', BicycleListViewSet.as_view({'get': 'list'})),  # просмотр
+    path('bicycles/<int:pk>/', BicycleDetailViewSet.as_view({'get': 'retrieve'})),  # просмотр
     path('my/bicycles/', MyBicycleListViewSet.as_view({'get': 'list'})),  # просмотр
     path('my/bicycles/create/', MyBicycleCreateViewSet.as_view()),  # (создание)
     path('my/bicycles/<int:pk>/', MyBicycleUpdateViewSet.as_view()),  # (редактирование, удаление)

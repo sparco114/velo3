@@ -1,26 +1,134 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import BicycleLogBookSmall from "../components/logbooks/BicycleLogBookSmall.vue";
+import { RouterLink } from "vue-router";
+
+const logBookRecordAmount = "?last=7";
+const bikeId = useRoute().params.id;
+
+const bicycle = ref([]);
+
+onMounted(() => {
+  let apiUrl = `http://127.0.0.1:8000/api/v1/bicycles/${bikeId}/`;
+
+  axios
+    .get(apiUrl)
+    .then((response) => {
+      bicycle.value = response.data;
+      // TODO: убрать на проде
+      console.log(response.data);
+    })
+    .catch((error) => {
+      // TODO: изменить на запись в лог и вывод текста пользователю
+      console.error("Ошибка при выполнении запроса:", error);
+    });
+});
+</script>
 
 <template>
-  <div>
-    <h2><strong>BIKE NAME</strong></h2>
+  <div class="pt-2">
+    <h2>
+      <strong>
+        {{ bicycle.brand }}
+        {{ bicycle.model }}
+        {{ bicycle.bicycle_name }}
+      </strong>
+    </h2>
   </div>
   <div class="img-main">
-    <img src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg" class="img-flui rounded-5" alt="...">
+    <img
+      src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+      class="rounded-4 shadow-sm"
+      alt="..."
+    />
+  </div>
+
+  <div class="card mt-2 rounded-4">
+    <div class="row g-2">
+      <div class="col-1 d-flex justify-content-center align-items-center">
+        <!--TODO: доработать, чтоб на разрешении телефона эта часть с инфо о велосипеде уходила вверх-->
+        <div class="avatar">
+          <RouterLink to="#">
+            <img
+              src="https://static.toiimg.com/photo/msid-51359359/51359359.jpg"
+              alt="user_avatar"
+              class="rounded-circle"
+            />
+          </RouterLink>
+        </div>
+      </div>
+      <div class="col-11">
+        <!-- Vue не успевает обнаружить реактивные изменения внутри объекта словаря, 
+          поэтому делаем проверку v-if (она может отобразить значение позже, 
+          когда оно будет подгружено из базы) -->
+        <div v-if="bicycle.owner" class="ms-2">
+          <RouterLink class="text-decoration-none text-dark" to="#">
+            <span class="fs-5">{{ bicycle.owner.username }}</span>
+          </RouterLink>
+          <br />
+          <small class="text-secondary">{{
+            bicycle.owner.city ? bicycle.owner.city : "-"
+          }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2 rounded-4">
+    <div class="card-body">
+      <h5 class="card-title">О велосипеде</h5>
+      <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+      <p class="card-text">{{ bicycle.about }}</p>
+      <div class="mt-">
+        <strong>ХАРАКТЕРИСТИКИ</strong>
+        <ul>
+          <li v-if="bicycle.brand">Марка: {{ bicycle.brand }}</li>
+          <li v-if="bicycle.model">Модель: {{ bicycle.model }}</li>
+          <li v-if="bicycle.release_year">
+            Год выпуска: {{ bicycle.release_year }}
+          </li>
+          <li v-if="bicycle.wheel_size">
+            Размер колес: {{ bicycle.wheel_size }}″
+          </li>
+          <li v-if="bicycle.frame_material">
+            Материал рамы: {{ bicycle.frame_material }}
+          </li>
+          <li v-if="bicycle.purchase_year">
+            Был куплен в {{ bicycle.purchase_year }} г.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <BicycleLogBookSmall :logBookRecordAmount="logBookRecordAmount" :bicycleId="bikeId"/>
   </div>
 </template>
 
-
 <style>
 .img-main {
-  height: 30rem; 
+  height: 30rem;
 }
 
 .img-main img {
-  width: 100%; 
+  width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
+.avatar {
+  width: 3rem;
+  height: 3rem;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
 
 <!-- TODO: в будущем доработать, чтоб можно было загружать более одного фото для велосипеда 

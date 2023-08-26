@@ -35,7 +35,7 @@ class BicycleLogBookViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         bicycle_pk = self.kwargs.get('pk')
-        queryset = LogBookRecord.objects.filter(bicycle=bicycle_pk)
+        queryset = LogBookRecord.objects.filter(bicycle=bicycle_pk).order_by('-id')
         return queryset
 
 

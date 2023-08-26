@@ -6,11 +6,11 @@ from rest_framework.response import Response
 
 from src.bicycles.models import Bicycle
 from src.bicycles.permissions import IsOwner
-from src.bicycles.serializers import BicycleSerializer
+from src.bicycles.serializers import BicycleListSerializer, BicycleDetailSerializer
 
 
-class BicycleViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = BicycleSerializer
+class BicycleListViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = BicycleListSerializer
     # http_method_names = ['get']
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['id']
@@ -32,9 +32,18 @@ class BicycleViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+class BicycleDetailViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = BicycleDetailSerializer
+
+    def get_queryset(self):
+        bicycle_pk = self.kwargs.get('pk')
+        queryset = Bicycle.objects.filter(pk=bicycle_pk)
+        return queryset
+
+
 class MyBicycleListViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = BicycleSerializer
+    serializer_class = BicycleListSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -44,7 +53,7 @@ class MyBicycleListViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MyBicycleCreateViewSet(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = BicycleSerializer
+    serializer_class = BicycleListSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -52,7 +61,7 @@ class MyBicycleCreateViewSet(generics.CreateAPIView):
 
 class MyBicycleUpdateViewSet(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwner]
-    serializer_class = BicycleSerializer
+    serializer_class = BicycleListSerializer
 
     def get_queryset(self):
         bicycle_pk = self.kwargs.get('pk')

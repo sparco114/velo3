@@ -23,9 +23,11 @@ onMounted(() => {
     .get(apiUrl)
     .then((response) => {
       logBookRecords.value = response.data.results;
+      // Убрать на проде
       console.log(response.data);
     })
     .catch((error) => {
+      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });

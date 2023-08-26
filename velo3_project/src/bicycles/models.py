@@ -42,6 +42,7 @@ class Bicycle(models.Model):
     # TODO: валидаторы для release_year и purchase_year вынести в один, чтоб не было копипаста
     wheel_size = models.CharField(max_length=4, blank=True, null=True, choices=WHEEL_SIZES)
     frame_material = models.CharField(max_length=35, blank=True, null=True)
+    # TODO: добавить сравнение, чтоб год покупки был не раньше года выпуска
     purchase_year = models.IntegerField(blank=True, null=True,
                                         validators=[
                                             MaxValueValidator(timezone.now().year,

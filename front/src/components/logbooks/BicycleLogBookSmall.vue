@@ -38,22 +38,28 @@ onMounted(() => {
 </script>
 
 <template>
-  <RouterLink class="nav-link" to="#"><h3>Бортжурнал</h3></RouterLink>
+  <RouterLink
+    class="nav-link"
+    :to="{ name: 'bicycle-logbook-full', params: { id: bicycleId } }"
+    ><h3>Бортжурнал</h3>
+  </RouterLink>
   <div v-if="logBookRecords.length > 0">
     <div v-for="record in logBookRecords" :key="record.id">
       <LogBookRecordSmall :record="record" />
     </div>
-    <RouterLink class="card mt-3 rounded-4 text-center shadow-sm nav-link full-logbook-button" to="#">
-      <div class="card-body fs-5 ">Все записи</div>
+    <RouterLink
+      class="card mt-3 rounded-4 text-center shadow-sm nav-link full-logbook-button"
+      :to="{ name: 'bicycle-logbook-full', params: { id: bicycleId } }"
+    >
+      <div class="card-body fs-5">Все записи</div>
     </RouterLink>
   </div>
   <div v-else>Нет записей</div>
 </template>
 
-
 <style>
 .full-logbook-button {
-    background-color: #19875425;
-    outline-width: 10rem;
+  background-color: #19875425;
+  outline-width: 10rem;
 }
 </style>

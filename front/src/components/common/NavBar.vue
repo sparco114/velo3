@@ -21,10 +21,10 @@ import { RouterLink } from "vue-router";
         </RouterLink>
       </div>
       <div>
-        <RouterLink class="btn btn-success border me-2" to="#">
+        <RouterLink class="btn btn-success border me-2 rounded-4" to="#">
           Регистрация
         </RouterLink>
-        <RouterLink class="btn btn-success border" to="#"> Вход </RouterLink>
+        <RouterLink class="btn btn-success border rounded-4" to="#"> Вход </RouterLink>
       </div>
     </div>
   </nav>

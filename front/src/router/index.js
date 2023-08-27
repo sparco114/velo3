@@ -4,6 +4,7 @@ import BicyclesView from '../views/BicyclesView.vue'
 import LogBookRecordsView from '../views/LogBookRecordsView.vue'
 import BicycleDetailView from '../views/BicycleDetailView.vue'
 import LogBookRecordDetailView from '../views/LogBookRecordDetailView.vue'
+import BicycleLogBookFullView from '../views/BicycleLogBookFullView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/logbooks/:id',
       name: 'logbook-record-detail',
       component: LogBookRecordDetailView
+    },
+    {
+      path: '/bicycles/:id/logbook',
+      name: 'bicycle-logbook-full',
+      component: BicycleLogBookFullView
     },
     
 

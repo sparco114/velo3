@@ -43,9 +43,48 @@ function showFullText(record) {
           <div class="">
             <img
               src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
-              class="card-img"
+              class="card-img rounded-3"
             />
           </div>
+
+          <div class="row row-cols-md-5 g-1 mt-0">
+            <div class="col img-small">
+              <img
+                src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+          </div>
+
           <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
           <p class="card-text">
             <small class="text-muted">{{ record.category }}</small>
@@ -69,11 +108,16 @@ function showFullText(record) {
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
 </template>
+
+<style>
+.img-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-small {
+  height: 5rem;
+}
+</style>

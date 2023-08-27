@@ -1,14 +1,145 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
+import { RouterLink } from "vue-router";
 
+const logBookRecordId = useRoute().params.id;
+const record = ref([]);
+
+
+onMounted(() => {
+  let apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/`;
+
+  axios
+    .get(apiUrl)
+    .then((response) => {
+      record.value = response.data;
+      // TODO: убрать на проде
+      console.log(response.data);
+    })
+    .catch((error) => {
+      // TODO: изменить на запись в лог и вывод текста пользователю
+      console.error("Ошибка при выполнении запроса:", error);
+    });
+});
 </script>
 
-
 <template>
-<br>
-<br>
-<br>
-<div>
-    ONE - LogBookRecordDetailView
-</div>
+  <div class="mt-4">
+    <div class="">
+      <RouterLink
+        v-if="record.bicycle"
+        class="ms-2 fs-4 text-decoration-none text-dark"
+        to="#"
+      >
+        <strong class="">
+          {{ record.bicycle.brand }}
+          {{ record.bicycle.model }}
+          {{ record.bicycle.bicycle_name }}
+        </strong>
+      </RouterLink>
+    </div>
+    <!-- TODO: Разобраться со стилями и добавить кнопку "в бортжурнал", 
+    т.к. при ее добавлении страница отркывается не сверху, а снизу, 
+    как будто уже прокручена до конца-->
+    <!-- <div class="">
+          <RouterLink class="ms-2 text-decoration-none text-dark " to="">
+            &lt; в бортжурнал
+          </RouterLink>
+        </div> -->
+  </div>
 
+  <div class="card shadow-sm mt-3 rounded-4">
+    <div class="row g-0">
+      <div class="col">
+        <div class="card-body">
+          <h5 class="card-title mb-0 fs-3">{{ record.header }}</h5>
+          <p class="card-text">
+            <small class="text-muted">{{ record.category }}</small>
+          </p>
+          <div class="">
+            <img
+              src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
+              class="card-img rounded-3"
+            />
+          </div>
+
+          <div class="row row-cols-md-5 g-1 mt-0">
+            <div class="col img-small">
+              <img
+                src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <div class="col img-small">
+              <img
+                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                class="card-img-top rounded-3"
+                alt="..."
+              />
+            </div>
+            <!-- <div class="col img-small">
+                <img
+                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div> -->
+          </div>
+
+          <div class="card-text mt-3">
+            {{ record.text }}
+          </div>
+
+          <div class="container mt-3">
+            <div class="row">
+              <div v-if="record.mileage" class="col text-muted">
+                <span>Пробег: {{ record.mileage }} км.</span>
+              </div>
+              <div class="col text-muted">
+                <span v-if="record.cost">Стоимость: {{ record.cost }} руб.</span>
+              </div>
+              <!-- пустая колонка для корректного отобраения на странице -->
+              <div class="col"></div>
+              <div class="col text-muted text-end">
+                <small>{{ record.created_at }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row row-cols-md-3 mt-2">
+      <div class="col d-flex justify-content-center align-items-center">
+        <RouterLink class="btn rounded-5 btn-lg border" to="">
+          &lt; в бортжурнал
+        </RouterLink>
+      </div>
+      <div class="col">
+        <RouterLink class="btn rounded-5 btn-lg w-100 border" to="#">
+          Наверх
+        </RouterLink>
+      </div>
+    </div>
+  </div>
 </template>

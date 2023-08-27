@@ -23,7 +23,7 @@ import { RouterLink } from "vue-router";
     </div>
     <div class="row mt-3">
       <div class="col align-self-center">
-        <RouterLink class="btn rounded-4 btn-lg border shadow" to="#">
+        <RouterLink class="btn rounded-4 btn-lg border shadow-sm" to="#">
           Завести бортжурнал
         </RouterLink>
       </div>

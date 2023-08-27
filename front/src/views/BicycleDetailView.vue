@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import BicycleLogBookSmall from "../components/logbooks/BicycleLogBookSmall.vue";
+import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
 
 const logBookRecordAmount = "?last=7";
@@ -25,6 +26,7 @@ onMounted(() => {
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
+
 </script>
 
 <template>
@@ -45,36 +47,19 @@ onMounted(() => {
     />
   </div>
 
-  <div class="card mt-2 rounded-4">
-    <div class="row g-2">
-      <div class="col-1 d-flex justify-content-center align-items-center">
-        <!--TODO: доработать, чтоб на разрешении телефона эта часть с инфо о велосипеде уходила вверх-->
-        <div class="avatar">
-          <RouterLink to="#">
-            <img
-              src="https://static.toiimg.com/photo/msid-51359359/51359359.jpg"
-              alt="user_avatar"
-              class="rounded-circle"
-            />
-          </RouterLink>
-        </div>
-      </div>
-      <div class="col-11">
-        <!-- Vue не успевает обнаружить реактивные изменения внутри объекта словаря, 
-          поэтому делаем проверку v-if (она может отобразить значение позже, 
-          когда оно будет подгружено из базы) -->
-        <div v-if="bicycle.owner" class="ms-2">
-          <RouterLink class="text-decoration-none text-dark" to="#">
-            <span class="fs-5">{{ bicycle.owner.username }}</span>
-          </RouterLink>
-          <br />
-          <small class="text-secondary">{{
-            bicycle.owner.city ? bicycle.owner.city : "-"
-          }}</small>
-        </div>
-      </div>
-    </div>
-  </div>
+  
+
+
+
+
+
+
+<BicycleOwnerCardSmall :bicycleOwner="bicycle.owner" />
+
+
+
+
+
 
   <div class="card mt-2 rounded-4">
     <div class="card-body">

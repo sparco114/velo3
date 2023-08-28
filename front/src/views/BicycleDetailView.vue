@@ -26,7 +26,6 @@ onMounted(() => {
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
-
 </script>
 
 <template>
@@ -47,19 +46,7 @@ onMounted(() => {
     />
   </div>
 
-  
-
-
-
-
-
-
-<BicycleOwnerCardSmall :bicycleOwner="bicycle.owner" />
-
-
-
-
-
+  <BicycleOwnerCardSmall :bicycleOwner="bicycle.owner" />
 
   <div class="card mt-2 rounded-4">
     <div class="card-body">
@@ -89,7 +76,10 @@ onMounted(() => {
   </div>
 
   <div class="mt-4">
-    <BicycleLogBookSmall :logBookRecordAmount="logBookRecordAmount" :bicycleId="bikeId"/>
+    <BicycleLogBookSmall
+      :logBookRecordAmount="logBookRecordAmount"
+      :bicycleId="bikeId"
+    />
   </div>
 </template>
 
@@ -99,17 +89,6 @@ onMounted(() => {
 }
 
 .img-main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar {
-  width: 3rem;
-  height: 3rem;
-}
-
-.avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;

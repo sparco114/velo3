@@ -8,7 +8,6 @@ import { RouterLink } from "vue-router";
 const logBookRecordId = useRoute().params.id;
 const record = ref([]);
 
-
 onMounted(() => {
   let apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/`;
 
@@ -32,7 +31,7 @@ onMounted(() => {
       <RouterLink
         v-if="record.bicycle"
         class="ms-2 fs-4 text-decoration-none text-dark"
-        to="#"
+        :to="{ name: 'bicycle-detail', params: { id: record.bicycle.id } }"
       >
         <strong class="">
           {{ record.bicycle.brand }}
@@ -41,14 +40,19 @@ onMounted(() => {
         </strong>
       </RouterLink>
     </div>
-    <!-- TODO: Разобраться со стилями и добавить кнопку "в бортжурнал", 
-    т.к. при ее добавлении страница отркывается не сверху, а снизу, 
-    как будто уже прокручена до конца-->
-    <!-- <div class="">
-          <RouterLink class="ms-2 text-decoration-none text-dark " to="">
-            &lt; в бортжурнал
-          </RouterLink>
-        </div> -->
+
+    <div>
+      <RouterLink
+        v-if="record.bicycle"
+        class="ms-2 text-decoration-none text-dark"
+        :to="{
+          name: 'bicycle-logbook-full',
+          params: { id: record.bicycle.id },
+        }"
+      >
+        &lt; в бортжурнал
+      </RouterLink>
+    </div>
   </div>
 
   <div class="card shadow-sm mt-3 rounded-4">
@@ -104,7 +108,7 @@ onMounted(() => {
               </div> -->
           </div>
 
-          <div class="card-text mt-3">
+          <div class="card-text mt-4">
             {{ record.text }}
           </div>
 
@@ -114,7 +118,9 @@ onMounted(() => {
                 <span>Пробег: {{ record.mileage }} км.</span>
               </div>
               <div class="col text-muted">
-                <span v-if="record.cost">Стоимость: {{ record.cost }} руб.</span>
+                <span v-if="record.cost"
+                  >Стоимость: {{ record.cost }} руб.</span
+                >
               </div>
               <!-- пустая колонка для корректного отобраения на странице -->
               <div class="col"></div>
@@ -128,7 +134,10 @@ onMounted(() => {
     </div>
   </div>
 
-  <div class="container">
+  <!-- TODO: Разобраться со стилями и добавить кнопку "в бортжурнал", 
+    т.к. при ее добавлении страница отркывается не сверху, а снизу, 
+    как будто уже прокручена до конца-->
+  <!-- <div class="container">
     <div class="row row-cols-md-3 mt-2">
       <div class="col d-flex justify-content-center align-items-center">
         <RouterLink class="btn rounded-5 btn-lg border" to="">
@@ -141,5 +150,5 @@ onMounted(() => {
         </RouterLink>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

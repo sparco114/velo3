@@ -3,17 +3,23 @@ import UnregistredMainPage from "../components/common/UnregistredMainPage.vue";
 import BicyclesList from "../components/bicycles/BicyclesList.vue";
 import LogBookRecordsList from "../components/logbooks/LogBookRecordsList.vue";
 
-const bicycleAmount = "?random=3";
+const apiUrlBicycleList = "http://127.0.0.1:8000/api/v1/bicycles/?random=3";
 const logBookRecordAmount = "?random=7";
 </script>
 
 <template>
   <UnregistredMainPage />
   <div class="container mt-5">
-    <BicyclesList :bicycleAmount="bicycleAmount" />
+    <RouterLink class="nav-link" :to="{ name: 'bicycles-list' }">
+      <h3>Велосипеды</h3>
+    </RouterLink>
+    <BicyclesList :apiUrlBicycleList="apiUrlBicycleList" />
   </div>
 
-  <div class="container mt-5">
+  <div class="container mt-4">
+    <RouterLink class="nav-link" :to="{ name: 'logbooks-list' }">
+      <h3>Бортжурналы</h3>
+    </RouterLink>
     <LogBookRecordsList :logBookRecordAmount="logBookRecordAmount" />
   </div>
 </template>

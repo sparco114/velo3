@@ -34,7 +34,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <RouterLink class="nav-link" to="#"><h3>Бортжурналы</h3></RouterLink>
   <div v-for="record in logBookRecords" :key="record.id">
     <LogBookRecordMedium :record="record" />
   </div>

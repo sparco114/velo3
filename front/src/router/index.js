@@ -5,6 +5,9 @@ import LogBookRecordsView from '../views/LogBookRecordsView.vue'
 import BicycleDetailView from '../views/BicycleDetailView.vue'
 import LogBookRecordDetailView from '../views/LogBookRecordDetailView.vue'
 import BicycleLogBookFullView from '../views/BicycleLogBookFullView.vue'
+import ProfileDetailView from '../views/ProfileDetailView.vue'
+import UserRegistrationView from '../views/UserRegistrationView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,12 +19,12 @@ const router = createRouter({
     },    
     {
       path: '/bicycles',
-      name: 'bicycles',
+      name: 'bicycles-list',
       component: BicyclesView
     },
     {
       path: '/logbooks',
-      name: 'logbooks',
+      name: 'logbooks-list',
       component: LogBookRecordsView
     },
     {
@@ -39,7 +42,16 @@ const router = createRouter({
       name: 'bicycle-logbook-full',
       component: BicycleLogBookFullView
     },
-    
+    {
+      path: '/profiles/:id',
+      name: 'profile-detail',
+      component: ProfileDetailView
+    },
+    {
+      path: '/registration',
+      name: 'user-registration',
+      component: UserRegistrationView
+    },
 
 
     // {
@@ -50,7 +62,10 @@ const router = createRouter({
     //   // which is lazy-loaded when the route is visited.
     //   component: () => import('../views/BicyclesView.vue')
     // }
-  ]
+  ],
+  scrollBehavior() {
+    return { top: 0 }; // Прокрутка страницы в начало при каждом переходе
+  },
 })
 
 export default router

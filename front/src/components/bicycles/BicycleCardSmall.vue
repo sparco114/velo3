@@ -12,7 +12,7 @@ const props = defineProps({
     <RouterLink
       class="stretched-link"
       :to="{ name: 'bicycle-detail', params: { id: bicycle.id } }"
-    ></RouterLink>
+    />
     <img
       src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
       class="card-img-top"

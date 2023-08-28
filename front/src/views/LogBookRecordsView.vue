@@ -6,7 +6,8 @@ const logBookRecordAmount = "?ordering=-id";
 </script>
 
 <template>
-  <div class="mt-4">
+  <div class="pt-3">
+    <h3>Бортжурналы</h3>
     <LogBookRecordsList :logBookRecordAmount="logBookRecordAmount" />
   </div>
 </template>

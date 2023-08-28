@@ -12,11 +12,14 @@ function truncateText(text, maxLength) {
   }
   return text;
 }
-
-function showFullText(record) {
-  // TODO: реализовать навигацию на страницу с полным текстом, используя например Vue Router или другой метод навигации
-  console.log("Перейти к полному тексту записи:", record.text);
-}
+// TODO: можно добавить кнопку Читать далее,
+//             которая будет раскрывать полный текст и добавлять Пробег и Стоимость
+//             выше нужно будет ниже есть для эотго заготовка
+// function showFullText(record) {
+//   // return record.text
+//   // TODO: реализовать навигацию на страницу с полным текстом, используя например Vue Router или другой метод навигации
+//   console.log("Перейти к полному тексту записи:", record.text);
+// }
 </script>
 
 <template>
@@ -27,15 +30,26 @@ function showFullText(record) {
         то есть заменить col-2 на col-md-2, но нужно настроить так, чтоб при преходе 
         этой части карточки вверх, название велосипеда отражалось справа от фото велосипеда -->
         <div class="card-body velo-picture">
-          <img
-            src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-            class="card-img"
-            alt="..."
-          />
-          <div class="card-body">
-            <p class="">{{ record.bicycle.bicycle_name }}</p>
-            <small class="text-muted">{{ record.bicycle.owner }}</small>
-          </div>
+          <RouterLink
+            class="nav-link"
+            :to="{ name: 'bicycle-detail', params: { id: record.bicycle.id } }"
+          >
+            <img
+              src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+              class="card-img"
+              alt="..."
+            />
+            <div class="ms-1 mt-1">
+              <!-- TODO: можно доработать, чтоб при наведении на пользователя/велосипед 
+              появлялось краткое инфо, в том числе город -->
+              <div class="">
+                {{ record.bicycle.brand }}
+                {{ record.bicycle.model }}
+                {{ record.bicycle.bicycle_name }}
+              </div>
+            </div>
+          </RouterLink>
+          <small class="ms-1 text-muted">{{ record.bicycle.owner }}</small>
         </div>
       </div>
       <div class="col-10">
@@ -84,23 +98,31 @@ function showFullText(record) {
               />
             </div>
           </div>
+          <RouterLink
+            class="nav-link"
+            :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
+          >
+            <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
+            <p class="card-text">
+              <small class="text-muted">{{ record.category }}</small>
+            </p>
+            <div class="card-text">
+              {{ truncateText(record.text, 225) }}
 
-          <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
-          <p class="card-text">
-            <small class="text-muted">{{ record.category }}</small>
-          </p>
-          <div class="card-text">
-            {{ truncateText(record.text, 225) }}
-            <span v-if="record.text.length > 225">
+              <!-- TODO: можно добавить кнопку Читать далее, 
+            которая будет раскрывать полный текст и добавлять Пробег и Стоимость
+            выше нужно будет внести корректировки в функцию showFullText -->
+              <!-- <span v-if="record.text.length > 225">
               <RouterLink
                 class="text-nowrap"
                 to="#"
-                @click.prevent="showFullText(record)"
+                 @click="showFullText(record)"
               >
                 Читать далее
-              </RouterLink>
-            </span>
-          </div>
+              </RouterLink> 
+            </span> -->
+            </div>
+          </RouterLink>
           <p class="card-text text-end">
             <small class="text-muted">{{ record.created_at }}</small>
           </p>

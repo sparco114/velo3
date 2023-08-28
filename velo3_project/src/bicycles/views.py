@@ -3,6 +3,7 @@ from rest_framework import filters
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from src.bicycles.models import Bicycle
 from src.bicycles.permissions import IsOwner
@@ -12,7 +13,8 @@ from src.bicycles.serializers import BicycleListSerializer, BicycleDetailSeriali
 class BicycleListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BicycleListSerializer
     # http_method_names = ['get']
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['owner']
     ordering_fields = ['id']
 
     def get_queryset(self):

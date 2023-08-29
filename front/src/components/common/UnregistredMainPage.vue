@@ -16,14 +16,14 @@ import { RouterLink } from "vue-router";
     </div>
     <div class="row">
       <div class="col align-self-center">
-        <RouterLink class="btn rounded-4 btn-lg border" to="#">
+        <RouterLink class="btn rounded-4 btn-lg border" :to="{ name: 'user-login'}">
           Войти
         </RouterLink>
       </div>
     </div>
     <div class="row mt-3">
       <div class="col align-self-center">
-        <RouterLink class="btn rounded-4 btn-lg border shadow-sm" to="#">
+        <RouterLink class="btn rounded-4 btn-lg border shadow-sm" :to="{ name: 'user-registration'}">
           Завести бортжурнал
         </RouterLink>
       </div>

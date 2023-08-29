@@ -7,6 +7,7 @@ import LogBookRecordDetailView from '../views/LogBookRecordDetailView.vue'
 import BicycleLogBookFullView from '../views/BicycleLogBookFullView.vue'
 import ProfileDetailView from '../views/ProfileDetailView.vue'
 import UserRegistrationView from '../views/UserRegistrationView.vue'
+import UserLogInView from '../views/UserLogInView.vue'
 
 
 const router = createRouter({
@@ -52,7 +53,11 @@ const router = createRouter({
       name: 'user-registration',
       component: UserRegistrationView
     },
-
+    {
+      path: '/login',
+      name: 'user-login',
+      component: UserLogInView
+    },
 
     // {
     //   path: '/bicycles',

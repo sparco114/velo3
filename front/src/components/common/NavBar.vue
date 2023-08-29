@@ -45,7 +45,7 @@ const redirectToRegistration = () => {
         <button class="btn btn-success border me-2 rounded-4" @click="redirectToRegistration">
           Регистрация
         </button>
-        <RouterLink class="btn btn-success border rounded-4" to="#">
+        <RouterLink class="btn btn-success border rounded-4" :to="{ name: 'user-login'}">
           Вход
         </RouterLink>
       </div>

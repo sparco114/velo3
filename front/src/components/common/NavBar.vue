@@ -1,16 +1,27 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 
 const route = useRoute();
 const router = useRouter();
+const store = useStore();
 
+
+// TODO: подумать, нужно ли это обновление страницы
 const redirectToRegistration = () => {
-  if (route.name === 'user-registration') {
+  if (route.name === "user-registration") {
     router.go(); // Этот вызов обновит текущую страницу
   } else {
-    router.push({ name: 'user-registration' });
+    router.push({ name: "user-registration" });
   }
+};
+
+// TODO: перенести эту кнопку и логику в актуальное место на сайтеs
+const isLoggedIn = computed(() => store.state.authToken !== null);
+const logoutUser = () => {
+  store.commit("clearAuthToken");
 };
 </script>
 
@@ -41,13 +52,26 @@ const redirectToRegistration = () => {
           Бортжурналы
         </RouterLink>
       </div>
-      <div>
-        <button class="btn btn-success border me-2 rounded-4" @click="redirectToRegistration">
+
+      <div v-if="!isLoggedIn">
+        <button
+          class="btn btn-success border me-2 rounded-4"
+          @click="redirectToRegistration"
+        >
           Регистрация
         </button>
-        <RouterLink class="btn btn-success border rounded-4" :to="{ name: 'user-login'}">
+        <RouterLink
+          class="btn btn-success border rounded-4"
+          :to="{ name: 'user-login' }"
+        >
           Вход
         </RouterLink>
+      </div>
+      <div v-else>
+        <div>
+          <span> будет username </span>
+          <button class="btn btn-danger" @click="logoutUser">Выйти</button>
+        </div>
       </div>
     </div>
   </nav>

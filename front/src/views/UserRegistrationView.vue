@@ -10,6 +10,9 @@ const email = ref("");
 const password = ref("");
 const re_password = ref("");
 
+// TODO: !! добавить асинхронность и обработку ошибок
+// TODO: !! добавить валидацию полей
+// Получение заполненных регистрационных данных пользователя и отправка их с post на бэк
 const registerUser = () => {
   const userData = {
     username: username.value,
@@ -22,10 +25,13 @@ const registerUser = () => {
     .post("http://127.0.0.1:8000/api/v1/djoser_auth/users/", userData)
     .then((response) => {
       console.log("Пользователь зарегистрирован:", response.data);
+      // TODO: !! либо сделать автопереход на страницу лоигна, 
+      // либо реализовать автоматический лоигн и уже после этого переход на страницу пользователя 
       router.push({ name: "profile-detail", params: { id: response.data.id } });
     })
     .catch((error) => {
-      console.error("Ошибка при регистрации:", error);
+      // console.error("Ошибка при регистрации:", error);
+      console.error("Ошибка при регистрации----:", error.response.data);
     });
 };
 </script>

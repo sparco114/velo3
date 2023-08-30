@@ -54,6 +54,10 @@ function truncateText(text, maxLength) {
       </div>
       <div class="col-10">
         <div class="card-body">
+          <RouterLink
+            class="nav-link"
+            :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
+          >
           <div class="">
             <img
               src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
@@ -98,10 +102,7 @@ function truncateText(text, maxLength) {
               />
             </div>
           </div>
-          <RouterLink
-            class="nav-link"
-            :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
-          >
+          
             <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
             <p class="card-text">
               <small class="text-muted">{{ record.category }}</small>

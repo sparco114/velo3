@@ -2,13 +2,18 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from 'vuex';
+
 
 const router = useRouter();
+const store = useStore();
 
 const username = ref("");
 const password = ref("");
 
+
 // TODO: попробовал использовать асинхронность, можно в будущем добавть ее в остальные места
+// проверить все ли ошибки отлавливаются при входе/выходе пользователя (не только в этой функции)
 const loginUser = async () => {
   try {
     const response = await axios.post(
@@ -19,11 +24,18 @@ const loginUser = async () => {
       }
     );
     const token = response.data.auth_token; // Предполагается, что сервер возвращает токен в поле 'auth_token'
-    localStorage.setItem("authToken", token);
+    if (token) {
+      store.commit('setAuthToken', token);
+    }
+    else {
+      console.log("Токен не получен в ответе", response.data)
+    }
+    
     // TODO: на проде удалить.
     console.log("Вход выполнен:", response.data);
     router.push({ name: "home"});
   } catch (error) {
+    localStorage.removeItem('authToken')
     // TODO: на проде отправлять в лог
     console.error("Ошибка входа:", error);
   }

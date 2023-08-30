@@ -68,6 +68,8 @@ const router = createRouter({
     //   component: () => import('../views/BicyclesView.vue')
     // }
   ],
+
+// TODO: страницы не всегда открываются с начала(сверху). Попробовать решить это другим способом.
   scrollBehavior() {
     return { top: 0 }; // Прокрутка страницы в начало при каждом переходе
   },

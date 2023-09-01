@@ -56,7 +56,7 @@ const registerUser = () => {
         </div>
         <div class="col-auto">
           <span id="passwordHelpInline" class="form-text">
-            Латинские буквы и цифры.
+            Только латинские буквы и цифры.
           </span>
         </div>
       </div>

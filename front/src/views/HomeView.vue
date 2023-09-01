@@ -11,14 +11,14 @@ const logBookRecordAmount = "?random=7";
   <UnregistredMainPage />
   <div class="container mt-5">
     <RouterLink class="nav-link" :to="{ name: 'bicycles-list' }">
-      <h3>Велосипеды</h3>
+      <h3>Примеры других велосипедов</h3>
     </RouterLink>
     <BicyclesList :apiUrlBicycleList="apiUrlBicycleList" />
   </div>
 
   <div class="container mt-4">
     <RouterLink class="nav-link" :to="{ name: 'logbooks-list' }">
-      <h3>Бортжурналы</h3>
+      <h3>Примеры других бортжурналов</h3>
     </RouterLink>
     <LogBookRecordsList :logBookRecordAmount="logBookRecordAmount" />
   </div>

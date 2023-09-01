@@ -182,14 +182,16 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,  # Включает подтверждение пароля при регистрации
     'SET_PASSWORD_RETYPE': True,  # Включает подтверждение при изменении пароля
 
+    # Переопределение стандартного сериализатора в CustomTokenSerializer, чтоб он возвращал вместе с токеном user_id
+    'SERIALIZERS': {
+        'token': 'src.profiles.serializers.CustomTokenSerializer',
+    },
 }
-
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-
 
 # DEFAULT_CHARSET = 'utf-8'
 # REST_FRAMEWORK = {

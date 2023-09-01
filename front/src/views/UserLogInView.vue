@@ -2,15 +2,13 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { useStore } from 'vuex';
-
+import { useStore } from "vuex";
 
 const router = useRouter();
 const store = useStore();
 
 const username = ref("");
 const password = ref("");
-
 
 // TODO: попробовал использовать асинхронность, можно в будущем добавть ее в остальные места
 // проверить все ли ошибки отлавливаются при входе/выходе пользователя (не только в этой функции)
@@ -24,18 +22,38 @@ const loginUser = async () => {
       }
     );
     const token = response.data.auth_token; // Предполагается, что сервер возвращает токен в поле 'auth_token'
-    if (token) {
-      store.commit('setAuthToken', token);
-    }
-    else {
-      console.log("Токен не получен в ответе", response.data)
-    }
+    const userId = response.data.user_id; // Предполагается, что сервер возвращает токен в поле 'user_id'
     
+    if (token && userId) {
+      store.commit("setAuthTokenFromApi", token);
+      store.commit("setUserIdFromFromApi", userId);
+      console.log("setAuthTokenFromApi--in", token);
+      console.log("setUserIdFromFromApi--in", userId);
+
+      // Функионал вынесен в функцию fetchUserId в store.js
+      // const userResponse = await axios.get('http://127.0.0.1:8000/api/v1/djoser_auth/users/me/', {
+      //   headers: {
+      //     Authorization: `Token ${token}`
+      //   }
+      // });
+      // const userId = userResponse.data.id;
+      // store.commit('setUserId', userId);
+      // console.log('userId--in', userId)
+    } else {
+      console.log("Токен не получен в ответе", response.data);
+    }
+
     // TODO: на проде удалить.
-    console.log("Вход выполнен:", response.data);
-    router.push({ name: "home"});
+    // console.log("Вход выполнен:", response.data);
+    router.push({ name: "home" });
+
+    // TODO: сейчас при нажалтии Войти не получается с первого раза перейти в профиль,
+    // т.к. не успевает получить id юзера и записать его в store,
+    // чтоб сделать редиркет сразу, нужно чтоб Сначала приходил id, а уже после
+    // срабатывал редирект. Либо можно настроить бэк, чтоб вместе с токеном приходил user id
+    // router.push({ name: 'profile-detail', params:{ id: store.state.userId} });
   } catch (error) {
-    localStorage.removeItem('authToken')
+    store.commit("clearAuthToken");
     // TODO: на проде отправлять в лог
     console.error("Ошибка входа:", error);
   }

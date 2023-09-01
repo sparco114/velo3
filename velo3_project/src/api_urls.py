@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import include, path, re_path
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
@@ -13,8 +14,9 @@ urlpatterns = [
     # path('', include('src.logbooks.urls')),
 
     path('drf_auth/', include('rest_framework.urls')),  # стандартный вход drf (по сессиям)
-    path('djoser_auth/', include('djoser.urls')),  # регистрация djoser
+    path('djoser_auth/', include('djoser.urls')),  # регистрация djoser и остальные эндпойнты
     path('djoser_token/', include('djoser.urls.authtoken')),  # вход djoser (по токену)
+
 
     # TODO: Проверить возможность переписать это на роутеры
     path('profiles/', VeloUserViewSet.as_view({'get': 'list'})),  # просмотр
@@ -24,7 +26,7 @@ urlpatterns = [
 
     path('bicycles/', BicycleListViewSet.as_view({'get': 'list'})),  # просмотр
     path('bicycles/<int:pk>/', BicycleDetailViewSet.as_view({'get': 'retrieve'})),  # просмотр
-    path('my/bicycles/', MyBicycleListViewSet.as_view({'get': 'list'})),  # просмотр
+    path('my/bicycles/', MyBicycleListViewSet.as_view({'get': 'list'})),  # просмотр, возможно не пригодится, если не будет отдельной стрницы для моих велосипедов
     path('my/bicycles/create/', MyBicycleCreateViewSet.as_view()),  # (создание)
     path('my/bicycles/<int:pk>/', MyBicycleUpdateViewSet.as_view()),  # (редактирование, удаление)
 

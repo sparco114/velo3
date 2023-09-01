@@ -1,4 +1,7 @@
 from rest_framework.serializers import ModelSerializer
+from djoser.serializers import TokenSerializer
+from rest_framework import serializers
+# TODO: переписать два импорта serializers в один
 
 from src.profiles.models import VeloUser, VeloUserProfile
 
@@ -34,3 +37,11 @@ class VeloUserSerializer(ModelSerializer):
         instance.velouserprofile.full_clean() # проверка на соответствие choice на уровне модели
         instance.velouserprofile.save()
         return super().update(instance, validated_data)
+
+
+class CustomTokenSerializer(TokenSerializer):
+    """Переопределение стандартного сериализатора djoser, чтоб он возвращал вместе с токеном user_id"""
+    user_id = serializers.IntegerField(source='user.id')
+
+    class Meta(TokenSerializer.Meta):
+        fields = TokenSerializer.Meta.fields + ('user_id',)

@@ -95,7 +95,7 @@ onMounted(() => {
       <h3 class="col">Велосипеды пользователя</h3>
       <div class="col text-end">
         <RouterLink
-          class="btn btn-sm btn-outline-success rounded-5"
+          class="btn btn-sm btn-success rounded-5"
           v-if="userIdFromRoute == userIdFromStore"
           to="#"
           >Добавить велосипед</RouterLink

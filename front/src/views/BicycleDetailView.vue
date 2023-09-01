@@ -1,15 +1,20 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import BicycleLogBookSmall from "../components/logbooks/BicycleLogBookSmall.vue";
 import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
+import { useStore } from "vuex";
 
 const logBookRecordAmount = "?last=7";
 const bikeId = useRoute().params.id;
+const store = useStore();
+
+const userIdFromStore = computed(() => store.state.userId);
 
 const bicycle = ref([]);
+// console.log('bicycle-----', bicycle.value)
 
 onMounted(() => {
   let apiUrl = `http://127.0.0.1:8000/api/v1/bicycles/${bikeId}/`;
@@ -18,25 +23,49 @@ onMounted(() => {
     .get(apiUrl)
     .then((response) => {
       bicycle.value = response.data;
+      // Перезаписываем значение about, заменяя в нем переносы на <br>, 
+      // а пробелы на &nbsp; чтоб отображать на странице корректное форматирование
+      // TODO: можно подумать над другим способом, чтоб не перезаписывать внутри запроса
+      // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
+      bicycle.value.about = response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;");
       // TODO: убрать на проде
       console.log(response.data);
+      console.log(bicycle.value);
     })
     .catch((error) => {
       // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
+
 </script>
 
 <template>
-  <div class="pt-2">
-    <h2>
-      <strong>
-        {{ bicycle.brand }}
-        {{ bicycle.model }}
-        {{ bicycle.bicycle_name }}
-      </strong>
-    </h2>
+  <!-- TODO: много где проверяется v-if="bicycle, возможно надо вынести его на весь шаблон -->
+  <div class="pt-2 pb-2">
+    <div class="row">
+      <div class="col">
+        <h2>
+          <strong>
+            {{ bicycle.brand }}
+            {{ bicycle.model }}
+            {{ bicycle.bicycle_name }}
+          </strong>
+        </h2>
+      </div>
+
+      <div class="col">
+        <div class="col text-end" v-if="bicycle.owner">
+          <RouterLink
+            class="btn btn-success rounded-5"
+            v-if="userIdFromStore == bicycle.owner.id"
+            to="#"
+          >
+            Добавить запись
+          </RouterLink>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="img-main">
     <img
@@ -46,15 +75,26 @@ onMounted(() => {
     />
   </div>
 
+  <!-- TODO: если не будет успевать подгружаться, тогда нужен тоже v-if="bicycle.owner" -->
   <BicycleOwnerCardSmall :bicycleOwner="bicycle.owner" />
 
   <div class="card mt-2 rounded-4">
-    <div class="card-body">
-      <h5 class="card-title">О велосипеде</h5>
-      <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
-      <p class="card-text">{{ bicycle.about }}</p>
-      <div class="mt-">
-        <strong>ХАРАКТЕРИСТИКИ</strong>
+    <div class="card-body mx-3">
+      <div class="row">
+        <h5 class="col card-title">О велосипеде</h5>
+        <div class="col text-end" v-if="bicycle.owner">
+          <RouterLink
+            class="btn btn-sm btn-outline-success rounded-5"
+            v-if="userIdFromStore == bicycle.owner.id"
+            to="#"
+            >Редактировать</RouterLink
+          >
+        </div>
+      </div>
+      <div v-html="bicycle.about" class="card-text"></div>
+      <!-- <p class="card-text">{{ bicycle.about }}</p> -->
+      <div class="mt-3">
+        <strong class="fs-5">ХАРАКТЕРИСТИКИ</strong>
         <ul>
           <li v-if="bicycle.brand">Марка: {{ bicycle.brand }}</li>
           <li v-if="bicycle.model">Модель: {{ bicycle.model }}</li>
@@ -76,6 +116,30 @@ onMounted(() => {
   </div>
 
   <div class="mt-4">
+    <div class="container g-0">
+      <div class="row">
+        <div class="col">
+          <div class="d-flex">
+            <RouterLink
+              class="nav-link"
+              :to="{ name: 'bicycle-logbook-full', params: { id: bicycle.id } }"
+            >
+              <h3>Бортжурнал</h3>
+            </RouterLink>
+          </div>
+        </div>
+        <div class="col text-end" v-if="bicycle.owner">
+          <RouterLink
+            class="btn btn-success rounded-5"
+            v-if="userIdFromStore == bicycle.owner.id"
+            to="#"
+          >
+            Добавить запись
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
     <BicycleLogBookSmall
       :logBookRecordAmount="logBookRecordAmount"
       :bicycleId="bikeId"

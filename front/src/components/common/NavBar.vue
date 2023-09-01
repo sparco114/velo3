@@ -20,6 +20,7 @@ const redirectToRegistration = () => {
 // const userId = computed(() => store.state.userId);
 // TODO: перенести эту кнопку и логику в актуальное место на сайте, если потребуется
 const isLoggedIn = computed(() => store.state.authToken !== null);
+// const userId = computed(() => store.state.userId);
 const logoutUser = () => {
   store.commit("clearAuthToken");
   store.commit("clearUserId");

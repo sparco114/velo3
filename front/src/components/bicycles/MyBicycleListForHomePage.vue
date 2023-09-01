@@ -4,14 +4,14 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const props = defineProps({
-  apiUrlBicycleList: String,
+  apiUrlMyBicycleListForHomePage: String,
 });
 
 const bicycles = ref([]);
 
 onMounted(() => {
   axios
-    .get(props.apiUrlBicycleList)
+    .get(props.apiUrlMyBicycleListForHomePage)
     .then((response) => {
       bicycles.value = response.data.results;
       // TODO: убрать на проде
@@ -22,23 +22,26 @@ onMounted(() => {
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
+console.log("bicycles.value---", bicycles.value.length);
+// console.log("bicycles---", bicycles);
 </script>
 
 <template>
   <div v-if="bicycles.length > 0">
-    <div class="row row-cols-3 g-3 mt-2">
+    <div class="row justify-content-center row-cols-3 g-3 mt-2">
       <div class="col" v-for="bicycle in bicycles" :key="bicycle.id">
         <BicycleCardSmall :bicycle="bicycle" />
       </div>
     </div>
   </div>
-  <div v-else>
+  <div v-else class="">
     <div class="row justify-content-center row-cols-3 g-3 mt-2">
       <div class="card text-center mb-3 rounded-4">
         <div class="card-body">
           <p class="card-text">
-            Не добавлено ни одного велосипеда
+            Вы пока не добавили велосипед
           </p>
+          <a href="#" class="btn btn-l btn-success rounded-4">Добавить велосипед</a>
         </div>
       </div>
     </div>

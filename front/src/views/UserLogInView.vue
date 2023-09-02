@@ -9,6 +9,8 @@ const store = useStore();
 
 const username = ref("");
 const password = ref("");
+const credentialsErrorLogInMessage = ref("");
+const otherErrorLogInMessage = ref("");
 
 // TODO: попробовал использовать асинхронность, можно в будущем добавть ее в остальные места
 // проверить все ли ошибки отлавливаются при входе/выходе пользователя (не только в этой функции)
@@ -23,22 +25,16 @@ const loginUser = async () => {
     );
     const token = response.data.auth_token; // Предполагается, что сервер возвращает токен в поле 'auth_token'
     const userId = response.data.user_id; // Предполагается, что сервер возвращает токен в поле 'user_id'
-    
+    credentialsErrorLogInMessage.value = "";
+    otherErrorLogInMessage.value = "";
+
     if (token && userId) {
       store.commit("setAuthTokenFromApi", token);
       store.commit("setUserIdFromFromApi", userId);
       console.log("setAuthTokenFromApi--in", token);
       console.log("setUserIdFromFromApi--in", userId);
 
-      // Функионал вынесен в функцию fetchUserId в store.js
-      // const userResponse = await axios.get('http://127.0.0.1:8000/api/v1/djoser_auth/users/me/', {
-      //   headers: {
-      //     Authorization: `Token ${token}`
-      //   }
-      // });
-      // const userId = userResponse.data.id;
-      // store.commit('setUserId', userId);
-      // console.log('userId--in', userId)
+      
     } else {
       console.log("Токен не получен в ответе", response.data);
     }
@@ -55,7 +51,13 @@ const loginUser = async () => {
   } catch (error) {
     store.commit("clearAuthToken");
     // TODO: на проде отправлять в лог
-    console.error("Ошибка входа:", error);
+    console.error("Ошибка входа:", error.response.data.non_field_errors);
+    if (error.response.data.non_field_errors == "Unable to log in with provided credentials.") {
+      // console.log("Неверное имя пользователя или пароль")
+      otherErrorLogInMessage.value = "Неверное имя пользователя или пароль"
+    } else {
+      otherErrorLogInMessage.value = "Ошибка при входе. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку"
+    }
   }
 };
 </script>
@@ -101,6 +103,12 @@ const loginUser = async () => {
           Войти
         </button>
       </div>
+      <div class="d-flex justify-content-center">
+      <div class="text-danger mt-2">
+        {{otherErrorLogInMessage}}
+      </div>
+      </div>
+
     </form>
   </div>
 </template>

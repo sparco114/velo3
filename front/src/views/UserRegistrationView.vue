@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
+// TODO: переписать в одну переменную все значения
 const username = ref("");
 const email = ref("");
 const password = ref("");
@@ -27,7 +28,8 @@ const registerUser = () => {
       console.log("Пользователь зарегистрирован:", response.data);
       // TODO: !! либо сделать автопереход на страницу лоигна, 
       // либо реализовать автоматический лоигн и уже после этого переход на страницу пользователя 
-      router.push({ name: "profile-detail", params: { id: response.data.id } });
+      // router.push({ name: "profile-detail", params: { id: response.data.id } });
+      router.push({ name: "home" });
     })
     .catch((error) => {
       // console.error("Ошибка при регистрации:", error);
@@ -124,3 +126,6 @@ const registerUser = () => {
     </form>
   </div>
 </template>
+
+<style>
+</style>

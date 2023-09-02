@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div v-if="bicycles.length > 0">
-    <div class="row row-cols-3 g-3 mt-2">
+    <div class="row row-cols-3 g-3 mt-1">
       <div class="col" v-for="bicycle in bicycles" :key="bicycle.id">
         <BicycleCardSmall :bicycle="bicycle" />
       </div>

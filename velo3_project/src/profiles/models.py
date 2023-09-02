@@ -32,6 +32,7 @@ class VeloUserProfile(models.Model):
     velouser = models.OneToOneField(VeloUser, on_delete=models.CASCADE)
     sex = models.CharField(max_length=9, choices=GENDER, blank=True, null=True)
     birthday = models.DateField(blank=True, null=True)
+    # TODO: если переименовать phone на contacts, то нужно изменить max_length 
     phone = models.CharField(max_length=14, blank=True, null=True)
     about = models.TextField(blank=True, null=True)
 

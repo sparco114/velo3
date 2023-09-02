@@ -8,6 +8,9 @@ import BicycleLogBookFullView from '../views/BicycleLogBookFullView.vue'
 import ProfileDetailView from '../views/ProfileDetailView.vue'
 import UserRegistrationView from '../views/UserRegistrationView.vue'
 import UserLogInView from '../views/UserLogInView.vue'
+import ProfileEditView from '../views/ProfileEditView.vue'
+import BicycleCreateView from '../views/BicycleCreateView.vue'
+
 
 
 const router = createRouter({
@@ -58,7 +61,16 @@ const router = createRouter({
       name: 'user-login',
       component: UserLogInView
     },
-
+    {
+      path: '/profiles/my/edit',
+      name: 'profile-edit',
+      component: ProfileEditView
+    },
+    {
+      path: '/my/bicycles/create',
+      name: 'bicycle-create',
+      component: BicycleCreateView
+    },
     // {
     //   path: '/bicycles',
     //   name: 'bicycles',

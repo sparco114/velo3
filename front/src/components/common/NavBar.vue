@@ -38,7 +38,7 @@ const logoutUser = () => {
           class="navbar-brand navbar-button fs-4 me-5"
           :to="{ name: 'home' }"
         >
-          velo3.ru
+          сайт
         </RouterLink>
       </strong>
       <div class="me-3">

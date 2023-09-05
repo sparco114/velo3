@@ -23,11 +23,13 @@ onMounted(() => {
     .get(apiUrl)
     .then((response) => {
       bicycle.value = response.data;
-      // Перезаписываем значение about, заменяя в нем переносы на <br>, 
+      // Перезаписываем значение about, заменяя в нем переносы на <br>,
       // а пробелы на &nbsp; чтоб отображать на странице корректное форматирование
       // TODO: можно подумать над другим способом, чтоб не перезаписывать внутри запроса
       // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
-      bicycle.value.about = response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;");
+      bicycle.value.about = response.data.about
+        ? response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
+        : "";
       // TODO: убрать на проде
       console.log(response.data);
       console.log(bicycle.value);
@@ -37,7 +39,6 @@ onMounted(() => {
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
-
 </script>
 
 <template>
@@ -86,7 +87,7 @@ onMounted(() => {
           <RouterLink
             class="btn btn-sm btn-outline-success rounded-5"
             v-if="userIdFromStore == bicycle.owner.id"
-            to="#"
+            :to="{ name: 'bicycle-edit', params: { id: bicycle.id } }"
             >Редактировать</RouterLink
           >
         </div>

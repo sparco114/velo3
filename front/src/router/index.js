@@ -10,7 +10,7 @@ import UserRegistrationView from '../views/UserRegistrationView.vue'
 import UserLogInView from '../views/UserLogInView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import BicycleCreateView from '../views/BicycleCreateView.vue'
-
+import BicycleEditView from '../views/BicycleEditView.vue'
 
 
 const router = createRouter({
@@ -70,6 +70,11 @@ const router = createRouter({
       path: '/my/bicycles/create',
       name: 'bicycle-create',
       component: BicycleCreateView
+    },
+    {
+      path: '/my/bicycles/:id',
+      name: 'bicycle-edit',
+      component: BicycleEditView
     },
     // {
     //   path: '/bicycles',

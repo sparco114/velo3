@@ -5,7 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="card mt-2 rounded-4">
+  <div class="//card mt-2 rounded-4">
     <div class="row g-2">
       <div class="col-1 d-flex justify-content-center align-items-center">
         <!--TODO: доработать, чтоб на разрешении телефона эта часть с инфо о велосипеде уходила вверх-->

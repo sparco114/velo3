@@ -34,11 +34,11 @@ onMounted(() => {
       user.value = response.data;
 
       // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
-      if (user.value.velouser_profile) {
-        user.value.velouser_profile.about
-          ? response.data.velouser_profile.about.replace(/\n/g, "<br>")
-          : null;
-      }
+      // if (user.value.velouser_profile) {
+      user.value.velouser_profile.about = response.data.velouser_profile.about
+        ? response.data.velouser_profile.about.replace(/\n/g, "<br>")
+        : "";
+      // }
       // TODO: убрать на проде
       console.log(response.data);
     })

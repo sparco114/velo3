@@ -1,12 +1,16 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
+import { useStore } from "vuex";
 
+const store = useStore();
 const logBookRecordId = useRoute().params.id;
+
 const record = ref([]);
+const userIdFromStore = computed(() => store.state.userId);
 
 onMounted(() => {
   let apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/`;
@@ -16,6 +20,11 @@ onMounted(() => {
     .then((response) => {
       record.value = response.data;
       // TODO: убрать на проде
+
+      record.value.text = response.data.text
+        ? response.data.text.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
+        : "";
+
       console.log(response.data);
     })
     .catch((error) => {
@@ -23,6 +32,9 @@ onMounted(() => {
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
+
+console.log("userIdFromStore----", userIdFromStore);
+// console.log('record.creator----', record.value)
 </script>
 
 <template>
@@ -59,7 +71,25 @@ onMounted(() => {
     <div class="row g-0">
       <div class="col">
         <div class="card-body">
-          <h5 class="card-title mb-0 fs-3">{{ record.header }}</h5>
+          <div class="col text-end">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title mb-0 fs-3 text-start">{{ record.header }}</h5>
+              </div>
+              <div class="col" v-if="record.creator">
+                <RouterLink
+                  class="btn btn-sm btn-outline-success rounded-5"
+                  v-if="userIdFromStore == record.creator.id"
+                  :to="{
+                    name: 'logbook-record-edit',
+                    params: { id: logBookRecordId },
+                  }"
+                  >Редактировать</RouterLink
+                >
+              </div>
+            </div>
+          </div>
+
           <p class="card-text">
             <small class="text-muted">{{ record.category }}</small>
           </p>
@@ -108,16 +138,14 @@ onMounted(() => {
               </div> -->
           </div>
 
-          <div class="card-text mt-4">
-            {{ record.text }}
-          </div>
+          <div v-html="record.text" class="card-text mt-4"></div>
 
           <div class="container mt-3">
             <div class="row">
-              <div v-if="record.mileage" class="col text-muted">
+              <div v-if="record.mileage" class="col-3 text-muted">
                 <span>Пробег: {{ record.mileage }} км.</span>
               </div>
-              <div class="col text-muted">
+              <div class="col-4 text-muted">
                 <span v-if="record.cost"
                   >Стоимость: {{ record.cost }} руб.</span
                 >

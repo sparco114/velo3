@@ -5,22 +5,21 @@ import router from "../router";
 
 const bicycle = ref({});
 
-const successBicycleCreateMessage = ref(""); // Сообщение об успешном сохранении
+// const successBicycleCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleCreateMessage = ref(""); // Сообщение об ошибке
 
 const createNewBicycle = () => {
   const apiUrl = "http://127.0.0.1:8000/api/v1/my/bicycles/create/";
-  successBicycleCreateMessage.value = "";
+  // successBicycleCreateMessage.value = "";
   errorBicycleCreateMessage.value = "";
 
-  console.log('newBicycle-----перед отправкой', bicycle.value)
+  console.log("newBicycle-----перед отправкой", bicycle.value);
   axios
     .post(apiUrl, bicycle.value)
     .then((response) => {
       console.log("Велосипед успешно создан:", response.data);
-      // TODO: добавить редирект на страницу пользователя
       // successBicycleCreateMessage.value = "Велосипед успешно создан";
-      router.push({ name: 'bicycle-detail', params: {id: response.data.id}})
+      router.push({ name: "bicycle-detail", params: { id: response.data.id } });
       // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
     })
     .catch((error) => {
@@ -37,12 +36,12 @@ const createNewBicycle = () => {
   <div class="card mb-4 rounded-4">
     <form class="card-body ms-4 pb-4" @submit.prevent="createNewBicycle">
       <div class="row align-items-center">
-        <label for="bicycleName">Никнейм велосипеда</label>
+        <label for="bicycle_name">Никнейм велосипеда</label>
         <div class="col-5">
           <input
             v-model="bicycle.bicycle_name"
             type="text"
-            id="bicycleName"
+            id="bicycle_name"
             class="form-control"
             required
           />
@@ -52,33 +51,47 @@ const createNewBicycle = () => {
       <div class="row align-items-center">
         <label for="brand">Бренд</label>
         <div class="col-5">
-          <input v-model="bicycle.brand" type="text" id="brand" class="form-control" />
-        </div>
-      </div>
-
-      <div class="row align-items-center">
-        <label for="model">Модель</label>
-        <div class="col-5">
-          <input v-model="bicycle.model" type="text" id="model" class="form-control" />
-        </div>
-      </div>
-
-      <div class="row align-items-center">
-        <label for="releaseYear">Год выпуска</label>
-        <div class="col-5">
           <input
-            v-model="bicycle.release_year"
-            type="number"
-            id="releaseYear"
+            v-model="bicycle.brand"
+            type="text"
+            id="brand"
             class="form-control"
           />
         </div>
       </div>
 
       <div class="row align-items-center">
-        <label for="wheelSize">Размер колес</label>
+        <label for="model">Модель</label>
         <div class="col-5">
-          <select class="form-control" id="wheelSize" v-model="bicycle.wheel_size">
+          <input
+            v-model="bicycle.model"
+            type="text"
+            id="model"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <label for="release_year">Год выпуска</label>
+        <div class="col-5">
+          <input
+            v-model="bicycle.release_year"
+            type="number"
+            id="release_year"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <label for="wheel_size">Размер колес</label>
+        <div class="col-5">
+          <select
+            class="form-control"
+            id="wheel_size"
+            v-model="bicycle.wheel_size"
+          >
             TODO: не срабатывает selected
             <option value="" selected="">--------</option>
             <option value="10">10</option>
@@ -98,24 +111,24 @@ const createNewBicycle = () => {
       </div>
 
       <div class="row align-items-center">
-        <label for="frameMaterial">Материал рамы</label>
+        <label for="frame_material">Материал рамы</label>
         <div class="col-5">
           <input
             v-model="bicycle.frame_material"
             type="text"
-            id="frameMaterial"
+            id="frame_material"
             class="form-control"
           />
         </div>
       </div>
 
       <div class="row align-items-center">
-        <label for="purchaseYear">Год покупки</label>
+        <label for="purchase_year">Год покупки</label>
         <div class="col-5">
           <input
             v-model="bicycle.purchase_year"
             type="number"
-            id="purchaseYear"
+            id="purchase_year"
             class="form-control"
           />
         </div>
@@ -140,9 +153,9 @@ const createNewBicycle = () => {
               class="form-check-input"
               type="checkbox"
               v-model="bicycle.is_former"
-              id="isFormer"
+              id="is_former"
             />
-            <label class="form-check-label" for="isFormer">
+            <label class="form-check-label" for="is_former">
               Это мой бывший велосипед
             </label>
           </div>
@@ -152,7 +165,12 @@ const createNewBicycle = () => {
       <div class="row align-items-center">
         <label for="about">О велосипеде</label>
         <div class="col">
-          <textarea v-model="bicycle.about" id="about" class="form-control" />
+          <textarea
+            v-model="bicycle.about"
+            id="about"
+            class="form-control"
+            rows="8"
+          />
         </div>
       </div>
 
@@ -183,161 +201,3 @@ const createNewBicycle = () => {
     </form>
   </div>
 </template>
-
-<style>
-/* <!-- TODO: проверить классы, если ненужные для бутстрап, то удалить, тк форма взята с drf -->
-
-  <div class="ms-1 mb-2 fs-3 text-center">Новый велосипед</div>
-  <div class="card mb-4 rounded-4" >
-    <!-- TODO: разобраться до конца как работает @submit.prevent, и, возможно переписать -->
-    <form class="card-body ms-4 pb-4" @submit.prevent="createNewBicycle">
-      <div class="form-group">
-        <label for="bicycle_name" class="col-form-label"> Имя велосипеда </label>
-
-        <div class="col-9">
-          <input
-            id="bicycle_name"
-            class="form-control"
-            type="text"
-            v-model="bicycleName"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label"> Брэнд </label>
-
-        <div class="col-sm-10">
-          <input name="brand" class="form-control" type="text" value="" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label"> Модель </label>
-
-        <div class="col-sm-10">
-          <input name="model" class="form-control" type="text" value="" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label"> Год выпуска </label>
-
-        <div class="col-sm-9">
-          <input
-            name="release_year"
-            class="form-control"
-            type="number"
-            value=""
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label"> Размер колес </label>
-
-        <div class="col-sm-9">
-          <select class="form-control" name="wheel_size">
-            <option value="" selected="">--------</option>
-
-            <option value="10">10</option>
-
-            <option value="12">12</option>
-
-            <option value="14">14</option>
-
-            <option value="16">16</option>
-
-            <option value="18">18</option>
-
-            <option value="20">20</option>
-
-            <option value="24">24</option>
-
-            <option value="26">26</option>
-
-            <option value="27.5">27.5</option>
-
-            <option value="28">28</option>
-
-            <option value="29">29</option>
-
-            <option value="36">36</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label"> Материал рамы </label>
-
-        <div class="col-sm-9">
-          <input
-            name="frame_material"
-            class="form-control"
-            type="text"
-            value=""
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label"> Год покупки </label>
-
-        <div class="col-sm-9">
-          <input
-            name="purchase_year"
-            class="form-control"
-            type="number"
-            value=""
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label"> Цена </label>
-
-        <div class="col-sm-10">
-          <input name="price" class="form-control" type="number" value="" />
-        </div>
-      </div>
-
-      <!-- TODO: временно убрал, если поле в дальнейшем не потребуется, 
-          то нужно убрать его так же в апи в соответствующем эндпойнте -->
-      <!-- <div class="form-group horizontal-checkbox">
-            <label class="col-sm-2 control-label"> Is former </label>
-
-            <div class="col-sm-10">
-              <input type="checkbox" name="is_former" value="true" />
-            </div>
-          </div> -->
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label"> О велосипеде </label>
-
-        <div class="col-sm-10">
-          <textarea name="about" class="form-control"></textarea>
-        </div>
-      </div>
-
-      <div class="form-group mt-2">
-        <label class="col-sm-2 control-label"> Фотография </label>
-
-        <div class="col-sm-10">
-          <input name="pictures" type="file" value="" />
-        </div>
-      </div>
-
-      <div class="form-actions mt-3 d-flex justify-content-center">
-        <button
-          class="btn btn-success rounded-4"
-          title=""
-          data-original-title="Make a POST request on the My Bicycle Create resource"
-    
-        >
-          Создать велосипед
-        </button>
-      </div>
-    </form>
-  </div> */
-</style>

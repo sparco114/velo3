@@ -11,6 +11,8 @@ import UserLogInView from '../views/UserLogInView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import BicycleCreateView from '../views/BicycleCreateView.vue'
 import BicycleEditView from '../views/BicycleEditView.vue'
+import LogBookRecordCreate from '../views/LogBookRecordCreate.vue'
+import LogBookRecordEdit from '../views/LogBookRecordEdit.vue'
 
 
 const router = createRouter({
@@ -76,6 +78,18 @@ const router = createRouter({
       name: 'bicycle-edit',
       component: BicycleEditView
     },
+    {
+      path: '/bicycles/:id/logbook/create',
+      name: 'logbook-record-create',
+      component: LogBookRecordCreate
+    },
+    {
+      path: '/logbook/:id/edit',
+      name: 'logbook-record-edit',
+      component: LogBookRecordEdit
+    },
+    
+    
     // {
     //   path: '/bicycles',
     //   name: 'bicycles',

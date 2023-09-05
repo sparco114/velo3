@@ -38,7 +38,7 @@ const logoutUser = () => {
           class="navbar-brand navbar-button fs-4 me-5"
           :to="{ name: 'home' }"
         >
-          сайт
+          logo
         </RouterLink>
       </strong>
       <div class="me-3">

@@ -30,7 +30,7 @@ console.log('apiUrlMyBicycleListForHomePage------- from home-', apiUrlMyBicycleL
         class="img-fluid logo-velo"
       />
     </div>
-    <div class="row">
+    <div class="row text-center">
       <h1><strong>Бортовой журнал вашего велосипеда</strong></h1>
     </div>
 

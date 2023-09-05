@@ -60,7 +60,7 @@ onMounted(() => {
           <RouterLink
             class="btn btn-success rounded-5"
             v-if="userIdFromStore == bicycle.owner.id"
-            to="#"
+            :to="{ name: 'logbook-record-create', params: { id: bikeId } }"
           >
             Добавить запись
           </RouterLink>
@@ -133,7 +133,7 @@ onMounted(() => {
           <RouterLink
             class="btn btn-success rounded-5"
             v-if="userIdFromStore == bicycle.owner.id"
-            to="#"
+            :to="{ name: 'logbook-record-create', params: { id: bikeId } }"
           >
             Добавить запись
           </RouterLink>

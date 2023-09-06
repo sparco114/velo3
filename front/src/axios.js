@@ -21,7 +21,7 @@ customAxios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 404) {
-      router.push({ name: "NotFound" });
+      router.push({ name: "not-found-page" });
     }
     return Promise.reject(error);
   }

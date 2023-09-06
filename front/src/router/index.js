@@ -14,6 +14,10 @@ import BicycleEditView from '../views/BicycleEditView.vue'
 import LogBookRecordCreate from '../views/LogBookRecordCreate.vue'
 import LogBookRecordEdit from '../views/LogBookRecordEdit.vue'
 import NotFound from '../views/NotFound.vue'
+import AboutProject from '../views/AboutProject.vue'
+import Agreement from '../views/Agreement.vue'
+import ConfidentialPolicy from '../views/ConfidentialPolicy.vue'
+import Support from '../views/Support.vue'
 
 
 
@@ -91,14 +95,35 @@ const router = createRouter({
       component: LogBookRecordEdit
     },
     {
-      path: '/NotFound',
-      name: 'NotFoundPage',
+      path: '/404',
+      name: 'not-found-page',
       component: NotFound
     },
     { path: '/:pathMatch(.*)*',
-      name: 'NotFoundPath', 
+      name: 'not-found-path', 
       component: NotFound 
-    }
+    },
+    {
+      path: '/about-project',
+      name: 'about-project',
+      component: AboutProject
+    },
+    {
+      path: '/agreement',
+      name: 'agreement',
+      component: Agreement
+    },
+    {
+      path: '/confidential-policy',
+      name: 'confidential-policy',
+      component: ConfidentialPolicy
+    },
+    {
+      path: '/support',
+      name: 'support',
+      component: Support
+    },
+    
 
     
     // Динамический импорт

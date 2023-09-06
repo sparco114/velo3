@@ -1,7 +1,10 @@
 <script setup>
 import BicycleCardSmall from "./BicycleCardSmall.vue";
 import { ref, onMounted } from "vue";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../../axios.js"
+import { RouterLink } from "vue-router";
+
 
 const props = defineProps({
   apiUrlMyBicycleListForHomePage: String,
@@ -10,7 +13,7 @@ const props = defineProps({
 const bicycles = ref([]);
 
 onMounted(() => {
-  axios
+  customAxios
     .get(props.apiUrlMyBicycleListForHomePage)
     .then((response) => {
       bicycles.value = response.data.results;
@@ -41,7 +44,7 @@ console.log("bicycles.value---", bicycles.value.length);
           <p class="card-text">
             Вы пока не добавили велосипед
           </p>
-          <a href="#" class="btn btn-l btn-success rounded-4">Добавить велосипед</a>
+          <RouterLink class="btn btn-l btn-success rounded-4" :to="{ name: 'bicycle-create' }">Добавить велосипед</RouterLink>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { createStore } from "vuex";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "./axios"
+
 
 // Отправляется запрос на сервер для получения id залогиненого юзера
 // (требуется при входе юзера или при перезагрузке старницы)
@@ -50,7 +52,7 @@ const store = createStore({
   mutations: {
     setAuthTokenFromLocalStorage(state, token) {
       state.authToken = token;
-      axios.defaults.headers.common["Authorization"] = `Token ${token}`;
+      customAxios.defaults.headers.common["Authorization"] = `Token ${token}`;
       // console.log("сейчас вызовется фетч");
       // state.userId = fetchUserId(token);
       // state.userId = await fetchUserId(token);
@@ -62,7 +64,7 @@ const store = createStore({
     setAuthTokenFromApi(state, token) {
       localStorage.setItem("authToken", token);
       state.authToken = token;
-      axios.defaults.headers.common["Authorization"] = `Token ${token}`;
+      customAxios.defaults.headers.common["Authorization"] = `Token ${token}`;
       // state.userId = fetchUserId(token);
       // fetchUserId(token).then(userId => {
       //   state.userId = userId; // Присваиваем userId после разрешения промиса
@@ -72,7 +74,7 @@ const store = createStore({
     clearAuthToken(state) {
       localStorage.removeItem("authToken");
       state.authToken = null;
-      axios.defaults.headers.common["Authorization"] = null;
+      customAxios.defaults.headers.common["Authorization"] = null;
     },
     setUserIdFromLocalStorage(state, userId) {
       state.userId = userId; // Сохраняем идентификатор пользователя
@@ -82,6 +84,7 @@ const store = createStore({
       state.userId = userId; // Сохраняем идентификатор пользователя
     },
     clearUserId(state) {
+      localStorage.removeItem("userId");
       state.userId = null; // Сохраняем идентификатор пользователя
     },
   },

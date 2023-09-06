@@ -13,6 +13,8 @@ import BicycleCreateView from '../views/BicycleCreateView.vue'
 import BicycleEditView from '../views/BicycleEditView.vue'
 import LogBookRecordCreate from '../views/LogBookRecordCreate.vue'
 import LogBookRecordEdit from '../views/LogBookRecordEdit.vue'
+import NotFound from '../views/NotFound.vue'
+
 
 
 const router = createRouter({
@@ -88,8 +90,18 @@ const router = createRouter({
       name: 'logbook-record-edit',
       component: LogBookRecordEdit
     },
+    {
+      path: '/NotFound',
+      name: 'NotFoundPage',
+      component: NotFound
+    },
+    { path: '/:pathMatch(.*)*',
+      name: 'NotFoundPath', 
+      component: NotFound 
+    }
+
     
-    
+    // Динамический импорт
     // {
     //   path: '/bicycles',
     //   name: 'bicycles',

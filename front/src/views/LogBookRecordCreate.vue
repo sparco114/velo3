@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+// import axios from "axios";
 import router from "../router";
 import { useRoute } from "vue-router";
+import customAxios from "../axios.js"
+
 
 const bikeId = useRoute().params.id;
 
@@ -12,12 +14,12 @@ const logBookRecord = ref({});
 const errorRecordCreateMessage = ref(""); // Сообщение об ошибке
 
 const createNewLogBookRecord = () => {
-  const apiUrl = `http://127.0.0.1:8000/api/v1/bicycles/${bikeId}/logbook/create/`;
+  const apiUrl = `/bicycles/${bikeId}/logbook/create/`;
   //   successRecordCreateMessage.value = "";
   errorRecordCreateMessage.value = "";
 
   console.log("newBicycle-----перед отправкой", logBookRecord.value);
-  axios
+  customAxios
     .post(apiUrl, logBookRecord.value)
     .then((response) => {
       console.log("Запись успешно создана:", response.data);

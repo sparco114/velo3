@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../axios.js"
 import { useRoute } from "vue-router";
-import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
+// import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
 
@@ -13,9 +14,9 @@ const record = ref([]);
 const userIdFromStore = computed(() => store.state.userId);
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/`;
+  let apiUrl = `/logbooks/${logBookRecordId}/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       record.value = response.data;
@@ -161,6 +162,8 @@ console.log("userIdFromStore----", userIdFromStore);
       </div>
     </div>
   </div>
+<!-- TODO: !! Добавить кнопки Следующия запись и Предыдущая запись-->
+
 
   <!-- TODO: Разобраться со стилями и добавить кнопку "в бортжурнал", 
     т.к. при ее добавлении страница отркывается не сверху, а снизу, 

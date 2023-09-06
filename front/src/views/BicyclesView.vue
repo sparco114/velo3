@@ -3,7 +3,7 @@ import { RouterLink } from "vue-router";
 import BicyclesList from "../components/bicycles/BicyclesList.vue";
 
 // TODO: добавить пагинацию, и фильтр по брендам велосипеда в будущем
-const apiUrlBicycleList = "http://127.0.0.1:8000/api/v1/bicycles/?ordering=-id";
+const apiUrlBicycleList = "/bicycles/?ordering=-id";
 </script>
 
 <template>

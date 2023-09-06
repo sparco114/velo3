@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../axios.js"
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -16,8 +17,8 @@ const otherErrorLogInMessage = ref("");
 // проверить все ли ошибки отлавливаются при входе/выходе пользователя (не только в этой функции)
 const loginUser = async () => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/api/v1/djoser_token/token/login/",
+    const response = await customAxios.post(
+      "/djoser_token/token/login/",
       {
         username: username.value,
         password: password.value,
@@ -52,6 +53,8 @@ const loginUser = async () => {
     store.commit("clearAuthToken");
     // TODO: на проде отправлять в лог
     console.error("Ошибка входа:", error.response.data.non_field_errors);
+    // TODO: Можно добавить проверку логина и пароля как в UserRegistrationView, 
+    // чтоб не отправлять на сервер лишних запросов
     if (error.response.data.non_field_errors == "Unable to log in with provided credentials.") {
       // console.log("Неверное имя пользователя или пароль")
       otherErrorLogInMessage.value = "Неверное имя пользователя или пароль"

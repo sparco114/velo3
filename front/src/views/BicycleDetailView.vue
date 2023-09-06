@@ -1,11 +1,14 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
-import { useRoute } from "vue-router";
+// import router from '..router/index.js';
+// import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
 import BicycleLogBookSmall from "../components/logbooks/BicycleLogBookSmall.vue";
 import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
+import customAxios from "../axios.js"
+
 
 const logBookRecordAmount = "?last=7";
 const bikeId = useRoute().params.id;
@@ -17,9 +20,9 @@ const bicycle = ref([]);
 // console.log('bicycle-----', bicycle.value)
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/bicycles/${bikeId}/`;
+  let apiUrl = `/bicycles/${bikeId}/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       bicycle.value = response.data;
@@ -28,17 +31,21 @@ onMounted(() => {
       // TODO: можно подумать над другим способом, чтоб не перезаписывать внутри запроса
       // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
       bicycle.value.about = response.data.about
-        ? response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
-        : "";
+      ? response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
+      : "";
       // TODO: убрать на проде
       console.log(response.data);
       console.log(bicycle.value);
     })
     .catch((error) => {
+      // if (error.response.status === 404) {
+      //   console.error("Ошибка 404--- при выполнении запроса:", error);
+      //   router.push({ name: "NotFound" });
+      // }
       // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
-});
+  });
 </script>
 
 <template>

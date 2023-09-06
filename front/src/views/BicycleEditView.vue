@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+// import axios from "axios";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import router from "../router";
+import customAxios from "../axios.js"
+
 
 const store = useStore();
 const bikeId = useRoute().params.id;
@@ -13,9 +15,9 @@ const userIdFromStore = computed(() => store.state.userId);
 const bicycle = ref({});
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/my/bicycles/${bikeId}/`;
+  let apiUrl = `/my/bicycles/${bikeId}/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       bicycle.value = response.data;
@@ -38,12 +40,12 @@ const successBicycleUpdateMessage = ref(""); // Сообщение об успе
 const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
 
 const updateMyBicycle = () => {
-  const apiUrl = `http://127.0.0.1:8000/api/v1/my/bicycles/${bikeId}/`;
+  const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
 
   console.log("newBicycle-----перед отправкой", bicycle.value);
-  axios
+  customAxios
     .patch(apiUrl, bicycle.value)
     .then((response) => {
       console.log("Информация о велосипеде успешно обновлена:", response.data);
@@ -67,12 +69,12 @@ function confirmDelete() {
 }
 
 const deleteMyBicycle = () => {
-  const apiUrl = `http://127.0.0.1:8000/api/v1/my/bicycles/${bikeId}/`;
+  const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
 
   //   console.log("newBicycle-----перед отправкой", bicycle.value);
-  axios
+  customAxios
     .delete(apiUrl)
     .then((response) => {
       console.log("Информация о велосипеде успешно удалена:", response.data);
@@ -250,11 +252,11 @@ const deleteMyBicycle = () => {
         </button>
       </div>
       <div class="text-center mt-2">
-        <!-- <span
+        <span
           v-if="successBicycleUpdateMessage"
           class="text-success col-10 ml-2 my-2"
           >{{ successBicycleUpdateMessage }}</span
-        > -->
+        >
         <span
           v-if="errorBicycleUpdateMessage"
           class="text-danger col-10 ml-2"

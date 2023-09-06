@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+// import axios from "axios";
 import router from "../router";
+import customAxios from "../axios.js"
+
 
 const bicycle = ref({});
 
@@ -9,12 +11,12 @@ const bicycle = ref({});
 const errorBicycleCreateMessage = ref(""); // Сообщение об ошибке
 
 const createNewBicycle = () => {
-  const apiUrl = "http://127.0.0.1:8000/api/v1/my/bicycles/create/";
+  const apiUrl = "/my/bicycles/create/";
   // successBicycleCreateMessage.value = "";
   errorBicycleCreateMessage.value = "";
 
   console.log("newBicycle-----перед отправкой", bicycle.value);
-  axios
+  customAxios
     .post(apiUrl, bicycle.value)
     .then((response) => {
       console.log("Велосипед успешно создан:", response.data);

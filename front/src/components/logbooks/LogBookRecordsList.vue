@@ -1,5 +1,6 @@
 <script setup>
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../../axios.js"
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 import LogBookRecordMedium from "./LogBookRecordMedium.vue";
@@ -11,7 +12,7 @@ const props = defineProps({
 const logBookRecords = ref([]);
 
 onMounted(() => {
-  let apiUrl = "http://127.0.0.1:8000/api/v1/logbooks/";
+  let apiUrl = "/logbooks/";
 
   if (props.logBookRecordAmount) {
     apiUrl += props.logBookRecordAmount;
@@ -19,7 +20,7 @@ onMounted(() => {
     apiUrl += "?last=5";
   }
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       logBookRecords.value = response.data.results;

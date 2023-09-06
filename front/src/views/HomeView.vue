@@ -9,14 +9,14 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const logBookRecordAmount = "?random=7";
-const apiUrlBicycleList = "http://127.0.0.1:8000/api/v1/bicycles/?random=3";
+const apiUrlBicycleList = "/bicycles/?random=3";
 
 const userIdInStore = computed(() => store.state.userId);
 console.log('userId------from Home - ', userIdInStore)
 console.log('store.state.userId------from Home - ', store.state.userId)
 let apiUrlMyBicycleListForHomePage = null;
 if (userIdInStore) {
-  apiUrlMyBicycleListForHomePage = `http://127.0.0.1:8000/api/v1/bicycles/?owner=${userIdInStore.value}`;
+  apiUrlMyBicycleListForHomePage = `/bicycles/?owner=${userIdInStore.value}`;
 }
 console.log('apiUrlMyBicycleListForHomePage------- from home-', apiUrlMyBicycleListForHomePage)
 </script>

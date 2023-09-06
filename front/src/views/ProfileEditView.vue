@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+import customAxios from "../axios.js"
+
+// import axios from "axios";
 // import { RouterLink } from "vue-router";
 // import { useStore } from "vuex";
 // import { useRoute } from "vue-router";
@@ -17,9 +19,9 @@ import axios from "axios";
 const user = ref([]);
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/my/profile/`;
+  let apiUrl = `/my/profile/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       user.value = response.data;
@@ -36,11 +38,11 @@ const successMessage = ref(""); // Сообщение об успешном со
 const errorMessage = ref(""); // Сообщение об ошибке
 
 const updateUserProfile = () => {
-  const apiUrl = "http://127.0.0.1:8000/api/v1/my/profile/";
+  const apiUrl = "/my/profile/";
   successMessage.value = "";
   errorMessage.value = "";
 
-  axios
+  customAxios
     .patch(apiUrl, user.value) // Отправляем данные пользователя
     .then((response) => {
       console.log("Данные успешно сохранены:", response.data);

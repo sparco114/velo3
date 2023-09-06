@@ -1,7 +1,9 @@
 <script setup>
 import BicycleCardSmall from "./BicycleCardSmall.vue";
 import { ref, onMounted } from "vue";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../../axios.js"
+
 
 const props = defineProps({
   apiUrlBicycleList: String,
@@ -10,7 +12,7 @@ const props = defineProps({
 const bicycles = ref([]);
 
 onMounted(() => {
-  axios
+  customAxios
     .get(props.apiUrlBicycleList)
     .then((response) => {
       bicycles.value = response.data.results;

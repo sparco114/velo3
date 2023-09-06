@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+// import axios from "axios";
+import customAxios from "../axios.js"
 import router from "../router";
 import { useRoute } from "vue-router";
 
@@ -9,9 +10,9 @@ const logBookRecordId = useRoute().params.id;
 const logBookRecord = ref({});
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/`;
+  let apiUrl = `/logbooks/${logBookRecordId}/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       logBookRecord.value = response.data;
@@ -33,12 +34,12 @@ onMounted(() => {
 const errorRecordUpdateMessage = ref(""); // Сообщение об ошибке
 
 const updateLogBookRecord = () => {
-  const apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/update/`;
+  const apiUrl = `/logbooks/${logBookRecordId}/update/`;
   //   successRecordCreateMessage.value = "";
   errorRecordUpdateMessage.value = "";
 
   console.log("newBicycle-----перед отправкой", logBookRecord.value);
-  axios
+  customAxios
     .patch(apiUrl, logBookRecord.value)
     .then((response) => {
       console.log("Запись успешно создана:", response.data);
@@ -64,12 +65,12 @@ function confirmDeleteRecord() {
 }
 
 const deleteLogBookRecord = () => {
-  const apiUrl = `http://127.0.0.1:8000/api/v1/logbooks/${logBookRecordId}/update/`;
+  const apiUrl = `/logbooks/${logBookRecordId}/update/`;
   //   successBicycleUpdateMessage.value = "";
   errorRecordUpdateMessage.value = "";
 
   //   console.log("newBicycle-----перед отправкой", bicycle.value);
-  axios
+  customAxios
     .delete(apiUrl)
     .then((response) => {
       console.log("Запист успешно удалена:", response.data);
@@ -195,7 +196,7 @@ const deleteLogBookRecord = () => {
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">
-          Создать запись
+          Сохранить изменения
         </button>
       </div>
       <div class="text-center mt-2">

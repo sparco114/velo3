@@ -2,13 +2,28 @@
 import { ref, onMounted, computed } from "vue";
 // import axios from "axios";
 import router from "../router";
-import customAxios from "../axios.js"
-
+import customAxios from "../axios.js";
 
 const bicycle = ref({});
 
 // const successBicycleCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleCreateMessage = ref(""); // Сообщение об ошибке
+
+// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
+//  - добавить апи для загрузки фото
+//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
+//    адрес этого фото, и записывать его в поле pictures объекта bicycle.
+// Добавляем файл в запрос
+const handleBicycleCreatePictureUpload = (event) => {
+  const file = event.target.files[0];
+  const maxSize = 1 * 1024 * 1024; // 1 МБ в байтах
+  if (file && file.size > maxSize) {
+    alert("Файл слишком большой. Максимальный размер файла: 1 МБ.");
+    event.target.value = ""; // Очистить выбранный файл
+    return;
+  }
+  bicycle.value.pictures = file;
+};
 
 const createNewBicycle = () => {
   const apiUrl = "/my/bicycles/create/";
@@ -17,7 +32,9 @@ const createNewBicycle = () => {
 
   console.log("newBicycle-----перед отправкой", bicycle.value);
   customAxios
-    .post(apiUrl, bicycle.value)
+    .post(apiUrl, bicycle.value, {
+      headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+    })
     .then((response) => {
       console.log("Велосипед успешно создан:", response.data);
       // successBicycleCreateMessage.value = "Велосипед успешно создан";
@@ -177,11 +194,33 @@ const createNewBicycle = () => {
       </div>
 
       <div class="row align-items-center mt-2">
-        <label>Фотография</label>
+        <label
+          >Фотография<span class="text-secondary"
+            >(максимальный размер файла: 1 МБ.)</span
+          ></label
+        >
         <div class="col">
-          <input name="pictures" type="file" value="" />
+          <input
+            name="pictures"
+            type="file"
+            accept="image/*"
+            @change="handleBicycleCreatePictureUpload"
+          />
         </div>
       </div>
+
+
+
+
+
+
+
+
+     
+
+
+
+
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">

@@ -9,6 +9,14 @@ def bicycle_pictures_directory_path(instance, filename):
     current_datetime = str(timezone.now().replace(microsecond=0))
     file_format = filename.split('.')[-1]
     full_filename = f'{current_datetime}.{file_format}'
+    """
+    TODO: !! при добавлении фото существующему вело все работает корректно, 
+    но при создании нового велосипеда id еще не известен, поэтому сохраняется в id_None.
+    Нужно изменить путь, чтоб вместо id велоиспеда в названии указывать id пользователя
+    (решить как достать id пользователя)
+    В будущем нужно создать в форме (при создании или редактировании велосипеда/профиля/записи) 
+    на сайте отдельную кнопку Загрузить фото, которая будет загружать фото до нажатия кнопки Сохранить.
+    """
     return f'bicycles/id_{instance.id}/{full_filename}'
 
 

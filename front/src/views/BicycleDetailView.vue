@@ -7,8 +7,7 @@ import BicycleLogBookSmall from "../components/logbooks/BicycleLogBookSmall.vue"
 import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
-import customAxios from "../axios.js"
-
+import customAxios from "../axios.js";
 
 const logBookRecordAmount = "?last=7";
 const bikeId = useRoute().params.id;
@@ -31,8 +30,8 @@ onMounted(() => {
       // TODO: можно подумать над другим способом, чтоб не перезаписывать внутри запроса
       // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
       bicycle.value.about = response.data.about
-      ? response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
-      : "";
+        ? response.data.about.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
+        : "";
       // TODO: убрать на проде
       console.log(response.data);
       console.log(bicycle.value);
@@ -45,7 +44,7 @@ onMounted(() => {
       // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
-  });
+});
 </script>
 
 <template>
@@ -76,11 +75,9 @@ onMounted(() => {
     </div>
   </div>
   <div class="img-main">
-    <img
-      src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-      class="rounded-4 shadow-sm"
-      alt="..."
-    />
+    <!-- src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg" -->
+    <img :src="bicycle.pictures" class="rounded-4 shadow-sm" alt="..." />
+    <div>{{ bicycle.pictures }}</div>
   </div>
 
   <!-- TODO: если не будет успевать подгружаться, тогда нужен тоже v-if="bicycle.owner" -->

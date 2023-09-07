@@ -85,7 +85,7 @@ const logoutUser = () => {
           :to="{ name: 'profile-detail', params: { id: store.state.userId } }"
         >
           Мой профиль
-          {{ store.state.userId }}
+          <!-- {{ store.state.userId }} -->
         </RouterLink>
         <!-- <RouterLink
         v-else

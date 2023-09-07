@@ -4,49 +4,70 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import router from "../router";
-import customAxios from "../axios.js"
-
+import customAxios from "../axios.js";
 
 const store = useStore();
 const bikeId = useRoute().params.id;
 
 const userIdFromStore = computed(() => store.state.userId);
 
+// TODO: Разобраться, нужно ли здесь использовать FormData вместо этого ref, 
+// для формирования ответа multipart/form-data
 const bicycle = ref({});
+
 
 onMounted(() => {
   let apiUrl = `/my/bicycles/${bikeId}/`;
-
+  
   customAxios
-    .get(apiUrl)
-    .then((response) => {
-      bicycle.value = response.data;
-      // Перезаписываем значение about, заменяя в нем переносы на <br>,
-      // а пробелы на &nbsp; чтоб отображать на странице корректное форматирование
-      // TODO: можно подумать над другим способом, чтоб не перезаписывать внутри запроса
-      // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
-      bicycle.value.about = response.data.about; //.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;");
-      // TODO: убрать на проде
-      console.log(response.data);
-      console.log(bicycle.value);
-    })
-    .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
-      console.error("Ошибка при выполнении запроса:", error);
-    });
+  .get(apiUrl)
+  .then((response) => {
+    bicycle.value = response.data;
+    console.log(response.data);
+    console.log(bicycle.value);
+  })
+  .catch((error) => {
+    // TODO: изменить на запись в лог и вывод текста пользователю
+    console.error("Ошибка при выполнении запроса:", error);
+  });
 });
 
 const successBicycleUpdateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
 
+
+// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
+//  - добавить апи для загрузки фото
+//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
+//    адрес этого фото, и записывать его в поле pictures объекта bicycle.
+// Добавляем файл в запрос
+const handleBicycleUpdatePictureUpload = (event) => {
+  const file = event.target.files[0];
+  const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
+  if (file && file.size > maxSize) {
+    alert('Файл слишком большой. Максимальный размер файла: 3 МБ.');
+    event.target.value = ''; // Очистить выбранный файл
+    return;
+  }
+  bicycle.value.pictures = file;
+};
+
+// TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
+const clearPicture = () => {
+  bicycle.value.pictures = ''; 
+  console.log('clearPicture------bicycle.value.pictures', bicycle.value.pictures)
+};
+
 const updateMyBicycle = () => {
   const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
-
+  
   console.log("newBicycle-----перед отправкой", bicycle.value);
   customAxios
-    .patch(apiUrl, bicycle.value)
+  .put(apiUrl, bicycle.value, {
+    headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+  })
     .then((response) => {
       console.log("Информация о велосипеде успешно обновлена:", response.data);
       // TODO: добавить редирект на страницу пользователя
@@ -100,6 +121,7 @@ const deleteMyBicycle = () => {
   <div class="ms-1 mb-2 fs-3 text-center">Редактировать велосипед</div>
   <div class="card mb-4 rounded-4">
     <form class="card-body ms-4 pb-4" @submit.prevent="updateMyBicycle">
+      <!-- <form class="card-body ms-4 pb-4" enctype="multipart/form-data" @submit.prevent="updateMyBicycle"> -->
       <div class="row align-items-center">
         <label for="bicycleName">Никнейм велосипеда</label>
         <div class="col-5">
@@ -239,12 +261,55 @@ const deleteMyBicycle = () => {
         </div>
       </div>
 
-      <div class="row align-items-center mt-2">
-        <label>Фотография</label>
+      <!-- <div class="row align-items-center mt-2">
+        <label>Фотография <span class="text-secondary">(максимальный размер файла: 3 МБ.)</span></label>
         <div class="col">
-          <input name="pictures" type="file" value="" />
+          <input
+            name="pictures"
+            type="file"
+            accept="image/*"
+            @change="handleBicycleUpdatePictureUpload"
+          />
+        </div>
+      </div> -->
+
+
+
+
+
+
+ <!-- Если есть изображение, показываем его и кнопку удаления -->
+ <div class="row align-items-center mt-2" v-if="bicycle.pictures">
+        <div class="col">
+          <img :src="bicycle.pictures" alt="Велосипед" class="rounded-4" />
+          <!-- <img :src=" URL.createObjectURL(bicycle.pictures)" alt="Велосипед" class="rounded-4" /> -->
+
+        </div>
+        <div class="col">
+          <button @click="clearPicture" class="btn btn-danger">Удалить</button>
         </div>
       </div>
+
+      <!-- Если нет изображения, показываем кнопку выбора файла -->
+      <div class="row align-items-center mt-2" v-else>
+        <label>Фотография<span class="text-secondary">(максимальный размер файла: 3 МБ.)</span></label>
+        <div class="col">
+          <input
+            name="pictures"
+            type="file"
+            accept="image/*"
+            @change="handleBicycleUpdatePictureUpload"
+          />
+        </div>
+      </div>
+
+
+
+
+
+
+
+
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">

@@ -24,6 +24,7 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+media/
 
 # Editor directories and files
 .vscode/*

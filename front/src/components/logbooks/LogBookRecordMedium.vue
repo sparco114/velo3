@@ -1,6 +1,8 @@
 <script setup>
 import { defineProps } from "vue";
 import { RouterLink } from "vue-router";
+import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../../constants.js";
+
 
 const props = defineProps({
   record: Object,
@@ -34,11 +36,14 @@ function truncateText(text, maxLength) {
             class="nav-link"
             :to="{ name: 'bicycle-detail', params: { id: record.bicycle.id } }"
           >
-            <img
-              src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-              class="card-img"
-              alt="..."
-            />
+            <div class="img-wrapper-bike-main-picture">
+              <img
+                :src="record.bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+                class="card-img"
+                alt="фото велосипеда"
+              />
+            </div>
+
             <div class="ms-1 mt-1">
               <!-- TODO: можно доработать, чтоб при наведении на пользователя/велосипед 
               появлялось краткое инфо, в том числе город -->
@@ -58,51 +63,51 @@ function truncateText(text, maxLength) {
             class="nav-link"
             :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
           >
-          <div class="">
-            <img
-              src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
-              class="card-img rounded-3"
-            />
-          </div>
+            <div class="">
+              <img
+                src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
+                class="card-img rounded-3"
+              />
+            </div>
 
-          <div class="row row-cols-md-5 g-1 mt-0">
-            <div class="col img-small">
-              <img
-                src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
+            <div class="row row-cols-md-5 g-1 mt-0">
+              <div class="col img-small">
+                <img
+                  src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div>
+              <div class="col img-small">
+                <img
+                  src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div>
+              <div class="col img-small">
+                <img
+                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div>
+              <div class="col img-small">
+                <img
+                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div>
+              <div class="col img-small">
+                <img
+                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
+                  class="card-img-top rounded-3"
+                  alt="..."
+                />
+              </div>
             </div>
-            <div class="col img-small">
-              <img
-                src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
-              <img
-                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
-              <img
-                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
-              <img
-                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-          </div>
-          
+
             <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
             <p class="card-text">
               <small class="text-muted">{{ record.category }}</small>

@@ -11,30 +11,28 @@ const bikeId = useRoute().params.id;
 
 const userIdFromStore = computed(() => store.state.userId);
 
-// TODO: Разобраться, нужно ли здесь использовать FormData вместо этого ref, 
+// TODO: Разобраться, нужно ли здесь использовать FormData вместо этого ref,
 // для формирования ответа multipart/form-data
 const bicycle = ref({});
 
-
 onMounted(() => {
   let apiUrl = `/my/bicycles/${bikeId}/`;
-  
+
   customAxios
-  .get(apiUrl)
-  .then((response) => {
-    bicycle.value = response.data;
-    console.log(response.data);
-    console.log(bicycle.value);
-  })
-  .catch((error) => {
-    // TODO: изменить на запись в лог и вывод текста пользователю
-    console.error("Ошибка при выполнении запроса:", error);
-  });
+    .get(apiUrl)
+    .then((response) => {
+      bicycle.value = response.data;
+      console.log(response.data);
+      console.log(bicycle.value);
+    })
+    .catch((error) => {
+      // TODO: изменить на запись в лог и вывод текста пользователю
+      console.error("Ошибка при выполнении запроса:", error);
+    });
 });
 
 const successBicycleUpdateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
-
 
 // TODO: !! Разобраться нужно ли переписать функционал следующим образом:
 //  - добавить апи для загрузки фото
@@ -45,29 +43,79 @@ const handleBicycleUpdatePictureUpload = (event) => {
   const file = event.target.files[0];
   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
   if (file && file.size > maxSize) {
-    alert('Файл слишком большой. Максимальный размер файла: 3 МБ.');
-    event.target.value = ''; // Очистить выбранный файл
+    alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+    event.target.value = ""; // Очистить выбранный файл
     return;
   }
   bicycle.value.pictures = file;
 };
 
+
+
+
+
+
+
+
+ // Создайте временную переменную для отправки данных на сервер
+const bicycleForUpdate = computed(() => {
+  const updatedBicycle = { ...bicycle.value };
+  if (updatedBicycle.pictures instanceof File) {
+
+  } else {
+    // updatedBicycle.pictures = null;
+    console.log('сработал-------delete updatedBicycle.pictures')
+    delete updatedBicycle.pictures;
+  }
+  return updatedBicycle;
+});
+
+
+
+
+
 // TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
 const clearPicture = () => {
-  bicycle.value.pictures = ''; 
-  console.log('clearPicture------bicycle.value.pictures', bicycle.value.pictures)
+  bicycleForUpdate.value.pictures = '';
+  // bicycle.value.pictures = '';
+  console.log('сработал-------clearPicture')
+
+  console.log(
+    "clearPicture------bicycleForUpdate.value.pictures",
+    bicycleForUpdate.value.pictures
+  );
 };
 
 const updateMyBicycle = () => {
+  console.log('сработал updateMyBicycle')
   const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
+
   
-  console.log("newBicycle-----перед отправкой", bicycle.value);
+  
+  const isPictureFile = bicycle.value.pictures instanceof File;
+  console.log("isPictureFile-----", isPictureFile);
+  
+
+// if (isPictureFile) {
+//   // Если pictures - это файл, устанавливаем значение в null
+//   bicycle.value.pictures = null;
+// } else {
+//     // Если pictures - это не файл, устанавливаем значение в пустую строку
+//     bicycle.value.pictures = "";
+//   }
+
+  
+  const headers = isPictureFile
+  ? { "Content-Type": "multipart/form-data" }
+  : { "Content-Type": "multipart/form-data" };
+  console.log("headers-----", headers);
+  
+  console.log("bicycle.value-----перед отправкой", bicycle.value);
+  console.log("bicycleForUpdate.value-----перед отправкой", bicycleForUpdate.value);
   customAxios
-  .put(apiUrl, bicycle.value, {
-    headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
-  })
+    .put(apiUrl, bicycleForUpdate.value, { headers })
     .then((response) => {
       console.log("Информация о велосипеде успешно обновлена:", response.data);
       // TODO: добавить редирект на страницу пользователя
@@ -76,7 +124,7 @@ const updateMyBicycle = () => {
       // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
     })
     .catch((error) => {
-      console.error("Ошибка при создании велосипеда:", error);
+      console.error("Ошибка при редактировании велосипеда:", error);
       errorBicycleUpdateMessage.value =
         "Произошла ошибка при сохранении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
       // TODO: Можно добавить вывод сообщения об ошибке пользователю
@@ -120,8 +168,12 @@ const deleteMyBicycle = () => {
 <template>
   <div class="ms-1 mb-2 fs-3 text-center">Редактировать велосипед</div>
   <div class="card mb-4 rounded-4">
-    <form class="card-body ms-4 pb-4" @submit.prevent="updateMyBicycle">
-      <!-- <form class="card-body ms-4 pb-4" enctype="multipart/form-data" @submit.prevent="updateMyBicycle"> -->
+    <!-- <form class="card-body ms-4 pb-4" @submit.prevent="updateMyBicycle"> -->
+    <form
+      class="card-body ms-4 pb-4"
+      enctype="multipart/form-data"
+      @submit.prevent="updateMyBicycle"
+    >
       <div class="row align-items-center">
         <label for="bicycleName">Никнейм велосипеда</label>
         <div class="col-5">
@@ -273,43 +325,40 @@ const deleteMyBicycle = () => {
         </div>
       </div> -->
 
-
-
-
-
-
- <!-- Если есть изображение, показываем его и кнопку удаления -->
- <div class="row align-items-center mt-2" v-if="bicycle.pictures">
-        <div class="col">
-          <img :src="bicycle.pictures" alt="Велосипед" class="rounded-4" />
-          <!-- <img :src=" URL.createObjectURL(bicycle.pictures)" alt="Велосипед" class="rounded-4" /> -->
-
+      <!-- Если есть изображение, показываем его и кнопку удаления -->
+      <div class="row align-items-center mt-2" v-if="bicycle.pictures">
+        <div class="col-3">
+          <div class="img-wrapper-bike-main-picture">
+            <img :src="bicycle.pictures" alt="Велосипед" class="rounded-4" />
+            <!-- <img :src=" URL.createObjectURL(bicycle.pictures)" alt="Велосипед" class="rounded-4" /> -->
+          </div>
         </div>
         <div class="col">
-          <button @click="clearPicture" class="btn btn-danger">Удалить</button>
+          <button
+            @click.prevent="clearPicture"
+            class="btn btn-sm btn-outline-danger rounded-4"
+          >
+            Удалить фото
+          </button>
         </div>
       </div>
 
       <!-- Если нет изображения, показываем кнопку выбора файла -->
       <div class="row align-items-center mt-2" v-else>
-        <label>Фотография<span class="text-secondary">(максимальный размер файла: 3 МБ.)</span></label>
+        <label
+          >Фотография<span class="text-secondary"
+            >(максимальный размер файла: 3 МБ.)</span
+          ></label
+        >
         <div class="col">
           <input
-            name="pictures"
+            name="main_pict"
             type="file"
             accept="image/*"
             @change="handleBicycleUpdatePictureUpload"
           />
         </div>
       </div>
-
-
-
-
-
-
-
-
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">
@@ -320,8 +369,9 @@ const deleteMyBicycle = () => {
         <span
           v-if="successBicycleUpdateMessage"
           class="text-success col-10 ml-2 my-2"
-          >{{ successBicycleUpdateMessage }}</span
         >
+          {{ successBicycleUpdateMessage }}. Вернуться к велосипеду
+        </span>
         <span
           v-if="errorBicycleUpdateMessage"
           class="text-danger col-10 ml-2"
@@ -331,7 +381,7 @@ const deleteMyBicycle = () => {
     </form>
   </div>
   <div class="row">
-    <div class="col text-end">
+    <div class="col text-en">
       <button
         @click="confirmDelete"
         class="btn btn-sm rounded-5 border btn-outline-danger"

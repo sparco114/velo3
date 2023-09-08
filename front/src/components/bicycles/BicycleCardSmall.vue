@@ -1,6 +1,8 @@
 <script setup>
 import { defineProps } from "vue";
 import { RouterLink } from "vue-router";
+import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../../constants.js";
+
 
 const props = defineProps({
   bicycle: Object,
@@ -13,11 +15,16 @@ const props = defineProps({
       class="stretched-link"
       :to="{ name: 'bicycle-detail', params: { id: bicycle.id } }"
     />
-    <img
-      src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-      class="card-img-top"
-      alt="фото_велосипеда"
-    />
+
+    <div class="img-wrapper-bike-main-picture">
+      <img
+        :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+        class="card-img-top"
+        alt="фото велосипеда"
+      />
+
+    </div>
+
     <div class="card-body d-flex flex-column">
       <h5 class="fs-5">
         {{ bicycle.brand }}

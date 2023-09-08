@@ -8,6 +8,7 @@ import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
 import customAxios from "../axios.js";
+import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../constants.js";
 
 const logBookRecordAmount = "?last=7";
 const bikeId = useRoute().params.id;
@@ -74,12 +75,14 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div class="img-main">
+  <div class="img-wrapper-bike-main-picture">
     <!-- src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg" -->
-    <img :src="bicycle.pictures" class="rounded-4 shadow-sm" alt="..." />
-    <div>{{ bicycle.pictures }}</div>
+    <img
+      :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+      class="rounded-4 shadow-sm"
+      alt="фото велосипеда"
+    />
   </div>
-
   <!-- TODO: если не будет успевать подгружаться, тогда нужен тоже v-if="bicycle.owner" -->
   <BicycleOwnerCardSmall :bicycleOwner="bicycle.owner" />
 
@@ -151,18 +154,6 @@ onMounted(() => {
     />
   </div>
 </template>
-
-<style>
-.img-main {
-  height: 30rem;
-}
-
-.img-main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-</style>
 
 <!-- TODO: в будущем доработать, чтоб можно было загружать более одного фото для велосипеда 
   и настроить этот слайдер с фото под ним, чтоб можно было листать. -->

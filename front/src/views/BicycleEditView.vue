@@ -33,6 +33,8 @@ onMounted(() => {
 
 const successBicycleUpdateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
+const clearMessage = ref("");
+
 
 // TODO: !! Разобраться нужно ли переписать функционал следующим образом:
 //  - добавить апи для загрузки фото
@@ -73,13 +75,13 @@ const bicycleForUpdate = computed(() => {
 
 
 
-
 // TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
 const clearPicture = () => {
   bicycleForUpdate.value.pictures = '';
   // bicycle.value.pictures = '';
   console.log('сработал-------clearPicture')
-
+  clearMessage.value = 'Фото будет удалено при Сохранения измений';
+  console.log('clearMessage-----', clearMessage)
   console.log(
     "clearPicture------bicycleForUpdate.value.pictures",
     bicycleForUpdate.value.pictures
@@ -91,6 +93,7 @@ const updateMyBicycle = () => {
   const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
+  clearMessage.value = "";
 
   
   
@@ -114,11 +117,13 @@ const updateMyBicycle = () => {
   
   console.log("bicycle.value-----перед отправкой", bicycle.value);
   console.log("bicycleForUpdate.value-----перед отправкой", bicycleForUpdate.value);
+
   customAxios
     .put(apiUrl, bicycleForUpdate.value, { headers })
     .then((response) => {
       console.log("Информация о велосипеде успешно обновлена:", response.data);
       // TODO: добавить редирект на страницу пользователя
+      bicycle.value.pictures = response.data.pictures;
       successBicycleUpdateMessage.value =
         "Информация о велосипеде успешно обновлена";
       // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
@@ -329,7 +334,7 @@ const deleteMyBicycle = () => {
       <div class="row align-items-center mt-2" v-if="bicycle.pictures">
         <div class="col-3">
           <div class="img-wrapper-bike-main-picture">
-            <img :src="bicycle.pictures" alt="Велосипед" class="rounded-4" />
+            <img :src="bicycle.pictures" alt="Фото будет загружено после Сохранения изменений" class="rounded-4" />
             <!-- <img :src=" URL.createObjectURL(bicycle.pictures)" alt="Велосипед" class="rounded-4" /> -->
           </div>
         </div>
@@ -340,6 +345,7 @@ const deleteMyBicycle = () => {
           >
             Удалить фото
           </button>
+          <div v-if="clearMessage">{{ clearMessage }}</div>
         </div>
       </div>
 

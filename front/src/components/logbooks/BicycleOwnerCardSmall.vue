@@ -1,4 +1,6 @@
 <script setup>
+import { DEFAULT_USER_AVATAR_IMAGE_URL } from "../../constants.js";
+
 const props = defineProps({
   bicycleOwner: Object,
 });
@@ -15,7 +17,7 @@ const props = defineProps({
             :to="{ name: 'profile-detail', params: { id: bicycleOwner.id } }"
           >
             <img
-              src="https://static.toiimg.com/photo/msid-51359359/51359359.jpg"
+              :src="bicycleOwner.avatar || DEFAULT_USER_AVATAR_IMAGE_URL"
               alt="user_avatar"
               class="rounded-circle"
             />

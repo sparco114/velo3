@@ -5,6 +5,8 @@ import { RouterLink } from "vue-router";
 import BicyclesList from "../bicycles/BicyclesList.vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import { DEFAULT_USER_AVATAR_IMAGE_URL } from "../../constants.js";
+
 
 const store = useStore();
 const route = useRoute();
@@ -54,9 +56,9 @@ onMounted(() => {
     <div class="row card-body">
       <div class="col-2 g-0 avatar-full-profile">
         <img
-          src="https://static.toiimg.com/photo/msid-51359359/51359359.jpg"
+          :src="user.avatar || DEFAULT_USER_AVATAR_IMAGE_URL"
           class="rounded-circle"
-          alt="..."
+          alt="avatar"
         />
 
         <!-- TODO: слово value подчеркнуто в userIdFromRoute.value в дувх местах как предупреждение 

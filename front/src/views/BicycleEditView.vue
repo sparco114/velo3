@@ -33,7 +33,7 @@ onMounted(() => {
 
 const successBicycleUpdateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
-const clearMessage = ref("");
+const bicyclePictureUpdateMessage = ref("");
 
 
 // TODO: !! Разобраться нужно ли переписать функционал следующим образом:
@@ -49,6 +49,7 @@ const handleBicycleUpdatePictureUpload = (event) => {
     event.target.value = ""; // Очистить выбранный файл
     return;
   }
+  bicyclePictureUpdateMessage.value = `Изображение "${file.name}" будет загружено после СОХРАНЕНИЯ ИЗМЕНЕНИЙ`
   bicycle.value.pictures = file;
 };
 
@@ -80,8 +81,8 @@ const clearPicture = () => {
   bicycleForUpdate.value.pictures = '';
   // bicycle.value.pictures = '';
   console.log('сработал-------clearPicture')
-  clearMessage.value = 'Фото будет удалено при Сохранения измений';
-  console.log('clearMessage-----', clearMessage)
+  bicyclePictureUpdateMessage.value = 'Изображение будет удалено при СОХРАНЕНИИ ИЗМЕНЕНИЙ';
+  console.log('clearMessage-----', bicyclePictureUpdateMessage)
   console.log(
     "clearPicture------bicycleForUpdate.value.pictures",
     bicycleForUpdate.value.pictures
@@ -93,7 +94,7 @@ const updateMyBicycle = () => {
   const apiUrl = `/my/bicycles/${bikeId}/`;
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
-  clearMessage.value = "";
+  bicyclePictureUpdateMessage.value = "";
 
   
   
@@ -330,12 +331,33 @@ const deleteMyBicycle = () => {
         </div>
       </div> -->
 
-      <!-- Если есть изображение, показываем его и кнопку удаления -->
-      <div class="row align-items-center mt-2" v-if="bicycle.pictures">
+
+
+
+
+      <div v-if="bicyclePictureUpdateMessage">
+        <div class="row align-items-center mt-2" v-if="bicycle.pictures">
+          <div class="col alert alert-primary rounded-4">{{ bicyclePictureUpdateMessage }}</div>
+          <div class="col">
+          <button
+            @click.prevent="clearPicture"
+            class="btn btn-sm btn-outline-danger rounded-4"
+          >
+            Удалить фото
+          </button>
+        </div>
+        </div>
+      </div>
+
+
+
+<div v-else>
+
+  <div class="row align-items-center mt-2" v-if="bicycle.pictures">
         <div class="col-3">
-          <div class="img-wrapper-bike-main-picture">
-            <img :src="bicycle.pictures" alt="Фото будет загружено после Сохранения изменений" class="rounded-4" />
-            <!-- <img :src=" URL.createObjectURL(bicycle.pictures)" alt="Велосипед" class="rounded-4" /> -->
+          <div class="avatar-full-profile">
+            <img :src="bicycle.pictures" alt="" class="rounded-circle border"/>
+          
           </div>
         </div>
         <div class="col">
@@ -345,11 +367,9 @@ const deleteMyBicycle = () => {
           >
             Удалить фото
           </button>
-          <div v-if="clearMessage">{{ clearMessage }}</div>
         </div>
       </div>
 
-      <!-- Если нет изображения, показываем кнопку выбора файла -->
       <div class="row align-items-center mt-2" v-else>
         <label
           >Фотография<span class="text-secondary"
@@ -365,6 +385,15 @@ const deleteMyBicycle = () => {
           />
         </div>
       </div>
+</div>
+
+
+
+
+
+
+
+
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">

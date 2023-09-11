@@ -8,7 +8,9 @@ import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
 import customAxios from "../axios.js";
-import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../constants.js";
+import {DEFAULT_MAIN_BICYCLE_IMAGE_URL } from "../constants.js";
+
+
 
 const logBookRecordAmount = "?last=7";
 const bikeId = useRoute().params.id;

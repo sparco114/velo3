@@ -36,18 +36,91 @@ onMounted(() => {
 
 const successMessage = ref(""); // Сообщение об успешном сохранении
 const errorMessage = ref(""); // Сообщение об ошибке
+const avatarUploadMessage = ref("");
+
+
+// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
+//  - добавить апи для загрузки фото
+//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
+//    адрес этого фото, и записывать его в поле pictures объекта bicycle.
+// Добавляем файл в запрос
+const handleAvatarUpload = (event) => {
+  const file = event.target.files[0];
+  const maxSize = 1 * 1024 * 1024; // 1 МБ в байтах
+  if (file && file.size > maxSize) {
+    alert("Файл слишком большой. Максимальный размер файла: 1 МБ.");
+    event.target.value = ""; // Очистить выбранный файл
+    return;
+  }
+  avatarUploadMessage.value = `Изображение "${file.name}" будет загружено после СОХРАНЕНИЯ ИЗМЕНЕНИЙ`
+  user.value.avatar = file;
+};
+
+
+
+ // Создаем временную переменную для отправки данных на сервер
+ const userForUpdate = computed(() => {
+  const updatedUser = { ...user.value };
+
+  updatedUser["velouser_profile.sex"] = updatedUser.velouser_profile.sex;
+  updatedUser["velouser_profile.birthday"] = updatedUser.velouser_profile.birthday;
+  updatedUser["velouser_profile.phone"] = updatedUser.velouser_profile.phone;
+  updatedUser["velouser_profile.about"] = updatedUser.velouser_profile.about;
+
+
+  if (updatedUser.avatar instanceof File) {
+
+  } else {
+    console.log('сработал-------delete updatedUser.avatar')
+    delete updatedUser.avatar;
+  }
+  return updatedUser;
+});
+
+
+
+// TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
+const clearAvatar = () => {
+  userForUpdate.value.avatar = '';
+  console.log('сработал-------clearAvatar')
+  avatarUploadMessage.value = 'Изображение будет удалено при СОХРАНЕНИИ ИЗМЕНЕНИЙ';
+  console.log('clearMessage-----', avatarUploadMessage)
+  console.log(
+    "clearAvatar------userForUpdate.value.avatar",
+    userForUpdate.value.avatar
+  );
+};
+
+
+
+
 
 const updateUserProfile = () => {
   const apiUrl = "/my/profile/";
   successMessage.value = "";
   errorMessage.value = "";
+  avatarUploadMessage.value = "";
 
+
+    // TODO: второй раз определяем instanceof File, можно слить в одну проверку, чтоб не дублировать
+  const isPictureFile = user.value.avatar instanceof File;
+  console.log("isPictureFile-----", isPictureFile);
+
+  const headers = isPictureFile
+  ? { "Content-Type": "multipart/form-data" }
+  : { "Content-Type": "multipart/form-data" };
+  // : { "Content-Type": "application/json" };
+  console.log("headers-----", headers);
+
+console.log('userForUpdate.value ---- перед отправкой', userForUpdate.value)
+  console.log('userForUpdate.value.avatar----перед отправкой', userForUpdate.value.avatar)
   customAxios
-    .patch(apiUrl, user.value) // Отправляем данные пользователя
+    .put(apiUrl, userForUpdate.value, { headers }) // Отправляем данные пользователя
     .then((response) => {
       console.log("Данные успешно сохранены:", response.data);
       successMessage.value = "Данные успешно сохранены";
       // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
+      user.value.avatar = response.data.avatar;
     })
     .catch((error) => {
       console.error("Ошибка при сохранении данных:", error);
@@ -65,9 +138,9 @@ const updateUserProfile = () => {
   <div class="ms-1 mb-2 fs-3 text-center">Редактирование профиля</div>
 
   <div class="card mt-3">
-    <div class="card-body">
+    <form class="card-body" enctype="multipart/form-data" @submit.prevent="updateUserProfile">
       <h5 class="card-title">{{ user.username }}</h5>
-      <fieldset>
+      <!-- <fieldset> -->
         <div class="form-group">
         </div>
 
@@ -125,13 +198,6 @@ const updateUserProfile = () => {
           </div>
         </div>
 
-        <div class="form-group mt-3">
-          <label class="col-sm-2 control-label"> Аватар </label>
-
-          <div class="col-sm-10">
-            <input name="avatar" type="file" value="" />
-          </div>
-        </div>
 
         <div v-if="user.velouser_profile">
           <div class="form-group mt-3">
@@ -184,6 +250,7 @@ const updateUserProfile = () => {
               <textarea
                 name="velouser_profile.about"
                 class="form-control"
+                rows="6"
                 v-model="user.velouser_profile.about"
               >
               </textarea>
@@ -191,16 +258,74 @@ const updateUserProfile = () => {
           </div>
         </div>
 
-        <div class="form-actions mt-3 row">
-          <div class="col-2">
+
+      
+      <div v-if="avatarUploadMessage">
+        <div class="row align-items-center mt-2" v-if="user.avatar">
+          <div class="col alert alert-primary rounded-4">{{ avatarUploadMessage }}</div>
+          <div class="col">
+          <button
+            @click.prevent="clearAvatar"
+            class="btn btn-sm btn-outline-danger rounded-4"
+          >
+            Удалить фото
+          </button>
+        </div>
+        </div>
+      </div>
+
+
+      <div v-else>
+        <div class="row align-items-center mt-2" v-if="user.avatar">
+        <div class="col-3">
+          <div class="avatar-full-profile">
+            <img :src="user.avatar" alt="" class="rounded-circle border"/>
+          
+          </div>
+        </div>
+        <div class="col">
+          <button
+            @click.prevent="clearAvatar"
+            class="btn btn-sm btn-outline-danger rounded-4"
+          >
+            Удалить фото
+          </button>
+        </div>
+      </div>
+
+
+      <div class="row align-items-center mt-2" v-else>
+        <label
+          >Фотография<span class="text-secondary"
+            >(максимальный размер файла: 1 МБ.)</span
+          ></label
+        >
+        <div class="col">
+          <input
+            name="avatar_pict"
+            type="file"
+            accept="image/*"
+            @change="handleAvatarUpload"
+          />
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+        <div class=" form-actions mt-3 row">
+          <div class="col d-flex justify-content-center">
             <button
-              class="btn btn-success rounded-4"
-              title="Make a PUT request on the My Velo User resource"
-              @click="updateUserProfile"
+              class="btn btn-success w-50 rounded-5"
+              type="submit"
             >
-              Сохранить
+              Сохранить изменения
             </button>
           </div>
+<div class="text-center mt-2">
+
 
           <span v-if="successMessage" class="text-success col-10 ml-2 my-2">{{
             successMessage
@@ -209,8 +334,24 @@ const updateUserProfile = () => {
             errorMessage
           }}</span>
         </div>
-      </fieldset>
+      </div>
+      <!-- </fieldset> -->
       <!-- </form> -->
-    </div>
+    </form>
   </div>
 </template>
+
+
+<style>
+.avatar-full-profile {
+  width: 8rem;
+  height: 8rem;
+}
+
+.avatar-full-profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+}
+</style>

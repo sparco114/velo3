@@ -16,9 +16,9 @@ const errorBicycleCreateMessage = ref(""); // Сообщение об ошибк
 // Добавляем файл в запрос
 const handleBicycleCreatePictureUpload = (event) => {
   const file = event.target.files[0];
-  const maxSize = 1 * 1024 * 1024; // 1 МБ в байтах
+  const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
   if (file && file.size > maxSize) {
-    alert("Файл слишком большой. Максимальный размер файла: 1 МБ.");
+    alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
     event.target.value = ""; // Очистить выбранный файл
     return;
   }
@@ -194,11 +194,12 @@ const createNewBicycle = () => {
       </div>
 
       <div class="row align-items-center mt-2">
-        <label
-          >Фотография<span class="text-secondary"
-            >(максимальный размер файла: 1 МБ.)</span
-          ></label
-        >
+        <label>
+          Фотография
+          <span class="text-secondary">
+            (максимальный размер файла: 3 МБ.)
+          </span>
+        </label>
         <div class="col">
           <input
             name="pictures"
@@ -208,19 +209,6 @@ const createNewBicycle = () => {
           />
         </div>
       </div>
-
-
-
-
-
-
-
-
-     
-
-
-
-
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">

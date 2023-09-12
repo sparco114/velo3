@@ -9,18 +9,88 @@ import customAxios from "../axios.js"
 const bikeId = useRoute().params.id;
 
 const logBookRecord = ref({});
+const formData = new FormData();
 
 // const successRecordCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorRecordCreateMessage = ref(""); // Сообщение об ошибке
+
+
+
+// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
+//  - добавить апи для загрузки фото
+//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
+//    адрес этого фото, и записывать его в поле pictures объекта logBookRecord.
+// Добавляем файл в запрос
+
+
+const handleRecordPicturesUpload = (event) => {
+  const files = event.target.files;
+  const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
+  const selectedFiles = [];
+  if (files && files.size > maxSize) {
+    alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+    event.target.value = ""; // Очистить выбранный файл
+    return;
+  }
+    for (let i = 0; i < files.length; i++) {
+    if (files[i].size > maxSize) {
+      alert(`Файл ${files[i].name} слишком большой. Максимальный размер файла: 3 МБ.`);
+    } else {
+      selectedFiles.push(files[i]);
+    }
+  }
+
+  // for (let i = 0; i < selectedFiles.length; i++) {
+  //   formData.append(`pictures[${i}]`, selectedFiles[i]);
+  // }
+  
+
+
+    // for (const file of selectedFiles) {
+    // formData.append('pictures', file);
+  // }
+  formData.append("header", logBookRecord.value.header);
+  formData.append("text", logBookRecord.value.text);
+ 
+  };
+
+
+
+
+// const handleRecordPicturesUpload = (event) => {
+//   const files = event.target.files[0];
+//   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
+//   const selectedFiles = [];
+
+
+
+//   if (files && files.size > maxSize) {
+//     alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+//     event.target.value = ""; // Очистить выбранный файл
+//     return;
+//   }
+   
+
+//   logBookRecord.value.pictures = files;
+// };
+
+
+
 
 const createNewLogBookRecord = () => {
   const apiUrl = `/bicycles/${bikeId}/logbook/create/`;
   //   successRecordCreateMessage.value = "";
   errorRecordCreateMessage.value = "";
 
-  console.log("newBicycle-----перед отправкой", logBookRecord.value);
+
+
+
+  console.log('formData + pictures  ------перед отправкой', console.table(Object.fromEntries(formData)) )
+  // console.log("newBicycle-----перед отправкой", logBookRecord.value);
   customAxios
-    .post(apiUrl, logBookRecord.value)
+    .post(apiUrl, formData, {
+      headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+    })
     .then((response) => {
       console.log("Запись успешно создана:", response.data);
       // successBicycleCreateMessage.value = "Велосипед успешно создан";
@@ -65,6 +135,7 @@ const createNewLogBookRecord = () => {
             id="text"
             class="form-control"
             rows="10"
+            required
           />
         </div>
       </div>
@@ -135,9 +206,21 @@ const createNewLogBookRecord = () => {
       </div>
 
       <div class="row align-items-center mt-2">
-        <label>Фотография</label>
+        <label>
+          Фотография
+          <span class="text-secondary">
+            (максимальный размер файла: 3 МБ.)
+          </span>
+        </label>
         <div class="col">
-          <input name="pictures" type="file" value="" />
+          <input
+            name="pictures"
+            id="pictures"
+            type="file"
+            accept="image/*"
+            @change="handleRecordPicturesUpload"
+            multiple
+          />
         </div>
       </div>
 

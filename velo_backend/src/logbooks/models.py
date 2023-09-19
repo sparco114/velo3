@@ -15,7 +15,6 @@ def logbook_record_pictures_directory_path(instance, filename):
 
 class LogBookRecord(models.Model):
     CATEGORIES = (
-        # TODO: добавить 'гонка', 'прогулка', 'тренировка', 'ПВД', 'покупка велосипеда' изменить на Продажа
         ('руль', 'руль'),
         ('вилка', 'вилка'),
         ('система переклчения', 'система переклчения'),
@@ -29,9 +28,13 @@ class LogBookRecord(models.Model):
         ('рама', 'рама'),
         ('поломка', 'поломка'),
         ('плановое ТО', 'плановое ТО'),
-        ('покупка велосипеда', 'покупка велосипеда'),
-        ('покупка велосипеда', 'покупка велосипеда'),
         ('другое', 'другое'),
+        ('гонка', 'гонка'),
+        ('тренировка', 'тренировка'),
+        ('ПВД', 'ПВД'),
+        ('прогулка', 'прогулка'),
+        ('покупка велосипеда', 'покупка велосипеда'),
+        ('продажа велосипеда', 'продажа велосипеда'),
     )
 
     bicycle = models.ForeignKey(Bicycle, on_delete=models.CASCADE, related_name='logbook_records')
@@ -41,10 +44,18 @@ class LogBookRecord(models.Model):
     cost = models.IntegerField(default=0)
     is_published = models.BooleanField(default=True)
     category = models.CharField(max_length=20, choices=CATEGORIES, default='другое')
-    pictures = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
+    # pictures = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
     creator = models.ForeignKey(VeloUser, on_delete=models.CASCADE, related_name='created_logbook_records')
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return f'id {self.pk}: {self.header}'
+
+
+class LogBookRecordPictures(models.Model):
+    image = models.ImageField(blank=True, null=True, upload_to=logbook_record_pictures_directory_path)
+    pictures = models.ForeignKey(LogBookRecord,
+                                 on_delete=models.CASCADE,
+                                 related_name='pictures',
+                                 related_query_name='pictures')

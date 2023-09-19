@@ -4,7 +4,7 @@ from rest_framework import filters
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from src.bicycles.models import Bicycle
-from src.logbooks.models import LogBookRecord
+from src.logbooks.models import LogBookRecord, LogBookRecordPictures
 from src.logbooks.permissions import IsBicycleOwner, IsRecordCreator
 from src.logbooks.serializers import LogBookRecordSerializer
 
@@ -43,17 +43,30 @@ class BicycleLogBookViewSet(viewsets.ReadOnlyModelViewSet):
 class BicycleLogBookRecordCreateView(generics.CreateAPIView):
     permission_classes = [IsBicycleOwner]
     serializer_class = LogBookRecordSerializer
-    # parser_classes = (MultiPartParser, FormParser,)
+    parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        bicycle_pk = self.kwargs.get('pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
+        bicycle_pk = self.kwargs.get(
+            'pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
         bicycle = Bicycle.objects.get(pk=bicycle_pk)
-        print(f"Received files-getlist: {self.request.FILES.getlist('pictures')}")
-        print(f"Received files-getlist-[]: {self.request.FILES.getlist('pictures[]')}")
-        # print(f"Received data-getlist-[]: {self.request.data.getlist('pictures[]')}")
-        print(f"Received files: {self.request.FILES}")
-        # print(f"Received data: {self.request.data}")
-        serializer.save(bicycle=bicycle, creator=self.request.user)
+        # print(f"Received files-getlist: {self.request.FILES.getlist('pictures')}")
+        # print(f"Received files-getlist-[]: {self.request.FILES.getlist('pictures[]')}")
+        print(f"Received data.getlist('pictures[]'): {self.request.data.getlist('pictures[]')}")
+        print(f"Received data.getlist('pictures'): {self.request.data.getlist('pictures')}")
+        # print(f"Received files: {self.request.FILES}")
+        print(f"Received data: {self.request.data}")
+        obj = serializer.save(bicycle=bicycle, creator=self.request.user)
+
+        for img in self.request.FILES.getlist('picturesss'):
+            print('img', img)
+            LogBookRecordPictures.objects.create(image=img, pictures=obj)
+            # record_img = LogBookRecordPictures.objects.create(image=img)
+            # print('record_img', record_img)
+            # obj.files.add(record_img)
+
+    # def post(self, request, *args, **kwargs):
+    #     logbook_record_pk = request.data.get('title')
+    #     images = request.data.getlist('pictures[]')
 
 
 class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):
@@ -64,6 +77,3 @@ class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):
         record_pk = self.kwargs.get('pk')
         queryset = LogBookRecord.objects.filter(pk=record_pk)
         return queryset
-
-
-

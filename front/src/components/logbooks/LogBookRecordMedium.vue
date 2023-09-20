@@ -63,7 +63,29 @@ function truncateText(text, maxLength) {
             class="nav-link"
             :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
           >
-            <div class="">
+
+
+<div v-if="record && record.pictures && record.pictures.length > 0">
+    <img
+
+      :src="record.pictures[0].image"
+      class="card-img rounded-3"
+    />
+
+  <div class="row row-cols-md-5 g-1 mt-0">
+    <template class="col img-small" v-for="(picture, index) in record.pictures" :key="index">
+      <div v-if="index > 0">
+        <img
+          :src="picture.image"
+          class="card-img-top rounded-3"
+        />
+      </div>
+    </template>
+  </div>
+</div>
+
+
+            <!-- <div class="">
               <img
                 src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
                 class="card-img rounded-3"
@@ -106,7 +128,7 @@ function truncateText(text, maxLength) {
                   alt="..."
                 />
               </div>
-            </div>
+            </div> -->
 
             <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
             <p class="card-text">

@@ -26,7 +26,7 @@ onMounted(() => {
         ? response.data.text.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
         : "";
 
-      console.log(response.data);
+      console.log('response.data------', response.data);
     })
     .catch((error) => {
       // TODO: изменить на запись в лог и вывод текста пользователю
@@ -94,22 +94,18 @@ console.log("userIdFromStore----", userIdFromStore);
           <p class="card-text">
             <small class="text-muted">{{ record.category }}</small>
           </p>
-          <div class="">
-            <img
-              src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
-              class="card-img rounded-3"
-            />
-          </div>
 
-          <div class="row row-cols-md-5 g-1 mt-0">
-            <div class="col img-small">
-              <img
-                src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
+
+<div v-if="record && record.pictures && record.pictures.length > 0" v-for="picture in record.pictures">
+
+    <img
+      :src="picture.image"
+      class="card-img rounded-3 mb-3"
+    />
+</div>
+
+
+            <!-- <div class="col img-small">
               <img
                 src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
                 class="card-img-top rounded-3"
@@ -130,14 +126,19 @@ console.log("userIdFromStore----", userIdFromStore);
                 alt="..."
               />
             </div>
-            <!-- <div class="col img-small">
+             <div class="col img-small">
                 <img
                   src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
                   class="card-img-top rounded-3"
                   alt="..."
                 />
               </div> -->
-          </div>
+
+
+
+
+
+
 
           <div v-html="record.text" class="card-text mt-4"></div>
 

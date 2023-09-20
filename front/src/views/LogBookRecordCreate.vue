@@ -41,7 +41,7 @@ const handleRecordPicturesUpload = (event) => {
   }
 
   for (let i = 0; i < selectedFiles.length; i++) {
-    formData.append(`picturesss[${i}]`, selectedFiles[i]);
+    formData.append(`picturess[${i}]`, selectedFiles[i]);
   }
   
 

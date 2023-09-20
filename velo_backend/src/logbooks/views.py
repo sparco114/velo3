@@ -49,24 +49,22 @@ class BicycleLogBookRecordCreateView(generics.CreateAPIView):
         bicycle_pk = self.kwargs.get(
             'pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
         bicycle = Bicycle.objects.get(pk=bicycle_pk)
-        # print(f"Received files-getlist: {self.request.FILES.getlist('pictures')}")
-        # print(f"Received files-getlist-[]: {self.request.FILES.getlist('pictures[]')}")
-        print(f"Received data.getlist('pictures[]'): {self.request.data.getlist('pictures[]')}")
-        print(f"Received data.getlist('pictures'): {self.request.data.getlist('pictures')}")
-        # print(f"Received files: {self.request.FILES}")
+        # print(f"Received data.getlist('pictures[]'): {self.request.data.getlist('pictures[]')}")
+        # print(f"Received data.getlist('pictures'): {self.request.data.getlist('pictures')}")
+        print(f"Received files: {self.request.FILES}")
         print(f"Received data: {self.request.data}")
         obj = serializer.save(bicycle=bicycle, creator=self.request.user)
 
-        for img in self.request.FILES.getlist('picturesss'):
-            print('img', img)
-            LogBookRecordPictures.objects.create(image=img, pictures=obj)
-            # record_img = LogBookRecordPictures.objects.create(image=img)
-            # print('record_img', record_img)
-            # obj.files.add(record_img)
+        # TODO: разобраться, почему не отправляется с именем pictures (возникает ошибка о том, что ожиадается
+        #  словарь), но отпарвялсяется с любым другим именем (сейчас чтоб обойти ошибку отправлею с picturess)
+        pictures = self.request.FILES
+        print('pictures---', pictures)
 
-    # def post(self, request, *args, **kwargs):
-    #     logbook_record_pk = request.data.get('title')
-    #     images = request.data.getlist('pictures[]')
+        for k, v in pictures.items():
+            print('k', k)
+            print('v', v)
+            LogBookRecordPictures.objects.create(image=v, pictures=obj)
+        return obj
 
 
 class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):

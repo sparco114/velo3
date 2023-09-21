@@ -19,22 +19,20 @@ body {
 .px-custom-feed {
   margin-top: 4rem;
   width: 50rem;
-
-  .img-wrapper-bike-main-picture {
-    width: 100%;
-    height: 0;
-    padding-top: 62%; /* 56.25%  - 16:9 соотношение сторон */
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .img-wrapper-bike-main-picture img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+}
+.img-wrapper-bike-main-picture {
+  width: 100%;
+  height: 0;
+  padding-top: 62%; /* 56.25%  - 16:9 соотношение сторон */
+  position: relative;
+  overflow: hidden;
 }
 
+.img-wrapper-bike-main-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

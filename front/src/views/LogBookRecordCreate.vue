@@ -25,16 +25,25 @@ const handleRecordPicturesUpload = (event) => {
   const files = event.target.files;
   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
   const selectedFiles = [];
-  if (files && files.size > maxSize) {
-    alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+
+  if (files && files.length > 6) {
+    alert("Максимальное количество файлов - 6 шт.");
     event.target.value = ""; // Очистить выбранный файл
     return;
   }
+
+  // if (files && files.size > maxSize) {
+  //   alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+  //   event.target.value = ""; // Очистить выбранный файл
+  //   return;
+  // }
+  // TODO: некорректно отображается количество выбранных файлов, если некоторые из них превышают максимальный размер
   for (let i = 0; i < files.length; i++) {
     if (files[i].size > maxSize) {
       alert(
-        `Файл ${files[i].name} слишком большой. Максимальный размер файла: 3 МБ.`
+        `Файл "${files[i].name}" не будет загружен, так как слишком большой. Максимальный размер файла: 3 МБ.`
       );
+      // return;
     } else {
       selectedFiles.push(files[i]);
     }
@@ -209,8 +218,11 @@ const createNewLogBookRecord = () => {
         <label>
           Фотография
           <span class="text-secondary">
-            (максимальный размер файла: 3 МБ.)
+            (Максимальное количество файлов - 6 шт.)
           </span>
+          <div class="text-secondary mb-2">
+            (Максимальный размер каждого файла: 3 МБ.)
+          </div>
         </label>
         <div class="col">
           <input

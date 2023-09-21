@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 // import axios from "axios";
-import customAxios from "../axios.js"
+import customAxios from "../axios.js";
 import router from "../router";
 import { useRoute } from "vue-router";
 
@@ -191,6 +191,26 @@ const deleteLogBookRecord = () => {
         <label>Фотография</label>
         <div class="col">
           <input name="pictures" type="file" value="" />
+        </div>
+
+        <div
+          class="row align-items-center mt-2"
+          v-if="logBookRecord.pictures && logBookRecord.pictures.length > 0"
+          v-for="picture in logBookRecord.pictures"
+        >
+          <div class="col-3">
+            <div class="img-wrapper-bike-main-picture">
+              <img :src="picture.image" alt="" class="rounded-3 border" />
+            </div>
+          </div>
+          <div class="col">
+            <button
+              @click.prevent="clearPicture"
+              class="btn btn-sm btn-outline-danger rounded-4"
+            >
+              Удалить фото
+            </button>
+          </div>
         </div>
       </div>
 

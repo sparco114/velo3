@@ -355,8 +355,8 @@ const deleteMyBicycle = () => {
 
   <div class="row align-items-center mt-2" v-if="bicycle.pictures">
         <div class="col-3">
-          <div class="avatar-full-profile">
-            <img :src="bicycle.pictures" alt="" class="rounded-circle border"/>
+          <div class="img-wrapper-bike-main-picture">
+            <img :src="bicycle.pictures" alt="" class="rounded-3 border"/>
           
           </div>
         </div>

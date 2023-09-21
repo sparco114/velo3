@@ -8,7 +8,7 @@ const props = defineProps({
 });
 
 const showFullText = ref({}); // Объект для хранения состояния отображения полного текста
-const fullText = props.record.text.replace(/\n/g, "<br>");
+const fullPreparedHtmlText = props.record.text.replace(/\n/g, "<br>");
 const shortenedText = props.record.text.slice(0, 255);
 const activateShowFull = (recordId) => {
   showFullText.value[recordId] = !showFullText.value[recordId];
@@ -57,14 +57,14 @@ const activateShowFull = (recordId) => {
             <div v-if="record && record.pictures && record.pictures.length > 0">
               <img :src="record.pictures[0].image" class="card-img rounded-3" />
 
-              <div class="row row-cols-md-5 g-1 mt-0 img-small">
+              <div class="row row-cols-5 g-1 mt-0">
                 <template
-                  class="col"
-                  v-for="(picture, index) in record.pictures"
-                  :key="index"
+                  v-for="picture in record.pictures.slice(1, record.pictures.length)"
                 >
-                  <div v-if="index > 0">
-                    <img :src="picture.image" class="card-img-top rounded-3" />
+                  <div class="col">
+                    <div class="image-container">
+                      <img :src="picture.image" class="rounded-3" />
+                    </div>
                   </div>
                 </template>
               </div>
@@ -75,7 +75,6 @@ const activateShowFull = (recordId) => {
               <small class="text-muted">{{ record.category }}</small>
             </p>
           </RouterLink>
-
 
           <!-- TODO: попробовать переписать логику, чтоб не было повторения кода -->
           <div class="mt-2">
@@ -92,7 +91,7 @@ const activateShowFull = (recordId) => {
                 </p>
               </div>
               <div v-else>
-                <div v-html="fullText"></div>
+                <div v-html="fullPreparedHtmlText"></div>
                 <div class="mt-2">
                   <div class="row">
                     <div v-if="record.mileage" class="col-3 text-muted">
@@ -152,13 +151,18 @@ const activateShowFull = (recordId) => {
 </template>
 
 <style>
-.img-small img {
-  width: 100%;
-  height: 40%;
-  object-fit: cover;
+.image-container {
+  position: relative;
+  padding-bottom: 62%;
+  overflow: hidden;
 }
 
-.img-small {
-  height: 5rem;
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

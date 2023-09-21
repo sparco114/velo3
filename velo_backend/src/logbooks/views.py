@@ -46,11 +46,8 @@ class BicycleLogBookRecordCreateView(generics.CreateAPIView):
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        bicycle_pk = self.kwargs.get(
-            'pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
+        bicycle_pk = self.kwargs.get('pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
         bicycle = Bicycle.objects.get(pk=bicycle_pk)
-        # print(f"Received data.getlist('pictures[]'): {self.request.data.getlist('pictures[]')}")
-        # print(f"Received data.getlist('pictures'): {self.request.data.getlist('pictures')}")
         print(f"Received files: {self.request.FILES}")
         print(f"Received data: {self.request.data}")
         obj = serializer.save(bicycle=bicycle, creator=self.request.user)

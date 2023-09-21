@@ -45,6 +45,8 @@ class BicycleLogBookRecordCreateView(generics.CreateAPIView):
     serializer_class = LogBookRecordSerializer
     parser_classes = (MultiPartParser, FormParser,)
 
+    # TODO: !! добавить обработку(сжатие) фото перед сохранением, возможно потребуется сохранение 
+    # в двух разных разрешениях (большое и маленькое), для отображения в разных местах
     def perform_create(self, serializer):
         bicycle_pk = self.kwargs.get('pk')  # - можно брать просто из словаря (self.kwargs['pk']), но если не будет pk, то вернется исключени, а если брать через get то вернется не исключение а просто None
         bicycle = Bicycle.objects.get(pk=bicycle_pk)

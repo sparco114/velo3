@@ -8,6 +8,8 @@ import { useRoute } from "vue-router";
 const logBookRecordId = useRoute().params.id;
 
 const logBookRecord = ref({});
+const formData = new FormData();
+
 
 onMounted(() => {
   let apiUrl = `/logbooks/${logBookRecordId}/`;
@@ -30,6 +32,67 @@ onMounted(() => {
     });
 });
 
+
+const selectedFileNames = ref([]);
+
+
+const handleRecordPicturesUpload = (event) => {
+  const files = event.target.files;
+  const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
+  const selectedFiles = [];
+
+  const amountUploadedPictures = logBookRecord.value.pictures.length
+
+  if (files && (files.length + amountUploadedPictures) > 6) {
+    alert("Общее количество файлов в статье не может первышать 6 шт.");
+    event.target.value = ""; // Очистить выбранный файл
+    return;
+  }
+
+  // if (files && files.size > maxSize) {
+  //   alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
+  //   event.target.value = ""; // Очистить выбранный файл
+  //   return;
+  // }
+  // TODO: некорректно отображается количество выбранных файлов, если некоторые из них превышают максимальный размер
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].size > maxSize) {
+      alert(
+        `Файл "${files[i].name}" не будет загружен, так как слишком большой. Максимальный размер файла: 3 МБ.`
+      );
+      // return;
+    } else {
+      selectedFiles.push(files[i]);
+    }
+  }
+
+  // Очистить список предыдущих имен файлов
+  selectedFileNames.value = [];
+
+
+  // Если есть выбранные файлы, получаем их имена
+  if (selectedFiles.length > 0) {
+    for (let i = 0; i < selectedFiles.length; i++) {
+      selectedFileNames.value.push(selectedFiles[i].name);
+    }
+  }
+//  TODO: слить вместе с заполнением selectedFileNames, чтоб не дублировался код
+  for (let i = 0; i < selectedFiles.length; i++) {
+    formData.append(`picturess[${i}]`, selectedFiles[i]);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 // const successRecordCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorRecordUpdateMessage = ref(""); // Сообщение об ошибке
 
@@ -38,11 +101,34 @@ const updateLogBookRecord = () => {
   //   successRecordCreateMessage.value = "";
   errorRecordUpdateMessage.value = "";
 
-  console.log("newBicycle-----перед отправкой", logBookRecord.value);
+
+
+  formData.append("header", logBookRecord.value.header);
+  formData.append("text", logBookRecord.value.text);
+  formData.append(
+    "mileage",
+    logBookRecord.value.mileage ? logBookRecord.value.mileage : ""
+  );
+  formData.append(
+    "cost",
+    logBookRecord.value.cost ? logBookRecord.value.cost : ""
+  );
+  formData.append(
+    "category",
+    logBookRecord.value.category ? logBookRecord.value.category : ""
+  );
+
+
+
+
+    console.log('table(Object.fromEntries(formData)', Object.fromEntries(formData));
+  // console.log("newBicycle-----перед отправкой", logBookRecord.value);
   customAxios
-    .patch(apiUrl, logBookRecord.value)
+    .patch(apiUrl, formData, {
+      headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+    })
     .then((response) => {
-      console.log("Запись успешно создана:", response.data);
+      console.log("Запись успешно обновлена:", response.data);
       // successBicycleCreateMessage.value = "Велосипед успешно создан";
       router.push({
         name: "logbook-record-detail",
@@ -189,8 +275,21 @@ const deleteLogBookRecord = () => {
 
       <div class="row align-items-center mt-2">
         <label>Фотография</label>
+        <span class="text-secondary">
+            (Максимальное количество файлов - 6 шт.)
+          </span>
+          <div class="text-secondary mb-2">
+            (Максимальный размер каждого файла: 3 МБ.)
+          </div>
         <div class="col">
-          <input name="pictures" type="file" value="" />
+            
+          <input 
+            name="pictures" 
+            type="file" 
+            value="" 
+            accept="image/*" 
+            @change="handleRecordPicturesUpload" 
+            multiple/>
         </div>
 
         <div

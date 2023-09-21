@@ -53,7 +53,7 @@ const handleRecordPicturesUpload = (event) => {
   selectedFileNames.value = [];
 
 
-  // Если есть выбранные файлы, получите их имена
+  // Если есть выбранные файлы, получаем их имена
   if (selectedFiles.length > 0) {
     for (let i = 0; i < selectedFiles.length; i++) {
       selectedFileNames.value.push(selectedFiles[i].name);
@@ -215,15 +215,13 @@ const createNewLogBookRecord = () => {
       </div>
 
       <div class="row align-items-center mt-2">
-        <label>
-          Фотография
+        <label>Фотография</label>
           <span class="text-secondary">
             (Максимальное количество файлов - 6 шт.)
           </span>
           <div class="text-secondary mb-2">
             (Максимальный размер каждого файла: 3 МБ.)
           </div>
-        </label>
         <div class="col">
           <input
             name="pictures"

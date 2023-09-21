@@ -1,27 +1,18 @@
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 import { RouterLink } from "vue-router";
-import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../../constants.js";
-
+import { DEFAULT_MAIN_BICYCLE_IMAGE_URL } from "../../constants.js";
 
 const props = defineProps({
   record: Object,
 });
 
-function truncateText(text, maxLength) {
-  if (text.length > maxLength) {
-    return text.slice(0, maxLength) + "...";
-  }
-  return text;
-}
-// TODO: можно добавить кнопку Читать далее,
-//             которая будет раскрывать полный текст и добавлять Пробег и Стоимость
-//             выше нужно будет ниже есть для эотго заготовка
-// function showFullText(record) {
-//   // return record.text
-//   // TODO: реализовать навигацию на страницу с полным текстом, используя например Vue Router или другой метод навигации
-//   console.log("Перейти к полному тексту записи:", record.text);
-// }
+const showFullText = ref({}); // Объект для хранения состояния отображения полного текста
+const fullText = props.record.text.replace(/\n/g, "<br>");
+const shortenedText = props.record.text.slice(0, 255);
+const activateShowFull = (recordId) => {
+  showFullText.value[recordId] = !showFullText.value[recordId];
+};
 </script>
 
 <template>
@@ -63,84 +54,88 @@ function truncateText(text, maxLength) {
             class="nav-link"
             :to="{ name: 'logbook-record-detail', params: { id: record.id } }"
           >
+            <div v-if="record && record.pictures && record.pictures.length > 0">
+              <img :src="record.pictures[0].image" class="card-img rounded-3" />
 
-
-<div v-if="record && record.pictures && record.pictures.length > 0">
-    <img
-
-      :src="record.pictures[0].image"
-      class="card-img rounded-3"
-    />
-
-  <div class="row row-cols-md-5 g-1 mt-0">
-    <template class="col img-small" v-for="(picture, index) in record.pictures" :key="index">
-      <div v-if="index > 0">
-        <img
-          :src="picture.image"
-          class="card-img-top rounded-3"
-        />
-      </div>
-    </template>
-  </div>
-</div>
-
-
-            <!-- <div class="">
-              <img
-                src="https://sun9-20.userapi.com/wr4Sk1RlMsahG6MNaK0SvWAB7X53VZY9Fyf7mg/2LKzqKEWTWE.jpg"
-                class="card-img rounded-3"
-              />
+              <div class="row row-cols-md-5 g-1 mt-0 img-small">
+                <template
+                  class="col"
+                  v-for="(picture, index) in record.pictures"
+                  :key="index"
+                >
+                  <div v-if="index > 0">
+                    <img :src="picture.image" class="card-img-top rounded-3" />
+                  </div>
+                </template>
+              </div>
             </div>
-
-            <div class="row row-cols-md-5 g-1 mt-0">
-              <div class="col img-small">
-                <img
-                  src="https://roliki-magazin.ru/wp-content/uploads/2/6/6/266d0d21749d8e208c20a678723c6535.jpeg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div>
-              <div class="col img-small">
-                <img
-                  src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div>
-              <div class="col img-small">
-                <img
-                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div>
-              <div class="col img-small">
-                <img
-                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div>
-              <div class="col img-small">
-                <img
-                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div>
-            </div> -->
 
             <h5 class="card-title mb-0 mt-3">{{ record.header }}</h5>
             <p class="card-text">
               <small class="text-muted">{{ record.category }}</small>
             </p>
-            <div class="card-text">
-              {{ truncateText(record.text, 225) }}
+          </RouterLink>
 
-              <!-- TODO: можно добавить кнопку Читать далее, 
+
+          <!-- TODO: попробовать переписать логику, чтоб не было повторения кода -->
+          <div class="mt-2">
+            <div v-if="record.text.length > 255">
+              <div v-if="!showFullText[record.id]">
+                {{ shortenedText }}
+                <span>
+                  <a class="text-nowrap" @click="activateShowFull(record.id)">
+                    Читать далее
+                  </a>
+                </span>
+                <p class="card-text text-end">
+                  <small class="text-muted">{{ record.created_at }}</small>
+                </p>
+              </div>
+              <div v-else>
+                <div v-html="fullText"></div>
+                <div class="mt-2">
+                  <div class="row">
+                    <div v-if="record.mileage" class="col-3 text-muted">
+                      <small>Пробег: {{ record.mileage }} км.</small>
+                    </div>
+                    <div class="col-4 text-muted">
+                      <small v-if="record.cost"
+                        >Стоимость: {{ record.cost }} руб.</small
+                      >
+                    </div>
+                    <div class="col text-muted text-end">
+                      <small>{{ record.created_at }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-else>
+              {{ record.text }}
+
+              <div class="mt-2">
+                <div class="row">
+                  <div v-if="record.mileage" class="col-3 text-muted">
+                    <small>Пробег: {{ record.mileage }} км.</small>
+                  </div>
+                  <div class="col-4 text-muted">
+                    <small v-if="record.cost"
+                      >Стоимость: {{ record.cost }} руб.</small
+                    >
+                  </div>
+                  <div class="col text-muted text-end">
+                    <small>{{ record.created_at }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TODO: можно добавить кнопку Читать далее, 
             которая будет раскрывать полный текст и добавлять Пробег и Стоимость
             выше нужно будет внести корректировки в функцию showFullText -->
-              <!-- <span v-if="record.text.length > 225">
+          <!-- <span v-if="record.text.length > 225">
               <RouterLink
                 class="text-nowrap"
                 to="#"
@@ -149,11 +144,7 @@ function truncateText(text, maxLength) {
                 Читать далее
               </RouterLink> 
             </span> -->
-            </div>
-          </RouterLink>
-          <p class="card-text text-end">
-            <small class="text-muted">{{ record.created_at }}</small>
-          </p>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -163,7 +154,7 @@ function truncateText(text, maxLength) {
 <style>
 .img-small img {
   width: 100%;
-  height: 100%;
+  height: 40%;
   object-fit: cover;
 }
 

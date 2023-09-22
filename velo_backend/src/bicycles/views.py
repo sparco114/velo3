@@ -66,19 +66,12 @@ class MyBicycleUpdateViewSet(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BicycleListSerializer
 
     def get_queryset(self):
+
+        # TODO: !! Принт срабатывает два раза, уточнить или запрос из BicycleEditView.vue приходит два раза,
+        #  или на бэке что-то отрабатывает некорректно.
+        #  А так же переписать это на get_object
+        print(f"Received data: {self.request.data}")
+
         bicycle_pk = self.kwargs.get('pk')
         queryset = Bicycle.objects.filter(pk=bicycle_pk)
         return queryset
-
-
-# """перенес эту функциональность в logbooks/views"""
-# class TEST_MET(viewsets.ReadOnlyModelViewSet):
-#     # permission_classes = [IsAuthenticated]
-#     serializer_class = BicycleSerializer
-#     queryset = Bicycle.objects.all()
-#
-#     # @action(methods=['get'], detail=False)  # на случай если используются роутеры
-#     def logbook(self, request, pk=None):
-#         logs = LogBookRecord.objects.filter(bicycle=pk)
-#         ser = LogBookRecordSerializer(logs, many=True)
-#         return Response({'logs': ser.data})

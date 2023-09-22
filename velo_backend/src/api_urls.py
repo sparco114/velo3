@@ -35,7 +35,7 @@ urlpatterns = [
     path('bicycles/<int:pk>/logbook/create/', BicycleLogBookRecordCreateView.as_view()),  # (создание)
     #
     path('logbooks/<int:pk>/', LogBookRecordViewSet.as_view({'get': 'retrieve'})),  # просмотр
-    path('logbooks/<int:pk>/update/', LogBookRecordUpdateView.as_view()),  # (редактирование)
+    path('logbooks/<int:pk>/update/', LogBookRecordUpdateView.as_view()),  # (редактирование, удаление)
     path('logbooks/', LogBookRecordViewSet.as_view({'get': 'list'})),  # просмотр
-    path('pictures/<int:picture_id>/delete/', LogBookRecordPictureDeleteView.as_view()),  # (удаление фото)
+    path('pictures/<int:picture_pk>/delete/', LogBookRecordPictureDeleteView.as_view()),  # (удаление фото)
 ]

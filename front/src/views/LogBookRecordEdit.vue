@@ -155,8 +155,8 @@ const updateLogBookRecord = () => {
 
 
 
-    console.log('table(Object.fromEntries(formData)', Object.fromEntries(formData));
-  // console.log("newBicycle-----перед отправкой", logBookRecord.value);
+    console.log('table(Object.fromEntries(formData)--------', Object.fromEntries(formData));
+  console.log("logBookRecord-----перед отправкой", logBookRecord.value);
   customAxios
     .put(apiUrl, formData, {
       headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
@@ -171,7 +171,7 @@ const updateLogBookRecord = () => {
       // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
     })
     .catch((error) => {
-      console.error("Информация в записи успешно обновлена:", error);
+      console.error("Ошибка при обновлении записи:", error);
       errorRecordUpdateMessage.value =
         "Произошла ошибка при сохранении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
       // TODO: Можно добавить вывод сообщения об ошибке пользователю
@@ -326,6 +326,14 @@ const deleteLogBookRecord = () => {
             multiple/>
         </div>
 
+        <div v-if="selectedFileNames.length > 0">
+        Выбранные файлы:
+        <ul>
+          <li v-for="(fileName, index) in selectedFileNames" :key="index">
+            {{ fileName }}
+          </li>
+        </ul>
+      </div>
 
         <div
           class="row align-items-center mt-2"

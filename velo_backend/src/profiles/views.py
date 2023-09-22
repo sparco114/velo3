@@ -17,5 +17,10 @@ class MyVeloUserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = VeloUserSerializer
 
     def get_object(self):
+
+        # TODO: проверить насколько корректный приходит запрос, похоже что поля для velouser_profile
+        #  приходят в двух форматах: velouser_profile[phone] и velouser_profile.phone одновременно
+        print(f"Received data: {self.request.data}")
+
         return self.request.user
 

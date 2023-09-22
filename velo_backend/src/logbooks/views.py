@@ -61,10 +61,11 @@ class BicycleLogBookRecordCreateView(generics.CreateAPIView):
         pictures = self.request.FILES
         print('pictures---', pictures)
 
-        for k, v in pictures.items():
-            print('k', k)
-            print('v', v)
-            LogBookRecordPictures.objects.create(image=v, pictures=obj)
+        for key, img in pictures.items():
+            # print('k', key)
+            # print('v', img)
+            LogBookRecordPictures.objects.create(image=img, pictures=obj)
+        # TODO: скорее всего возврат obj не нужен
         return obj
 
 
@@ -72,12 +73,18 @@ class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsRecordCreator]
     serializer_class = LogBookRecordSerializer
 
-    def get_queryset(self):
-        record_pk = self.kwargs.get('pk')
-        queryset = LogBookRecord.objects.filter(pk=record_pk)
+    def get_object(self):
         print(f"Received data: {self.request.data}")
+        record_pk = self.kwargs.get('pk')
+        self.obj = LogBookRecord.objects.get(pk=record_pk)
+        return self.obj
 
-        return queryset
+    def perform_update(self, serializer):
+        pictures = self.request.FILES
+
+        for key, img in pictures.items():
+            LogBookRecordPictures.objects.create(image=img, pictures=self.obj)
+        serializer.save()
 
 
 class LogBookRecordPictureDeleteView(generics.DestroyAPIView):
@@ -89,9 +96,9 @@ class LogBookRecordPictureDeleteView(generics.DestroyAPIView):
     #     picture_id = self.kwargs.get('picture_id')
     #     return LogBookRecordPictures.objects.get(id=picture_id)
     def get_object(self):
-        picture_id = self.kwargs.get('picture_id')
+        picture_pk = self.kwargs.get('picture_pk')
         try:
-            return LogBookRecordPictures.objects.get(id=picture_id)
+            return LogBookRecordPictures.objects.get(pk=picture_pk)
         except ObjectDoesNotExist:
             raise Http404
 

@@ -26,7 +26,7 @@ onMounted(() => {
         ? response.data.text.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
         : "";
 
-      console.log('response.data------', response.data);
+      // console.log('response.data------', response.data);
     })
     .catch((error) => {
       // TODO: изменить на запись в лог и вывод текста пользователю
@@ -34,7 +34,7 @@ onMounted(() => {
     });
 });
 
-console.log("userIdFromStore----", userIdFromStore);
+// console.log("userIdFromStore----", userIdFromStore);
 // console.log('record.creator----', record.value)
 </script>
 

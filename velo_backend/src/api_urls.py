@@ -5,7 +5,7 @@ from rest_framework.routers import SimpleRouter, DefaultRouter
 from src.bicycles.views import BicycleListViewSet, MyBicycleListViewSet, MyBicycleCreateViewSet, MyBicycleUpdateViewSet, \
     BicycleDetailViewSet
 from src.logbooks.views import LogBookRecordViewSet, BicycleLogBookViewSet, BicycleLogBookRecordCreateView, \
-    LogBookRecordUpdateView
+    LogBookRecordUpdateView, LogBookRecordPictureDeleteView
 from src.profiles.views import MyVeloUserView, VeloUserViewSet
 
 
@@ -37,4 +37,5 @@ urlpatterns = [
     path('logbooks/<int:pk>/', LogBookRecordViewSet.as_view({'get': 'retrieve'})),  # просмотр
     path('logbooks/<int:pk>/update/', LogBookRecordUpdateView.as_view()),  # (редактирование)
     path('logbooks/', LogBookRecordViewSet.as_view({'get': 'list'})),  # просмотр
+    path('pictures/<int:picture_id>/delete/', LogBookRecordPictureDeleteView.as_view()),  # (удаление фото)
 ]

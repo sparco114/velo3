@@ -33,6 +33,40 @@ onMounted(() => {
 });
 
 
+
+
+
+const errorPictureDeleteMessage = ref("");
+
+// TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
+const deletePicture = (pictureId) => {
+  // Выполните запрос на удаление фотографии с сервера
+  const apiUrl = `/pictures/${pictureId}/delete/`;
+
+  customAxios
+    .delete(apiUrl)
+    .then((response) => {
+      logBookRecord.value.pictures = logBookRecord.value.pictures.filter(picture => picture.id !== pictureId);
+      console.log(`Фотография с id ${pictureId} успешно удалена`);
+    })
+    .catch((error) => {
+      errorPictureDeleteMessage.value = "Произошла ошибка при удалении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
+      console.error(`Ошибка при удалении фотографии с id ${pictureId}:`, error);
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 const selectedFileNames = ref([]);
 
 
@@ -124,7 +158,7 @@ const updateLogBookRecord = () => {
     console.log('table(Object.fromEntries(formData)', Object.fromEntries(formData));
   // console.log("newBicycle-----перед отправкой", logBookRecord.value);
   customAxios
-    .patch(apiUrl, formData, {
+    .put(apiUrl, formData, {
       headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
     })
     .then((response) => {
@@ -292,25 +326,29 @@ const deleteLogBookRecord = () => {
             multiple/>
         </div>
 
+
         <div
           class="row align-items-center mt-2"
           v-if="logBookRecord.pictures && logBookRecord.pictures.length > 0"
           v-for="picture in logBookRecord.pictures"
+          :key="picture.id"
         >
           <div class="col-3">
+            
             <div class="img-wrapper-bike-main-picture">
               <img :src="picture.image" alt="" class="rounded-3 border" />
             </div>
           </div>
           <div class="col">
             <button
-              @click.prevent="clearPicture"
-              class="btn btn-sm btn-outline-danger rounded-4"
+            @click.prevent="deletePicture(picture.id)"
+            class="btn btn-sm btn-outline-danger rounded-4"
             >
-              Удалить фото
-            </button>
-          </div>
+            Удалить фото
+          </button>
         </div>
+      </div>
+      <span class="text-danger" v-if="errorPictureDeleteMessage">{{ errorPictureDeleteMessage }}</span>
       </div>
 
       <div class="d-flex justify-content-center mt-3">

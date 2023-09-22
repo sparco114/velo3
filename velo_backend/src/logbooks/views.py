@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from rest_framework import permissions
 from rest_framework import viewsets, generics
 from rest_framework import filters
@@ -6,7 +8,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from src.bicycles.models import Bicycle
 from src.logbooks.models import LogBookRecord, LogBookRecordPictures
 from src.logbooks.permissions import IsBicycleOwner, IsRecordCreator
-from src.logbooks.serializers import LogBookRecordSerializer
+from src.logbooks.serializers import LogBookRecordSerializer, LogBookRecordPictureSerializer
 
 
 class LogBookRecordViewSet(viewsets.ReadOnlyModelViewSet):
@@ -73,4 +75,23 @@ class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         record_pk = self.kwargs.get('pk')
         queryset = LogBookRecord.objects.filter(pk=record_pk)
+        print(f"Received data: {self.request.data}")
+
         return queryset
+
+
+class LogBookRecordPictureDeleteView(generics.DestroyAPIView):
+    # TODO: !! настроить, чтоб фото мог удалять только создатель
+    # permission_classes = [IsRecordCreator]
+    serializer_class = LogBookRecordPictureSerializer
+
+    # def get_queryset(self):
+    #     picture_id = self.kwargs.get('picture_id')
+    #     return LogBookRecordPictures.objects.get(id=picture_id)
+    def get_object(self):
+        picture_id = self.kwargs.get('picture_id')
+        try:
+            return LogBookRecordPictures.objects.get(id=picture_id)
+        except ObjectDoesNotExist:
+            raise Http404
+

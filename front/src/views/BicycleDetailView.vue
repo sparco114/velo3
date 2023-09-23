@@ -8,7 +8,7 @@ import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
 import customAxios from "../axios.js";
-import {DEFAULT_MAIN_BICYCLE_IMAGE_URL } from "../constants.js";
+import { DEFAULT_MAIN_BICYCLE_IMAGE } from "../constants.js";
 
 
 
@@ -80,7 +80,7 @@ onMounted(() => {
   <div class="img-wrapper-bike-main-picture">
     <!-- src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg" -->
     <img
-      :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+      :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE"
       class="rounded-4 shadow-sm"
       alt="фото велосипеда"
     />

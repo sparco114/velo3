@@ -1,11 +1,10 @@
 <script setup>
-import BicycleCardSmall from "./BicycleCardSmall.vue";
 import { ref, onMounted } from "vue";
-// import axios from "axios";
-import customAxios from "../../axios.js"
 import { RouterLink } from "vue-router";
+import customAxios from "../../axios.js";
+import BicycleCardSmall from "./BicycleCardSmall.vue";
 
-
+// из HomeView
 const props = defineProps({
   apiUrlMyBicycleListForHomePage: String,
 });
@@ -17,11 +16,9 @@ onMounted(() => {
     .get(props.apiUrlMyBicycleListForHomePage)
     .then((response) => {
       bicycles.value = response.data.results;
-      // TODO: убрать на проде
       console.log(response.data);
     })
     .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
@@ -41,10 +38,12 @@ console.log("bicycles.value---", bicycles.value.length);
     <div class="row justify-content-center row-cols-3 g-3 mt-2">
       <div class="card text-center mb-3 rounded-4">
         <div class="card-body">
-          <p class="card-text">
-            Вы пока не добавили велосипед
-          </p>
-          <RouterLink class="btn btn-l btn-success rounded-4" :to="{ name: 'bicycle-create' }">Добавить велосипед</RouterLink>
+          <p class="card-text">Вы пока не добавили велосипед</p>
+          <RouterLink
+            class="btn btn-l btn-success rounded-4"
+            :to="{ name: 'bicycle-create' }"
+            >Добавить велосипед</RouterLink
+          >
         </div>
       </div>
     </div>

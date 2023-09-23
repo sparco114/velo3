@@ -1,9 +1,9 @@
 <script setup>
 import { defineProps } from "vue";
 import { RouterLink } from "vue-router";
-import {DEFAULT_MAIN_BICYCLE_IMAGE_URL} from "../../constants.js";
+import { DEFAULT_MAIN_BICYCLE_IMAGE } from "../../constants.js";
 
-
+// из BicyclesList, MyBicycleListForHomePage
 const props = defineProps({
   bicycle: Object,
 });
@@ -18,11 +18,10 @@ const props = defineProps({
 
     <div class="img-wrapper-bike-main-picture">
       <img
-        :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+        :src="bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE"
         class="card-img-top"
         alt="фото велосипеда"
       />
-
     </div>
 
     <div class="card-body d-flex flex-column">

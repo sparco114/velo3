@@ -1,6 +1,7 @@
 <script setup>
-import { DEFAULT_USER_AVATAR_IMAGE_URL } from "../../constants.js";
+import { DEFAULT_USER_AVATAR_IMAGE } from "../../constants.js";
 
+// из BicycleDetailView
 const props = defineProps({
   bicycleOwner: Object,
 });
@@ -17,17 +18,16 @@ const props = defineProps({
             :to="{ name: 'profile-detail', params: { id: bicycleOwner.id } }"
           >
             <img
-              :src="bicycleOwner.avatar || DEFAULT_USER_AVATAR_IMAGE_URL"
+              :src="bicycleOwner.avatar || DEFAULT_USER_AVATAR_IMAGE"
               alt="user_avatar"
               class="rounded-circle"
             />
           </RouterLink>
         </div>
       </div>
+
       <div class="col-11">
-        <!-- Vue не успевает обнаружить реактивные изменения внутри объекта словаря, 
-          поэтому делаем проверку v-if (она может отобразить значение позже, 
-          когда оно будет подгружено из базы) -->
+        <!-- TODO: Попробовать вынести проверку v-if на уровень выше, чтоб не дублировался код -->
         <div v-if="bicycleOwner" class="ms-2">
           <RouterLink
             class="text-decoration-none text-dark"
@@ -37,9 +37,9 @@ const props = defineProps({
             <span class="fs-5">{{ bicycleOwner.username }}</span>
           </RouterLink>
           <br />
-          <small class="text-secondary">{{
-            bicycleOwner.city ? bicycleOwner.city : "-"
-          }}</small>
+          <small class="text-secondary">
+            {{ bicycleOwner.city ? bicycleOwner.city : "-" }}
+          </small>
         </div>
       </div>
     </div>

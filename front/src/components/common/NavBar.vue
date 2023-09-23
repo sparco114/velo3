@@ -1,14 +1,14 @@
 <script setup>
-import { RouterLink } from "vue-router";
-import { useRoute, useRouter } from "vue-router";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
 
 // TODO: подумать, нужно ли это обновление страницы
+/* Обновление страницы при нажатии Регистриция, если пользователь уже находится на странице регистрации, требуется для быстрой очистки полей формы, если позлователю нужно ввести другие данные */
 const redirectToRegistration = () => {
   if (route.name === "user-registration") {
     router.go(); // Этот вызов обновит текущую страницу
@@ -17,13 +17,12 @@ const redirectToRegistration = () => {
   }
 };
 
-// const userId = computed(() => store.state.userId);
-// TODO: перенести эту кнопку и логику в актуальное место на сайте, если потребуется
+/* Проверка авторизации, для отображения на странице разной информации в зависимости от этого */
 const isLoggedIn = computed(() => store.state.authToken !== null);
-// const userId = computed(() => store.state.userId);
+
 const logoutUser = () => {
-  store.commit("clearAuthToken");
-  store.commit("clearUserId");
+  store.commit("clearAuthToken"); // Удаление токена из "vue store" и из "local storage"
+  store.commit("clearUserId"); // Удаление "user id" из "vue store" и из "local storage"
   console.log("clearAuthToken-out", store.state.authToken);
   console.log("clearUserId-out", store.state.userId);
   router.push({ name: "user-login" });
@@ -41,6 +40,7 @@ const logoutUser = () => {
           logo
         </RouterLink>
       </strong>
+
       <div class="me-3">
         <RouterLink
           class="nav-link navbar-button fs-5"
@@ -49,6 +49,7 @@ const logoutUser = () => {
           Велосипеды
         </RouterLink>
       </div>
+
       <div class="me-auto">
         <RouterLink
           class="nav-link navbar-button fs-5"
@@ -72,13 +73,8 @@ const logoutUser = () => {
           Вход
         </RouterLink>
       </div>
+
       <div v-else>
-        <!-- <button
-          class="btn btn-success border me-2 rounded-4"
-          @click=""
-        >
-          Мои велосипеды
-        </button> -->
         <RouterLink
           v-if="store.state.userId"
           class="btn btn-success border rounded-4 me-3"
@@ -87,17 +83,10 @@ const logoutUser = () => {
           Мой профиль
           <!-- {{ store.state.userId }} -->
         </RouterLink>
-        <!-- <RouterLink
-        v-else
-          class="btn btn-success border rounded-4 me-4"
-          to="{ name: 'profile-detail', params:{ id: store.state.userId} }"
-        >состояния нет
-           {{ store.state.userId }}
-           {{ userId }}
-           {{ store.state.authToken }}
-        </RouterLink> -->
 
-        <button class="btn text-white rounded-4" @click="logoutUser">Выйти</button>
+        <button class="btn text-white rounded-4" @click="logoutUser">
+          Выйти
+        </button>
       </div>
     </div>
   </nav>
@@ -107,6 +96,7 @@ const logoutUser = () => {
 .navbar {
   background-color: #198754;
 }
+
 .navbar-button {
   color: #fff !important;
 }

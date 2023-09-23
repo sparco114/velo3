@@ -1,10 +1,10 @@
 <script setup>
-// import axios from "axios";
-import customAxios from "../../axios.js"
 import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
+import customAxios from "../../axios.js";
 import LogBookRecordMedium from "./LogBookRecordMedium.vue";
+import { DEFAULT_LOGBOOK_RECORDS_AMOUNT } from "../../constants.js";
 
+// из LogBookRecordsView
 const props = defineProps({
   logBookRecordAmount: String,
 });
@@ -17,18 +17,16 @@ onMounted(() => {
   if (props.logBookRecordAmount) {
     apiUrl += props.logBookRecordAmount;
   } else {
-    apiUrl += "?last=5";
+    apiUrl += DEFAULT_LOGBOOK_RECORDS_AMOUNT;
   }
 
   customAxios
     .get(apiUrl)
     .then((response) => {
       logBookRecords.value = response.data.results;
-      // Убрать на проде
       console.log(response.data);
     })
     .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });

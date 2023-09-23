@@ -1,17 +1,20 @@
 <script setup>
 import { defineProps, ref } from "vue";
 import { RouterLink } from "vue-router";
-import { DEFAULT_MAIN_BICYCLE_IMAGE_URL } from "../../constants.js";
+import { DEFAULT_MAIN_BICYCLE_IMAGE } from "../../constants.js";
 
+// из LogBookRecordsList и BicycleLogBookFull
 const props = defineProps({
   record: Object,
 });
 
 const showFullText = ref({}); // Объект для хранения состояния отображения полного текста
-const fullPreparedHtmlText = props.record.text.replace(/\n/g, "<br>");
-const shortenedText = props.record.text.slice(0, 255);
-const activateShowFull = (recordId) => {
-  showFullText.value[recordId] = !showFullText.value[recordId];
+
+const shortText = props.record.text.slice(0, 255); // Начало текста (первые 255 символов)
+const fullPreparedHtmlText = props.record.text.replace(/\n/g, "<br>"); // Полный текст
+
+const activateShowFullText = (recordId) => {
+  showFullText.value[recordId] = true; // Переключение в режим отображения полного текста
 };
 </script>
 
@@ -29,25 +32,25 @@ const activateShowFull = (recordId) => {
           >
             <div class="img-wrapper-bike-main-picture">
               <img
-                :src="record.bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE_URL"
+                :src="record.bicycle.pictures || DEFAULT_MAIN_BICYCLE_IMAGE"
                 class="card-img"
                 alt="фото велосипеда"
               />
             </div>
 
-            <div class="ms-1 mt-1">
-              <!-- TODO: можно доработать, чтоб при наведении на пользователя/велосипед 
+            <!-- TODO: можно доработать, чтоб при наведении на пользователя/велосипед 
               появлялось краткое инфо, в том числе город -->
-              <div class="">
-                {{ record.bicycle.brand }}
-                {{ record.bicycle.model }}
-                {{ record.bicycle.bicycle_name }}
-              </div>
+            <div class="ms-1 mt-1">
+              {{ record.bicycle.brand }}
+              {{ record.bicycle.model }}
+              {{ record.bicycle.bicycle_name }}
             </div>
           </RouterLink>
+
           <small class="ms-1 text-muted">{{ record.bicycle.owner }}</small>
         </div>
       </div>
+
       <div class="col-10">
         <div class="card-body">
           <RouterLink
@@ -58,15 +61,18 @@ const activateShowFull = (recordId) => {
               <img :src="record.pictures[0].image" class="card-img rounded-3" />
 
               <div class="row row-cols-5 g-1 mt-0">
-                <template
-                  v-for="picture in record.pictures.slice(1, record.pictures.length)"
+                <div
+                  v-for="picture in record.pictures.slice(
+                    1,
+                    record.pictures.length
+                  )"
                 >
                   <div class="col">
                     <div class="image-container">
                       <img :src="picture.image" class="rounded-3" />
                     </div>
                   </div>
-                </template>
+                </div>
               </div>
             </div>
 
@@ -80,16 +86,21 @@ const activateShowFull = (recordId) => {
           <div class="mt-2">
             <div v-if="record.text.length > 255">
               <div v-if="!showFullText[record.id]">
-                {{ shortenedText }}
+                {{ shortText }}
                 <span>
-                  <a class="text-nowrap" @click="activateShowFull(record.id)">
+                  <a
+                    class="text-nowrap"
+                    @click="activateShowFullText(record.id)"
+                  >
                     Читать далее
                   </a>
                 </span>
+
                 <p class="card-text text-end">
                   <small class="text-muted">{{ record.created_at }}</small>
                 </p>
               </div>
+
               <div v-else>
                 <div v-html="fullPreparedHtmlText"></div>
                 <div class="mt-2">
@@ -97,11 +108,13 @@ const activateShowFull = (recordId) => {
                     <div v-if="record.mileage" class="col-3 text-muted">
                       <small>Пробег: {{ record.mileage }} км.</small>
                     </div>
+
                     <div class="col-4 text-muted">
-                      <small v-if="record.cost"
-                        >Стоимость: {{ record.cost }} руб.</small
-                      >
+                      <small v-if="record.cost">
+                        Стоимость: {{ record.cost }} руб.
+                      </small>
                     </div>
+
                     <div class="col text-muted text-end">
                       <small>{{ record.created_at }}</small>
                     </div>
@@ -118,11 +131,13 @@ const activateShowFull = (recordId) => {
                   <div v-if="record.mileage" class="col-3 text-muted">
                     <small>Пробег: {{ record.mileage }} км.</small>
                   </div>
+
                   <div class="col-4 text-muted">
-                    <small v-if="record.cost"
-                      >Стоимость: {{ record.cost }} руб.</small
-                    >
+                    <small v-if="record.cost">
+                      Стоимость: {{ record.cost }} руб.
+                    </small>
                   </div>
+
                   <div class="col text-muted text-end">
                     <small>{{ record.created_at }}</small>
                   </div>
@@ -130,20 +145,6 @@ const activateShowFull = (recordId) => {
               </div>
             </div>
           </div>
-
-          <!-- TODO: можно добавить кнопку Читать далее, 
-            которая будет раскрывать полный текст и добавлять Пробег и Стоимость
-            выше нужно будет внести корректировки в функцию showFullText -->
-          <!-- <span v-if="record.text.length > 225">
-              <RouterLink
-                class="text-nowrap"
-                to="#"
-                 @click="showFullText(record)"
-              >
-                Читать далее
-              </RouterLink> 
-            </span> -->
-          <!-- </div> -->
         </div>
       </div>
     </div>

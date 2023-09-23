@@ -1,12 +1,10 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
-import { RouterLink } from "vue-router";
-import BicyclesList from "../bicycles/BicyclesList.vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
-import { DEFAULT_USER_AVATAR_IMAGE_URL } from "../../constants.js";
-
+import { RouterLink, useRoute } from "vue-router";
+import customAxios from "../../axios.js";
+import BicyclesList from "../bicycles/BicyclesList.vue";
+import { DEFAULT_USER_AVATAR_IMAGE } from "../../constants.js";
 
 const store = useStore();
 const route = useRoute();
@@ -15,37 +13,27 @@ const route = useRoute();
 // выяснить как ой вариант опитимальней (в этом случае требуется из обоих мест)
 const userIdFromRoute = computed(() => route.params.id);
 const userIdFromStore = computed(() => store.state.userId);
-console.log("userIdFromRoute----from Profil", userIdFromRoute.value);
-console.log("userIdFromStore----from Profil", userIdFromStore.value);
-console.log(
-  "userIdFromRoute.value == userIdFromStore.value---",
-  userIdFromRoute.value == userIdFromStore.value
-);
 
-// console.log("store.state.userId----from Profil", store.state.userId);
-const apiUrlBicycleList = `http://127.0.0.1:8000/api/v1/bicycles/?owner=${userIdFromRoute.value}`;
-// console.log("apiUrlBicycleList----from prof", apiUrlBicycleList);
+const apiUrlBicycleList = `/bicycles/?owner=${userIdFromRoute.value}`;
 const user = ref([]);
 
 onMounted(() => {
-  let apiUrl = `http://127.0.0.1:8000/api/v1/profiles/${userIdFromRoute.value}/`;
+  let apiUrl = `/profiles/${userIdFromRoute.value}/`;
 
-  axios
+  customAxios
     .get(apiUrl)
     .then((response) => {
       user.value = response.data;
 
-      // TODO: !! разобраться с безопасностью, т.е. приходится отображать это через v-html= в template
+      // TODO: !! разобраться с безопасностью, т.к. приходится отображать это через v-html= в template
       // if (user.value.velouser_profile) {
       user.value.velouser_profile.about = response.data.velouser_profile.about
         ? response.data.velouser_profile.about.replace(/\n/g, "<br>")
         : "";
       // }
-      // TODO: убрать на проде
       console.log(response.data);
     })
     .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
@@ -56,19 +44,16 @@ onMounted(() => {
     <div class="row card-body">
       <div class="col-2 g-0 avatar-full-profile">
         <img
-          :src="user.avatar || DEFAULT_USER_AVATAR_IMAGE_URL"
+          :src="user.avatar || DEFAULT_USER_AVATAR_IMAGE"
           class="rounded-circle"
           alt="avatar"
         />
 
-        <!-- TODO: слово value подчеркнуто в userIdFromRoute.value в дувх местах как предупреждение 
-          Property value may not exist on type string | string[]. Did you mean valueOf? 
-          Property value does not exist on type string.ts(2568), разобраться, повлияет ли на что-то в будущем -->
         <div
           v-if="userIdFromRoute == userIdFromStore"
           class="d-flex justify-content-center align-items-center mt-2"
         >
-          <!-- TODO: подумать откуда брать id, из userIdFromRoute или из userIdFromStore -->
+          <!-- TODO: подумать откуда лучше брать id, из userIdFromRoute или из userIdFromStore -->
           <RouterLink
             class="btn btn-sm btn-outline-secondary border rounded-5"
             :to="{ name: 'profile-edit' }"
@@ -77,6 +62,7 @@ onMounted(() => {
           </RouterLink>
         </div>
       </div>
+
       <div class="col">
         <div class="card-body ms-2">
           <h5 class="card-title">{{ user.username }}</h5>
@@ -86,30 +72,33 @@ onMounted(() => {
           <div class="card-text text-body-secondary text-muted" v-else>
             Имя: -
           </div>
+
           <div class="card-text" v-if="user.city">
             <small class="text-muted">{{ user.city }}</small>
           </div>
           <div class="card-text" v-else>
-            <small class="text-muted">Город: -</small>
+            <small class="text-muted">Город: - </small>
           </div>
 
-          <div class="card-text" v-if="user.velouser_profile">
-            <div v-if="user.velouser_profile.phone">
-              <small class="text-muted"
-                >Контакты: {{ user.velouser_profile.phone }}</small
-              >
+          <div v-if="user.velouser_profile">
+            <div class="card-text">
+              <div v-if="user.velouser_profile.phone">
+                <small class="text-muted">
+                  Контакты: {{ user.velouser_profile.phone }}
+                </small>
+              </div>
+              <div class="card-text" v-else>
+                <small class="text-muted">Контакты: - </small>
+              </div>
             </div>
-            <div class="card-text" v-else>
-              <small class="text-muted">Контакты: -</small>
-            </div>
-          </div>
 
-          <div class="card-text mt-4" v-if="user.velouser_profile">
-            <div v-if="user.velouser_profile.about">
-              <div v-html="user.velouser_profile.about"></div>
-            </div>
-            <div class="card-text text-body-secondary text-muted" v-else>
-              О себе: -
+            <div class="card-text mt-4">
+              <div v-if="user.velouser_profile.about">
+                <div v-html="user.velouser_profile.about"></div>
+              </div>
+              <div class="card-text text-body-secondary text-muted" v-else>
+                О себе: -
+              </div>
             </div>
           </div>
         </div>
@@ -126,10 +115,12 @@ onMounted(() => {
           class="btn btn-sm btn-success rounded-5"
           v-if="userIdFromRoute == userIdFromStore"
           :to="{ name: 'bicycle-create' }"
-          >Добавить велосипед</RouterLink
         >
+          Добавить велосипед
+        </RouterLink>
       </div>
     </div>
+
     <BicyclesList :apiUrlBicycleList="apiUrlBicycleList" />
   </div>
 </template>

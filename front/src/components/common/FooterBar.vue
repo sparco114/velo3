@@ -8,12 +8,15 @@ import { RouterLink } from "vue-router";
       <RouterLink class="nav-link me-3" to="about-project">
         О проекте
       </RouterLink>
+
       <RouterLink class="nav-link me-3" to="support">
         Связь с автором
       </RouterLink>
+
       <RouterLink class="nav-link me-3" to="confidential-policy">
         Политика конфиденциальности
       </RouterLink>
+
       <RouterLink class="nav-link me-3" to="agreement">
         Пользовательское соглашение
       </RouterLink>

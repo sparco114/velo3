@@ -30,3 +30,5 @@ app.use(store);
 app.use(router);
 
 app.mount("#app");
+
+// TODO: !! на проде убрать все console.log из всех компонентов. Вместо этого можно записывать в лог

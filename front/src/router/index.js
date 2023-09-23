@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import HomeView from '../views/HomeView.vue'
 import BicyclesView from '../views/BicyclesView.vue'
 import LogBookRecordsView from '../views/LogBookRecordsView.vue'
@@ -20,111 +21,108 @@ import ConfidentialPolicy from '../views/ConfidentialPolicy.vue'
 import Support from '../views/Support.vue'
 
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },    
     {
       path: '/bicycles',
       name: 'bicycles-list',
-      component: BicyclesView
+      component: BicyclesView,
     },
     {
       path: '/logbooks',
       name: 'logbooks-list',
-      component: LogBookRecordsView
+      component: LogBookRecordsView,
     },
     {
       path: '/bicycles/:id',
       name: 'bicycle-detail',
-      component: BicycleDetailView
+      component: BicycleDetailView,
     },
     {
       path: '/logbooks/:id',
       name: 'logbook-record-detail',
-      component: LogBookRecordDetailView
+      component: LogBookRecordDetailView,
     },
     {
       path: '/bicycles/:id/logbook',
       name: 'bicycle-logbook-full',
-      component: BicycleLogBookFullView
+      component: BicycleLogBookFullView,
     },
     {
       path: '/profiles/:id',
       name: 'profile-detail',
-      component: ProfileDetailView
+      component: ProfileDetailView,
     },
     {
       path: '/registration',
       name: 'user-registration',
-      component: UserRegistrationView
+      component: UserRegistrationView,
     },
     {
       path: '/login',
       name: 'user-login',
-      component: UserLogInView
+      component: UserLogInView,
     },
     {
       path: '/profiles/my/edit',
       name: 'profile-edit',
-      component: ProfileEditView
+      component: ProfileEditView,
     },
     {
       path: '/my/bicycles/create',
       name: 'bicycle-create',
-      component: BicycleCreateView
+      component: BicycleCreateView,
     },
     {
       path: '/my/bicycles/:id',
       name: 'bicycle-edit',
-      component: BicycleEditView
+      component: BicycleEditView,
     },
     {
       path: '/bicycles/:id/logbook/create',
       name: 'logbook-record-create',
-      component: LogBookRecordCreate
+      component: LogBookRecordCreate,
     },
     {
       path: '/logbook/:id/edit',
       name: 'logbook-record-edit',
-      component: LogBookRecordEdit
+      component: LogBookRecordEdit,
     },
     {
       path: '/404',
       name: 'not-found-page',
-      component: NotFound
+      component: NotFound,
     },
     { path: '/:pathMatch(.*)*',
       name: 'not-found-path', 
-      component: NotFound 
+      component: NotFound ,
     },
     {
       path: '/about-project',
       name: 'about-project',
-      component: AboutProject
+      component: AboutProject,
     },
     {
       path: '/agreement',
       name: 'agreement',
-      component: Agreement
+      component: Agreement,
     },
     {
       path: '/confidential-policy',
       name: 'confidential-policy',
-      component: ConfidentialPolicy
+      component: ConfidentialPolicy,
     },
     {
       path: '/support',
       name: 'support',
-      component: Support
+      component: Support,
     },
-    
-
     
     // Динамический импорт
     // {
@@ -143,4 +141,4 @@ const router = createRouter({
   },
 })
 
-export default router
+export default router;

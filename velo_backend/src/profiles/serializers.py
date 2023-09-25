@@ -14,7 +14,7 @@ class VeloUserProfileSerializer(ModelSerializer):
 
 class VeloUserSerializer(ModelSerializer):
     username = serializers.CharField(read_only=True)
-    velouser_profile = VeloUserProfileSerializer(source='velouserprofile', read_only=False)
+    velouser_profile = VeloUserProfileSerializer(source='velouserprofile', read_only=False, required=False)
     date_joined = serializers.DateTimeField(read_only=True)
     # velouserprofile это поле которое автоматически создается в модели VeloUser, как обратная ссылка.
     # Можно присвоить ему любое имя, указав в связанном

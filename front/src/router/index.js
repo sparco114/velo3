@@ -12,13 +12,13 @@ import UserLogInView from '../views/UserLogInView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import BicycleCreateView from '../views/BicycleCreateView.vue'
 import BicycleEditView from '../views/BicycleEditView.vue'
-import LogBookRecordCreate from '../views/LogBookRecordCreate.vue'
-import LogBookRecordEdit from '../views/LogBookRecordEdit.vue'
-import NotFound from '../views/NotFound.vue'
-import AboutProject from '../views/AboutProject.vue'
-import Agreement from '../views/Agreement.vue'
-import ConfidentialPolicy from '../views/ConfidentialPolicy.vue'
-import Support from '../views/Support.vue'
+import LogBookRecordCreateView from '../views/LogBookRecordCreateView.vue'
+import LogBookRecordEditView from '../views/LogBookRecordEditView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
+import AboutProjectView from '../views/AboutProjectView.vue'
+import AgreementView from '../views/AgreementView.vue'
+import ConfidentialPolicyView from '../views/ConfidentialPolicyView.vue'
+import SupportView from '../views/SupportView.vue'
 
 
 const router = createRouter({
@@ -87,41 +87,42 @@ const router = createRouter({
     {
       path: '/bicycles/:id/logbook/create',
       name: 'logbook-record-create',
-      component: LogBookRecordCreate,
+      component: LogBookRecordCreateView,
     },
     {
       path: '/logbook/:id/edit',
       name: 'logbook-record-edit',
-      component: LogBookRecordEdit,
+      component: LogBookRecordEditView,
     },
     {
       path: '/404',
       name: 'not-found-page',
-      component: NotFound,
+      component: NotFoundView,
     },
+    // TODO: При попадении на стнаицу NotFoundView невозможно вернуться на предыдущую станицу стрелкой Назад
     { path: '/:pathMatch(.*)*',
       name: 'not-found-path', 
-      component: NotFound ,
+      component: NotFoundView ,
     },
     {
       path: '/about-project',
       name: 'about-project',
-      component: AboutProject,
+      component: AboutProjectView,
     },
     {
       path: '/agreement',
       name: 'agreement',
-      component: Agreement,
+      component: AgreementView,
     },
     {
       path: '/confidential-policy',
       name: 'confidential-policy',
-      component: ConfidentialPolicy,
+      component: ConfidentialPolicyView,
     },
     {
       path: '/support',
       name: 'support',
-      component: Support,
+      component: SupportView,
     },
     
     // Динамический импорт

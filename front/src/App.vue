@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 import NavBar from "./components/common/NavBar.vue";
 import FooterBar from "./components/common/FooterBar.vue";
 </script>
@@ -12,7 +12,8 @@ import FooterBar from "./components/common/FooterBar.vue";
   <div class="container px-custom-feed">
     <RouterView />
   </div>
-  <FooterBar />
-</template>
 
-<style scoped></style>
+  <footer>
+    <FooterBar />
+  </footer>
+</template>

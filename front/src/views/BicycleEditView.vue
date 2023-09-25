@@ -1,18 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-// import axios from "axios";
-import { useRoute } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import router from "../router";
 import customAxios from "../axios.js";
 
-const store = useStore();
 const bikeId = useRoute().params.id;
+const store = useStore();
 
 const userIdFromStore = computed(() => store.state.userId);
 
-// TODO: Разобраться, нужно ли здесь использовать FormData вместо этого ref,
-// для формирования ответа multipart/form-data
 const bicycle = ref({});
 
 onMounted(() => {
@@ -22,118 +19,74 @@ onMounted(() => {
     .get(apiUrl)
     .then((response) => {
       bicycle.value = response.data;
-      console.log(response.data);
-      console.log(bicycle.value);
     })
     .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
 
 const successBicycleUpdateMessage = ref(""); // Сообщение об успешном сохранении
-const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке
-const bicyclePictureUpdateMessage = ref("");
+const errorBicycleUpdateMessage = ref(""); // Сообщение об ошибке сохранения
+const bicyclePictureUpdateMessage = ref(""); // Информационное сообщение при действиях с фото
 
-
-// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
-//  - добавить апи для загрузки фото
-//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
-//    адрес этого фото, и записывать его в поле pictures объекта bicycle.
+// TODO: Можно переписать функционал как в LogBookRecordCreateView (сохранять фото как отдельную модель на бэке)
 // Добавляем файл в запрос
 const handleBicycleUpdatePictureUpload = (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]; // Берем первый файл (т.к. выбирать на странице можно только один)
   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
   if (file && file.size > maxSize) {
     alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
     event.target.value = ""; // Очистить выбранный файл
     return;
   }
-  bicyclePictureUpdateMessage.value = `Изображение "${file.name}" будет загружено после СОХРАНЕНИЯ ИЗМЕНЕНИЙ`
+  bicyclePictureUpdateMessage.value = `Изображение "${file.name}" будет загружено после СОХРАНЕНИЯ ИЗМЕНЕНИЙ`;
   bicycle.value.pictures = file;
 };
 
-
-
-
-
-
-
-
- // Создайте временную переменную для отправки данных на сервер
+// Создаем временную переменную для отправки данных на сервер
 const bicycleForUpdate = computed(() => {
+  
   const updatedBicycle = { ...bicycle.value };
-  if (updatedBicycle.pictures instanceof File) {
 
-  } else {
-    // updatedBicycle.pictures = null;
-    console.log('сработал-------delete updatedBicycle.pictures')
+  // Если прикреплено новое фото - оставляем updatedBicycle как есть
+  if (updatedBicycle.pictures instanceof File) {
+  }
+  // Если новое фото не прикреплено - удаляем инфо из updatedBicycle, чтоб в запросе оно не отправлялось и действующее фото не изменялось
+  else {
     delete updatedBicycle.pictures;
   }
   return updatedBicycle;
 });
 
-
-
-
 // TODO: !! Добавить на бэке удаление изображения из папки, при удалении фото в форме
 const clearPicture = () => {
-  bicycleForUpdate.value.pictures = '';
-  // bicycle.value.pictures = '';
-  console.log('сработал-------clearPicture')
-  bicyclePictureUpdateMessage.value = 'Изображение будет удалено при СОХРАНЕНИИ ИЗМЕНЕНИЙ';
-  console.log('clearMessage-----', bicyclePictureUpdateMessage)
-  console.log(
-    "clearPicture------bicycleForUpdate.value.pictures",
-    bicycleForUpdate.value.pictures
-  );
+  bicycleForUpdate.value.pictures = ""; // Если фото удалено - добавляем в updatedBicycle пустую строку, чтоб затереть существующее фото
+  bicyclePictureUpdateMessage.value =
+    "Изображение будет удалено при СОХРАНЕНИИ ИЗМЕНЕНИЙ";
 };
 
 const updateMyBicycle = () => {
-  console.log('сработал updateMyBicycle')
   const apiUrl = `/my/bicycles/${bikeId}/`;
+
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
   bicyclePictureUpdateMessage.value = "";
 
-  
-  
-  const isPictureFile = bicycle.value.pictures instanceof File;
-  console.log("isPictureFile-----", isPictureFile);
-  
-
-// if (isPictureFile) {
-//   // Если pictures - это файл, устанавливаем значение в null
-//   bicycle.value.pictures = null;
-// } else {
-//     // Если pictures - это не файл, устанавливаем значение в пустую строку
-//     bicycle.value.pictures = "";
-//   }
-
-  
-  const headers = isPictureFile
-  ? { "Content-Type": "multipart/form-data" }
-  : { "Content-Type": "multipart/form-data" };
-  console.log("headers-----", headers);
-  
-  console.log("bicycle.value-----перед отправкой", bicycle.value);
-  console.log("bicycleForUpdate.value-----перед отправкой", bicycleForUpdate.value);
-
   customAxios
-    .put(apiUrl, bicycleForUpdate.value, { headers })
+    .put(apiUrl, bicycleForUpdate.value, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
     .then((response) => {
       console.log("Информация о велосипеде успешно обновлена:", response.data);
-      // TODO: добавить редирект на страницу пользователя
       bicycle.value.pictures = response.data.pictures;
       successBicycleUpdateMessage.value =
-        "Информация о велосипеде успешно обновлена";
-      // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
+        "Информация о велосипеде успешно обновлена.";
     })
     .catch((error) => {
       console.error("Ошибка при редактировании велосипеда:", error);
       errorBicycleUpdateMessage.value =
-        "Произошла ошибка при сохранении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
-      // TODO: Можно добавить вывод сообщения об ошибке пользователю
+        "Произошла ошибка при сохранении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку.";
+      // TODO: Можно добавить вывод сообщения о причине ошибки пользователю
     });
 };
 
@@ -145,28 +98,24 @@ function confirmDelete() {
 
 const deleteMyBicycle = () => {
   const apiUrl = `/my/bicycles/${bikeId}/`;
+
   successBicycleUpdateMessage.value = "";
   errorBicycleUpdateMessage.value = "";
 
-  //   console.log("newBicycle-----перед отправкой", bicycle.value);
   customAxios
     .delete(apiUrl)
     .then((response) => {
       console.log("Информация о велосипеде успешно удалена:", response.data);
-      // TODO: добавить редирект на страницу пользователя
-      //   successBicycleUpdateMessage.value =
-      //     "Информация о велосипеде успешно удалена";
       router.push({
         name: "profile-detail",
         params: { id: userIdFromStore.value },
       });
-      // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
     })
     .catch((error) => {
       console.error("Ошибка при удалении велосипеда:", error);
       errorBicycleUpdateMessage.value =
         "Произошла ошибка при удалении данных. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
-      // TODO: Можно добавить вывод сообщения об ошибке пользователю
+      // TODO: Можно добавить вывод сообщения о причине ошибки пользователю
     });
 };
 </script>
@@ -174,7 +123,6 @@ const deleteMyBicycle = () => {
 <template>
   <div class="ms-1 mb-2 fs-3 text-center">Редактировать велосипед</div>
   <div class="card mb-4 rounded-4">
-    <!-- <form class="card-body ms-4 pb-4" @submit.prevent="updateMyBicycle"> -->
     <form
       class="card-body ms-4 pb-4"
       enctype="multipart/form-data"
@@ -232,12 +180,12 @@ const deleteMyBicycle = () => {
       <div class="row align-items-center">
         <label for="wheelSize">Размер колес</label>
         <div class="col-5">
+          <!-- TODO: не срабатывает selected -->
           <select
             class="form-control"
             id="wheelSize"
             v-model="bicycle.wheel_size"
           >
-            TODO: не срабатывает selected
             <option value="" selected="">--------</option>
             <option value="10">10</option>
             <option value="12">12</option>
@@ -319,81 +267,56 @@ const deleteMyBicycle = () => {
         </div>
       </div>
 
-      <!-- <div class="row align-items-center mt-2">
-        <label>Фотография <span class="text-secondary">(максимальный размер файла: 3 МБ.)</span></label>
-        <div class="col">
-          <input
-            name="pictures"
-            type="file"
-            accept="image/*"
-            @change="handleBicycleUpdatePictureUpload"
-          />
-        </div>
-      </div> -->
-
-
-
-
-
       <div v-if="bicyclePictureUpdateMessage">
         <div class="row align-items-center mt-2" v-if="bicycle.pictures">
-          <div class="col alert alert-primary rounded-4">{{ bicyclePictureUpdateMessage }}</div>
+          <div class="col alert alert-primary rounded-4">
+            {{ bicyclePictureUpdateMessage }}
+          </div>
           <div class="col">
-          <button
-            @click.prevent="clearPicture"
-            class="btn btn-sm btn-outline-danger rounded-4"
-          >
-            Удалить фото
-          </button>
-        </div>
-        </div>
-      </div>
-
-
-
-<div v-else>
-
-  <div class="row align-items-center mt-2" v-if="bicycle.pictures">
-        <div class="col-3">
-          <div class="img-wrapper-bike-main-picture">
-            <img :src="bicycle.pictures" alt="" class="rounded-3 border"/>
-          
+            <button
+              @click.prevent="clearPicture"
+              class="btn btn-sm btn-outline-danger rounded-4"
+            >
+              Удалить фото
+            </button>
           </div>
         </div>
-        <div class="col">
-          <button
-            @click.prevent="clearPicture"
-            class="btn btn-sm btn-outline-danger rounded-4"
-          >
-            Удалить фото
-          </button>
-        </div>
       </div>
 
-      <div class="row align-items-center mt-2" v-else>
-        <label
-          >Фотография<span class="text-secondary"
-            >(максимальный размер файла: 3 МБ.)</span
-          ></label
-        >
-        <div class="col">
-          <input
-            name="main_pict"
-            type="file"
-            accept="image/*"
-            @change="handleBicycleUpdatePictureUpload"
-          />
+      <div v-else>
+        <div class="row align-items-center mt-2" v-if="bicycle.pictures">
+          <div class="col-3">
+            <div class="img-wrapper-bike-main-picture">
+              <img :src="bicycle.pictures" alt="" class="rounded-3 border" />
+            </div>
+          </div>
+          <div class="col">
+            <button
+              @click.prevent="clearPicture"
+              class="btn btn-sm btn-outline-danger rounded-4"
+            >
+              Удалить фото
+            </button>
+          </div>
+        </div>
+
+        <div class="row align-items-center mt-2" v-else>
+          <label>
+            Фотография
+            <span class="text-secondary">
+              (максимальный размер файла: 3 МБ.)
+            </span>
+          </label>
+          <div class="col">
+            <input
+              name="main_pict"
+              type="file"
+              accept="image/*"
+              @change="handleBicycleUpdatePictureUpload"
+            />
+          </div>
         </div>
       </div>
-</div>
-
-
-
-
-
-
-
-
 
       <div class="d-flex justify-content-center mt-3">
         <button type="submit" class="btn btn-success w-50 rounded-5">
@@ -405,16 +328,21 @@ const deleteMyBicycle = () => {
           v-if="successBicycleUpdateMessage"
           class="text-success col-10 ml-2 my-2"
         >
-          {{ successBicycleUpdateMessage }}. Вернуться к велосипеду
+          <p>{{ successBicycleUpdateMessage }}</p>
+          <RouterLink
+            class="btn border rounded-5"
+            :to="{ name: 'bicycle-detail', params: { id: bikeId } }"
+          >
+            Вернуться к велосипеду
+          </RouterLink>
         </span>
-        <span
-          v-if="errorBicycleUpdateMessage"
-          class="text-danger col-10 ml-2"
-          >{{ errorBicycleUpdateMessage }}</span
-        >
+        <span v-if="errorBicycleUpdateMessage" class="text-danger col-10 ml-2">
+          {{ errorBicycleUpdateMessage }}
+        </span>
       </div>
     </form>
   </div>
+
   <div class="row">
     <div class="col text-en">
       <button

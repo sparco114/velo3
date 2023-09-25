@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from "vue";
-// import axios from "axios";
-import customAxios from "../axios.js";
 import { useRouter } from "vue-router";
+import customAxios from "../axios.js";
 
 const router = useRouter();
 
@@ -12,8 +11,8 @@ const email = ref("");
 const password = ref("");
 const re_password = ref("");
 
-// TODO: Доработать вывод ошибок, чтоб вывод был на русском языке
-// (сейчас просто передается текст ошибки, которую отправил в ответе сервер)
+/* TODO: Доработать вывод ошибок, чтоб вывод был на русском языке
+(сейчас просто передается текст ошибки, которую отправил в ответе сервер) */
 const errorMessages = ref({
   username: [],
   email: [],
@@ -21,7 +20,7 @@ const errorMessages = ref({
   other: [],
 });
 
-// TODO: !! добавить асинхронность и обработку ошибок
+// TODO: !! попробовать добавить асинхронность и обработку ошибок
 // TODO: !! добавить валидацию полей
 // Получение заполненных регистрационных данных пользователя и отправка их с post на бэк
 const registerUser = () => {
@@ -47,8 +46,7 @@ const registerUser = () => {
     errorMessages.value.other.length > 0;
 
   if (hasValidationErrors) {
-    // Если есть ошибки, не отправляем запрос и завершаем функцию
-    return;
+    return; // Если есть ошибки, не отправляем запрос и завершаем функцию
   }
 
   customAxios
@@ -60,7 +58,7 @@ const registerUser = () => {
       router.push({ name: "user-login" });
     })
     .catch((error) => {
-      console.error("Ошибка при регистрации----:", error.response.data);
+      console.error("Ошибка при регистрации-:", error.response.data);
 
       const errorData = error.response.data;
       // Заполняем массив ошибок полученными ошибками
@@ -80,12 +78,11 @@ const registerUser = () => {
           }
         }
       }
-
-      console.log("errorMessages---", errorMessages);
+      console.log("errorMessages-", errorMessages);
     });
 };
 
-const checkUsername = () => {
+function checkUsername() {
   const usernamePattern = /^[a-zA-Z0-9]{4,20}$/; // Регулярное выражение для латинских букв и цифр
   if (!usernamePattern.test(username.value)) {
     errorMessages.value.username = [
@@ -94,9 +91,9 @@ const checkUsername = () => {
   } else {
     errorMessages.value.username = [];
   }
-};
+}
 
-const checkPassword = () => {
+function checkPassword() {
   const passwordPattern = /^[a-zA-Z0-9!@#$&*?]{8,20}$/; // Регулярное выражение для пароля
   if (!passwordPattern.test(password.value)) {
     errorMessages.value.password = [
@@ -105,15 +102,15 @@ const checkPassword = () => {
   } else {
     errorMessages.value.password = [];
   }
-};
+}
 
-const checkMatchRePassword = () => {
+function checkMatchRePassword() {
   if (password.value !== re_password.value) {
     errorMessages.value.other = ["Пароли не совпадают."];
   } else {
     errorMessages.value.other = [];
   }
-};
+}
 </script>
 
 <template>
@@ -124,6 +121,7 @@ const checkMatchRePassword = () => {
         <div class="">
           <label for="username" class="col-form-label">Никнейм:</label>
         </div>
+
         <div class="col-4">
           <input
             v-model="username"
@@ -133,7 +131,6 @@ const checkMatchRePassword = () => {
             aria-describedby="passwordHelpInline"
             required
           />
-          <!-- <p v-if="errorUsernameMessage">{{ errorUsernameMessage }}</p> -->
         </div>
         <div class="col-auto">
           <span id="passwordHelpInline" class="form-text">
@@ -217,5 +214,3 @@ const checkMatchRePassword = () => {
     </form>
   </div>
 </template>
-
-<style></style>

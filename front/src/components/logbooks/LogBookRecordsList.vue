@@ -4,7 +4,7 @@ import customAxios from "../../axios.js";
 import LogBookRecordMedium from "./LogBookRecordMedium.vue";
 import { DEFAULT_LOGBOOK_RECORDS_AMOUNT } from "../../constants.js";
 
-// из LogBookRecordsView
+// из HomeView и LogBookRecordsView
 const props = defineProps({
   logBookRecordAmount: String,
 });

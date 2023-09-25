@@ -1,21 +1,16 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
-// import axios from "axios";
+import { ref } from "vue";
 import router from "../router";
 import customAxios from "../axios.js";
 
 const bicycle = ref({});
 
-// const successBicycleCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorBicycleCreateMessage = ref(""); // Сообщение об ошибке
 
-// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
-//  - добавить апи для загрузки фото
-//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
-//    адрес этого фото, и записывать его в поле pictures объекта bicycle.
+// TODO: Можно переписать функционал как в LogBookRecordCreateView (сохранять фото как отдельную модель на бэке)
 // Добавляем файл в запрос
 const handleBicycleCreatePictureUpload = (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]; // Берем первый файл (т.к. выбирать на странице можно только один)
   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
   if (file && file.size > maxSize) {
     alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
@@ -27,25 +22,21 @@ const handleBicycleCreatePictureUpload = (event) => {
 
 const createNewBicycle = () => {
   const apiUrl = "/my/bicycles/create/";
-  // successBicycleCreateMessage.value = "";
+
   errorBicycleCreateMessage.value = "";
 
-  console.log("newBicycle-----перед отправкой", bicycle.value);
   customAxios
     .post(apiUrl, bicycle.value, {
-      headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+      headers: { "Content-Type": "multipart/form-data" }, //указываем из-за отправки изображения
     })
     .then((response) => {
-      console.log("Велосипед успешно создан:", response.data);
-      // successBicycleCreateMessage.value = "Велосипед успешно создан";
       router.push({ name: "bicycle-detail", params: { id: response.data.id } });
-      // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
+      console.log("Велосипед успешно создан:", response.data);
     })
     .catch((error) => {
-      console.error("Ошибка при создании велосипеда:", error);
       errorBicycleCreateMessage.value =
         "Произошла ошибка при создании велосипеда. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
-      // TODO: Можно добавить вывод сообщения об ошибке пользователю
+      console.error("Ошибка при создании велосипеда:", error);
     });
 };
 </script>
@@ -106,12 +97,12 @@ const createNewBicycle = () => {
       <div class="row align-items-center">
         <label for="wheel_size">Размер колес</label>
         <div class="col-5">
+          <!-- TODO: не срабатывает selected -->
           <select
             class="form-control"
             id="wheel_size"
             v-model="bicycle.wheel_size"
           >
-            TODO: не срабатывает selected
             <option value="" selected="">--------</option>
             <option value="10">10</option>
             <option value="12">12</option>
@@ -216,16 +207,9 @@ const createNewBicycle = () => {
         </button>
       </div>
       <div class="text-center mt-2">
-        <!-- <span
-          v-if="successBicycleCreateMessage"
-          class="text-success col-10 ml-2 my-2"
-          >{{ successBicycleCreateMessage }}</span
-        > -->
-        <span
-          v-if="errorBicycleCreateMessage"
-          class="text-danger col-10 ml-2"
-          >{{ errorBicycleCreateMessage }}</span
-        >
+        <span v-if="errorBicycleCreateMessage" class="text-danger col-10 ml-2">
+          {{ errorBicycleCreateMessage }}
+        </span>
       </div>
     </form>
   </div>

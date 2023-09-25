@@ -1,6 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
-// import axios from "axios";
+import { ref } from "vue";
 import router from "../router";
 import { useRoute } from "vue-router";
 import customAxios from "../axios.js";
@@ -10,17 +9,11 @@ const bikeId = useRoute().params.id;
 const logBookRecord = ref({});
 const formData = new FormData();
 
-// const successRecordCreateMessage = ref(""); // Сообщение об успешном сохранении
 const errorRecordCreateMessage = ref(""); // Сообщение об ошибке
 
-// TODO: !! Разобраться нужно ли переписать функционал следующим образом:
-//  - добавить апи для загрузки фото
-//  - добавить кнопку Загрузить фото в этой форме, которая будет загружать фото, а в ответ получать
-//    адрес этого фото, и записывать его в поле pictures объекта logBookRecord.
-// Добавляем файл в запрос
+const selectedFileNames = ref([]); // Имена выбранных файлов для отображения их на странице
 
-const selectedFileNames = ref([]);
-
+// Добавление файлов в запрос
 const handleRecordPicturesUpload = (event) => {
   const files = event.target.files;
   const maxSize = 3 * 1024 * 1024; // 3 МБ в байтах
@@ -32,11 +25,6 @@ const handleRecordPicturesUpload = (event) => {
     return;
   }
 
-  // if (files && files.size > maxSize) {
-  //   alert("Файл слишком большой. Максимальный размер файла: 3 МБ.");
-  //   event.target.value = ""; // Очистить выбранный файл
-  //   return;
-  // }
   // TODO: некорректно отображается количество выбранных файлов, если некоторые из них превышают максимальный размер
   for (let i = 0; i < files.length; i++) {
     if (files[i].size > maxSize) {
@@ -49,32 +37,26 @@ const handleRecordPicturesUpload = (event) => {
     }
   }
 
-  // Очистить список предыдущих имен файлов
-  selectedFileNames.value = [];
+  selectedFileNames.value = []; // Очистить список предыдущих имен файлов
 
-
-  // Если есть выбранные файлы, получаем их имена
+  // Если есть выбранные файлы, получаем их имена и добавляем в selectedFileNames
   if (selectedFiles.length > 0) {
     for (let i = 0; i < selectedFiles.length; i++) {
       selectedFileNames.value.push(selectedFiles[i].name);
     }
   }
-//  TODO: слить вместе с заполнением selectedFileNames, чтоб не дублировался код
+
+  //  TODO: слить вместе с заполнением selectedFileNames, чтоб не дублировался код
+  // Добавляем файлы в formData для отправки запроса
   for (let i = 0; i < selectedFiles.length; i++) {
     formData.append(`picturess[${i}]`, selectedFiles[i]);
   }
-
-  // for (const file of selectedFiles) {
-  // formData.append('pictures', file);
-  // }
 };
 
 const createNewLogBookRecord = () => {
   const apiUrl = `/bicycles/${bikeId}/logbook/create/`;
-  //   successRecordCreateMessage.value = "";
   errorRecordCreateMessage.value = "";
 
-  // console.log('logBookRecord.value.header--перед добавлением в formData', logBookRecord.value.header)
   formData.append("header", logBookRecord.value.header);
   formData.append("text", logBookRecord.value.text);
   formData.append(
@@ -89,31 +71,27 @@ const createNewLogBookRecord = () => {
     "category",
     logBookRecord.value.category ? logBookRecord.value.category : ""
   );
-  // console.log("formData.mileage------", formData.get('mileage'));
 
-  console.log(
-    "formData + pictures  ------перед отправкой",
-    console.table(Object.fromEntries(formData))
-  );
-  // console.log("newBicycle-----перед отправкой", logBookRecord.value);
+  // console.log(
+  //   "formData - перед отправкой",
+  //   console.table(Object.fromEntries(formData))
+  // );
   customAxios
     .post(apiUrl, formData, {
-      headers: { "Content-Type": "multipart/form-data" }, //указываем только из-за отправки изображения
+      headers: { "Content-Type": "multipart/form-data" }, //указываем из-за отправки изображения
     })
     .then((response) => {
       console.log("Запись успешно создана:", response.data);
-      // successBicycleCreateMessage.value = "Велосипед успешно создан";
       router.push({
         name: "logbook-record-detail",
         params: { id: response.data.id },
       });
-      // TODO: Можно добавить обновление состояния приложения в хранилище Vuex, если это необходимо
     })
     .catch((error) => {
       console.error("Ошибка при создании записи:", error);
       errorRecordCreateMessage.value =
         "Произошла ошибка при создании записи. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
-      // TODO: Можно добавить вывод сообщения об ошибке пользователю
+      // TODO: Можно добавить вывод сообщения о причине ошибки пользователю
     });
 };
 </script>
@@ -176,12 +154,12 @@ const createNewLogBookRecord = () => {
       <div class="row align-items-center">
         <label for="category">Категория</label>
         <div class="col-5">
+          <!-- TODO: не срабатывает selected -->
           <select
             class="form-control"
             id="category"
             v-model="logBookRecord.category"
           >
-            TODO: не срабатывает selected
             <option value="" selected="">не указано</option>
             <optgroup label="---">
               <option value="руль">руль</option>
@@ -199,7 +177,6 @@ const createNewLogBookRecord = () => {
               <option value="плановое ТО">плановое ТО</option>
               <option value="другое">другое</option>
             </optgroup>
-
             <optgroup label="---">
               <option value="гонка">гонка</option>
               <option value="тренировка">тренировка</option>
@@ -216,12 +193,12 @@ const createNewLogBookRecord = () => {
 
       <div class="row align-items-center mt-2">
         <label>Фотография</label>
-          <span class="text-secondary">
-            (Максимальное количество файлов - 6 шт.)
-          </span>
-          <div class="text-secondary mb-2">
-            (Максимальный размер каждого файла: 3 МБ.)
-          </div>
+        <span class="text-secondary">
+          (Максимальное количество файлов - 6 шт.)
+        </span>
+        <div class="text-secondary mb-2">
+          (Максимальный размер каждого файла: 3 МБ.)
+        </div>
         <div class="col">
           <input
             name="pictures"
@@ -248,15 +225,11 @@ const createNewLogBookRecord = () => {
           Создать запись
         </button>
       </div>
+
       <div class="text-center mt-2">
-        <!-- <span
-          v-if="successBicycleCreateMessage"
-          class="text-success col-10 ml-2 my-2"
-          >{{ successBicycleCreateMessage }}</span
-        > -->
-        <span v-if="errorRecordCreateMessage" class="text-danger col-10 ml-2">{{
-          errorRecordCreateMessage
-        }}</span>
+        <span v-if="errorRecordCreateMessage" class="text-danger col-10 ml-2">
+          {{ errorRecordCreateMessage }}
+        </span>
       </div>
     </form>
   </div>

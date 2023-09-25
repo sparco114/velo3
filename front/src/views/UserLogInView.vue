@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from "vue";
-// import axios from "axios";
-import customAxios from "../axios.js"
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import customAxios from "../axios.js";
 
 const router = useRouter();
 const store = useStore();
@@ -17,49 +16,43 @@ const otherErrorLogInMessage = ref("");
 // проверить все ли ошибки отлавливаются при входе/выходе пользователя (не только в этой функции)
 const loginUser = async () => {
   try {
-    const response = await customAxios.post(
-      "/djoser_token/token/login/",
-      {
-        username: username.value,
-        password: password.value,
-      }
-    );
+    const response = await customAxios.post("/djoser_token/token/login/", {
+      username: username.value,
+      password: password.value,
+    });
     const token = response.data.auth_token; // Предполагается, что сервер возвращает токен в поле 'auth_token'
     const userId = response.data.user_id; // Предполагается, что сервер возвращает токен в поле 'user_id'
-    credentialsErrorLogInMessage.value = "";
-    otherErrorLogInMessage.value = "";
+    credentialsErrorLogInMessage.value = ""; // Очищаем сообщение
+    otherErrorLogInMessage.value = ""; // Очищаем сообщение
 
     if (token && userId) {
-      store.commit("setAuthTokenFromApi", token);
-      store.commit("setUserIdFromFromApi", userId);
-      console.log("setAuthTokenFromApi--in", token);
-      console.log("setUserIdFromFromApi--in", userId);
-
-      
+      store.commit("setAuthTokenFromApi", token); // добавляем токен в vue store и local storage
+      store.commit("setUserIdFromFromApi", userId); // добавляем id в vue store и local storage
     } else {
-      console.log("Токен не получен в ответе", response.data);
+      console.log("Токен или user_id не получен в ответе", response.data);
     }
 
-    // TODO: на проде удалить.
-    // console.log("Вход выполнен:", response.data);
-    router.push({ name: "home" });
+    // router.push({ name: "home" });
 
-    // TODO: сейчас при нажалтии Войти не получается с первого раза перейти в профиль,
-    // т.к. не успевает получить id юзера и записать его в store,
-    // чтоб сделать редиркет сразу, нужно чтоб Сначала приходил id, а уже после
-    // срабатывал редирект. Либо можно настроить бэк, чтоб вместе с токеном приходил user id
-    // router.push({ name: 'profile-detail', params:{ id: store.state.userId} });
+    /* TODO: Проконтролировать, всегда ли сейчас при нажатии Войти происходит редирект на
+    страницу пользователя без ошибок. Если будут ошибки можно раскомментировать редирект на home */
+    router.push({ name: "profile-detail", params: { id: userId } });
   } catch (error) {
-    store.commit("clearAuthToken");
-    // TODO: на проде отправлять в лог
-    console.error("Ошибка входа:", error.response.data.non_field_errors);
-    // TODO: Можно добавить проверку логина и пароля как в UserRegistrationView, 
-    // чтоб не отправлять на сервер лишних запросов
-    if (error.response.data.non_field_errors == "Unable to log in with provided credentials.") {
-      // console.log("Неверное имя пользователя или пароль")
-      otherErrorLogInMessage.value = "Неверное имя пользователя или пароль"
+    store.commit("clearAuthToken"); // удаляем токен из vue store и local storage
+    store.commit("clearUserId"); // удаляем id из vue store и local storage
+    // console.error("Ошибка входа:", error.response.data.non_field_errors);
+
+    /* TODO: Можно добавить проверку логина и пароля как в UserRegistrationView,
+    чтоб не отправлять на сервер лишних запросов */
+
+    if (
+      error.response.data.non_field_errors ==
+      "Unable to log in with provided credentials."
+    ) {
+      otherErrorLogInMessage.value = "Неверное имя пользователя или пароль";
     } else {
-      otherErrorLogInMessage.value = "Ошибка при входе. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку"
+      otherErrorLogInMessage.value =
+        "Ошибка при входе. Пожалуйста, попробуйте ещё раз, или обратитесь в поддержку";
     }
   }
 };
@@ -73,6 +66,7 @@ const loginUser = async () => {
         <div class="">
           <label for="username" class="col-form-label">Никнейм:</label>
         </div>
+
         <div class="col-4">
           <input
             v-model="username"
@@ -107,11 +101,10 @@ const loginUser = async () => {
         </button>
       </div>
       <div class="d-flex justify-content-center">
-      <div class="text-danger mt-2">
-        {{otherErrorLogInMessage}}
+        <div class="text-danger mt-2">
+          {{ otherErrorLogInMessage }}
+        </div>
       </div>
-      </div>
-
     </form>
   </div>
 </template>

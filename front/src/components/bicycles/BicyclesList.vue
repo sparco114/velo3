@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import customAxios from "../../axios.js";
 import BicycleCardSmall from "./BicycleCardSmall.vue";
 
-// из ProfileDetail
+// из HomeView, BicyclesView и ProfileDetail
 const props = defineProps({
   apiUrlBicycleList: String,
 });

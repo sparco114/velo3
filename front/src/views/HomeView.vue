@@ -1,10 +1,10 @@
 <script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
 import UnregistredMainPage from "../components/common/UnregistredMainPage.vue";
 import BicyclesList from "../components/bicycles/BicyclesList.vue";
 import MyBicycleListForHomePage from "../components/bicycles/MyBicycleListForHomePage.vue";
 import LogBookRecordsList from "../components/logbooks/LogBookRecordsList.vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
 
 const store = useStore();
 
@@ -12,35 +12,36 @@ const logBookRecordAmount = "?random=7";
 const apiUrlBicycleList = "/bicycles/?random=3";
 
 const userIdInStore = computed(() => store.state.userId);
-console.log('userId------from Home - ', userIdInStore)
-console.log('store.state.userId------from Home - ', store.state.userId)
+
 let apiUrlMyBicycleListForHomePage = null;
+
 if (userIdInStore) {
   apiUrlMyBicycleListForHomePage = `/bicycles/?owner=${userIdInStore.value}`;
 }
-console.log('apiUrlMyBicycleListForHomePage------- from home-', apiUrlMyBicycleListForHomePage)
 </script>
 
 <template>
   <div class="container">
     <div class="row justify-content-center">
+      <!-- TODO: перенести русунко на сервер -->
       <img
         src="https://webstockreview.net/images/bicycle-clipart-vector-4.png"
         alt="вело"
         class="img-fluid logo-velo"
       />
     </div>
+
     <div class="row text-center">
       <h1><strong>Бортовой журнал вашего велосипеда</strong></h1>
     </div>
 
     <div class="row" v-if="userIdInStore">
-      <MyBicycleListForHomePage :apiUrlMyBicycleListForHomePage="apiUrlMyBicycleListForHomePage" />
-      <!-- ДА -->
+      <MyBicycleListForHomePage
+        :apiUrlMyBicycleListForHomePage="apiUrlMyBicycleListForHomePage"
+      />
     </div>
     <div class="row text-center" v-else>
       <UnregistredMainPage />
-      <!-- НЕТ -->
     </div>
   </div>
 

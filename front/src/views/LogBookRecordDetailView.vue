@@ -1,17 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-// import axios from "axios";
-import customAxios from "../axios.js"
-import { useRoute } from "vue-router";
-// import BicycleOwnerCardSmall from "../components/logbooks/BicycleOwnerCardSmall.vue";
-import { RouterLink } from "vue-router";
+import { useRoute, RouterLink } from "vue-router";
 import { useStore } from "vuex";
+import customAxios from "../axios.js";
 
 const store = useStore();
 const logBookRecordId = useRoute().params.id;
 
-const record = ref([]);
 const userIdFromStore = computed(() => store.state.userId);
+
+const record = ref([]);
 
 onMounted(() => {
   let apiUrl = `/logbooks/${logBookRecordId}/`;
@@ -20,33 +18,27 @@ onMounted(() => {
     .get(apiUrl)
     .then((response) => {
       record.value = response.data;
-      // TODO: убрать на проде
 
+      // TODO: Попробовать измежать использование v-html
       record.value.text = response.data.text
         ? response.data.text.replace(/\n/g, "<br>") //.replace(/ /g, "&nbsp;")
-        : "";
-
-      // console.log('response.data------', response.data);
+        : ""; // Подготовка текста для использования в html формате
     })
     .catch((error) => {
-      // TODO: изменить на запись в лог и вывод текста пользователю
       console.error("Ошибка при выполнении запроса:", error);
     });
 });
-
-// console.log("userIdFromStore----", userIdFromStore);
-// console.log('record.creator----', record.value)
 </script>
 
 <template>
   <div class="mt-4">
-    <div class="">
+    <div>
       <RouterLink
         v-if="record.bicycle"
         class="ms-2 fs-4 text-decoration-none text-dark"
         :to="{ name: 'bicycle-detail', params: { id: record.bicycle.id } }"
       >
-        <strong class="">
+        <strong>
           {{ record.bicycle.brand }}
           {{ record.bicycle.model }}
           {{ record.bicycle.bicycle_name }}
@@ -75,8 +67,11 @@ onMounted(() => {
           <div class="col text-end">
             <div class="row">
               <div class="col">
-                <h5 class="card-title mb-0 fs-3 text-start">{{ record.header }}</h5>
+                <h5 class="card-title mb-0 fs-3 text-start">
+                  {{ record.header }}
+                </h5>
               </div>
+
               <div class="col" v-if="record.creator">
                 <RouterLink
                   class="btn btn-sm btn-outline-success rounded-5"
@@ -85,8 +80,9 @@ onMounted(() => {
                     name: 'logbook-record-edit',
                     params: { id: logBookRecordId },
                   }"
-                  >Редактировать</RouterLink
                 >
+                  Редактировать
+                </RouterLink>
               </div>
             </div>
           </div>
@@ -95,50 +91,12 @@ onMounted(() => {
             <small class="text-muted">{{ record.category }}</small>
           </p>
 
-
-<div v-if="record && record.pictures && record.pictures.length > 0" v-for="picture in record.pictures">
-
-    <img
-      :src="picture.image"
-      class="card-img rounded-3 mb-3"
-    />
-</div>
-
-
-            <!-- <div class="col img-small">
-              <img
-                src="https://oboi-telefon.ru/wallpapers/20899/34618.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
-              <img
-                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-            <div class="col img-small">
-              <img
-                src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                class="card-img-top rounded-3"
-                alt="..."
-              />
-            </div>
-             <div class="col img-small">
-                <img
-                  src="http://www.mtbtestcentral.it/wp-content/uploads/2019/06/Orbea-Laufey-4-1536x1024.jpg"
-                  class="card-img-top rounded-3"
-                  alt="..."
-                />
-              </div> -->
-
-
-
-
-
-
+          <div
+            v-if="record && record.pictures && record.pictures.length > 0"
+            v-for="picture in record.pictures"
+          >
+            <img :src="picture.image" class="card-img rounded-3 mb-3" />
+          </div>
 
           <div v-html="record.text" class="card-text mt-4"></div>
 
@@ -147,10 +105,11 @@ onMounted(() => {
               <div v-if="record.mileage" class="col-3 text-muted">
                 <span>Пробег: {{ record.mileage }} км.</span>
               </div>
+
               <div class="col-4 text-muted">
-                <span v-if="record.cost"
-                  >Стоимость: {{ record.cost }} руб.</span
-                >
+                <span v-if="record.cost">
+                  Стоимость: {{ record.cost }} руб.
+                </span>
               </div>
               <!-- пустая колонка для корректного отобраения на странице -->
               <div class="col"></div>
@@ -163,24 +122,5 @@ onMounted(() => {
       </div>
     </div>
   </div>
-<!-- TODO: !! Добавить кнопки Следующия запись и Предыдущая запись-->
-
-
-  <!-- TODO: Разобраться со стилями и добавить кнопку "в бортжурнал", 
-    т.к. при ее добавлении страница отркывается не сверху, а снизу, 
-    как будто уже прокручена до конца-->
-  <!-- <div class="container">
-    <div class="row row-cols-md-3 mt-2">
-      <div class="col d-flex justify-content-center align-items-center">
-        <RouterLink class="btn rounded-5 btn-lg border" to="">
-          &lt; в бортжурнал
-        </RouterLink>
-      </div>
-      <div class="col">
-        <RouterLink class="btn rounded-5 btn-lg w-100 border" to="#">
-          Наверх
-        </RouterLink>
-      </div>
-    </div>
-  </div> -->
+  <!-- TODO: !! Добавить кнопки Следующия запись и Предыдущая запись-->
 </template>

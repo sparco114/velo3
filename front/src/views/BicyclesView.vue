@@ -1,6 +1,6 @@
 <script setup>
-import { RouterLink } from "vue-router";
 import BicyclesList from "../components/bicycles/BicyclesList.vue";
+
 
 // TODO: добавить пагинацию, и фильтр по брендам велосипеда в будущем
 const apiUrlBicycleList = "/bicycles/?ordering=-id";

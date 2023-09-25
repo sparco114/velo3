@@ -87,14 +87,12 @@ class LogBookRecordUpdateView(generics.RetrieveUpdateDestroyAPIView):
         serializer.save()
 
 
+# TODO: !! Настроить удаление изображения из папки, при удалении фото 
 class LogBookRecordPictureDeleteView(generics.DestroyAPIView):
     # TODO: !! настроить, чтоб фото мог удалять только создатель
     # permission_classes = [IsRecordCreator]
     serializer_class = LogBookRecordPictureSerializer
 
-    # def get_queryset(self):
-    #     picture_id = self.kwargs.get('picture_id')
-    #     return LogBookRecordPictures.objects.get(id=picture_id)
     def get_object(self):
         picture_pk = self.kwargs.get('picture_pk')
         try:
